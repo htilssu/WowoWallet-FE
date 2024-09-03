@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {ToastContainer, toast, Bounce} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,8 +14,8 @@ const AddInfoAtm = () => {
     const [bankList, setBankList] = useState([]);
     const [accountName, setAccountName] = useState("");
     const [accountNumber, setAccountNumber] = useState('');
-    const [expired, setexpired] = useState('');
-    const [previousexpired, setPreviousexpired] = useState('');
+    const [expired, setExpired] = useState('');
+    const [previousExpired, setPreviousExpired] = useState('');
     const [errors, setErrors] = useState({
         accountNumber: '',
         expired: ''
@@ -88,8 +88,8 @@ const AddInfoAtm = () => {
             value = value.slice(0, 5);
         }
 
-        setPreviousexpired(expired);
-        setexpired(value);
+        setPreviousExpired(expired);
+        setExpired(value);
 
         if (value.length === 5 || value.length === 2) {
             validateDate(value);
@@ -139,7 +139,7 @@ const AddInfoAtm = () => {
 
         e.preventDefault();
         if (handleValidation()) {
-            post("/api/v1/card", {
+            post("/v1/card", {
                 cardNumber: accountNumber,
                 holderName: accountName,
                 expired: expired,
@@ -294,7 +294,7 @@ const AddInfoAtm = () => {
                                     className="button-update text-green-500 p-3 rounded-2xl mr-3 font-bold"
                                     onClick={() => {
                                         setAccountNumber('');
-                                        setexpired(previousexpired);
+                                        setExpired(previousExpired);
                                         setSelectedBank('');
                                         setAccountName('');
                                         setErrors({});

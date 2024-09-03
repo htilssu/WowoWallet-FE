@@ -10,7 +10,7 @@ function MyWallet() {
     //lấy thông tin Ví
     const [user, setUser] = useState({});
     useEffect(() => {
-        get("/api/v1/user/wallet").then((res) => {
+        get("/v1/user/wallet").then((res) => {
             setUser(res.data);
         }).catch((e) => {
             toast.error('Không thể lấy thông tin Ví User!');
@@ -74,7 +74,7 @@ const PersonalInfoForm = () => {
     const [user, setUser] = useState({});
 
     useEffect(() => {
-        get("/api/v1/user").then((res) => {
+        get("/v1/user").then((res) => {
             setUser(res.data);
         }).catch((e) => {
             toast.error('Không lấy thông tin User!');

@@ -9,7 +9,7 @@ export default defineConfig({
       name: "remote",
       filename: "remoteEntry.js",
       exposes: {
-        "./Login": "./src/components/auth/LoginForm.jsx",
+        "./Login": "./src/components/auth/SignInPage.jsx",
       },
       shared: [
         "react",

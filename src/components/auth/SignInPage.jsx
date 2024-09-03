@@ -4,8 +4,14 @@ import { MantineProvider, PasswordInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { post } from "../../util/requestUtil.js";
 import { useState } from "react";
+import {useAuth} from "../../modules/hooks/useAuth.jsx";
+import {Navigate} from "react-router-dom";
 
-const LoginForm = ({ registrationLink }) => {
+const SignInPage = ({ registrationLink }) => {
+  const {login, isAuthenticate} = useAuth();
+  if (isAuthenticate) {return <Navigate to={"/home"}/>}
+
+  const returnPathName = new URLSearchParams(location.search).get("returnUrl")
   const form = useForm({
     initialValues: {
       userName: "",
@@ -33,16 +39,16 @@ const LoginForm = ({ registrationLink }) => {
     form.validate();
 
     if (form.isValid) {
-      post("/api/v1/auth/login", {
+      post("v1/auth/sign-in", {
         username: form.values.userName,
         password: form.values.password,
         isRemember: form.values.isRemember,
       })
         .then((res) => {
           if (res.data.user) {
-            localStorage.setItem("user", JSON.stringify(res.data.user));
+            login(res.data.user);
             localStorage.setItem("token", res.data.token);
-            location.href = "/";
+            location.href = returnPathName;
           } else {
             setError(res.data.message);
           }
@@ -128,7 +134,7 @@ const LoginForm = ({ registrationLink }) => {
                       <div>
                         <a
                           className="hover:text-primary hover:no-underline text-sm sm:text-base"
-                          href={"/fogot-password"}
+                          href={"/reset-password"}
                         >
                           Quên mật khẩu?
                         </a>
@@ -145,7 +151,7 @@ const LoginForm = ({ registrationLink }) => {
                   </form>
                 </div>
                 <a
-                  href={registrationLink ? registrationLink : "/register"}
+                  href={registrationLink ? registrationLink : "/sign-up"}
                   className={"hover:no-underline hover:text-primary mt-2"}
                 >
                   Tạo tài khoản mới
@@ -174,4 +180,4 @@ const LoginForm = ({ registrationLink }) => {
   );
 };
 
-export default LoginForm;
+export default SignInPage;

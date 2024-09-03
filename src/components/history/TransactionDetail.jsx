@@ -28,7 +28,7 @@ const TransactionDetail = () => {
     const [transaction, setTransaction] = useState({});
     const {id} = useParams();
     useEffect(() => {
-        get(`/api/v1/transaction/${id}`).then(res =>{
+        get(`/v1/transaction/${id}`).then(res =>{
             setTransaction(res.data);
             console.log(res.data);
         }).catch((e) => {

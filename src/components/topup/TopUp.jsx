@@ -14,7 +14,7 @@ const TopUp = () => {
       <div className="flex justify-center items-center flex-1">
         <div className="container mx-auto p-6 flex flex-col md:flex-row">
           <div className="flex justify-end w-full md:w-2/3 ml-auto">
-            <Suspense fallback={<h1>Tuan</h1>}>
+            <Suspense fallback={<h1>Loading</h1>}>
               <InfoTopUp />
             </Suspense>
           </div>

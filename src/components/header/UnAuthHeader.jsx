@@ -39,7 +39,7 @@ const UnAuthHeader = ({ UnAuthHeader, LoginRegister }) => {
                 alt="e-wallet"
                 width={75}
                 height={75}
-                src="src/assets/e-wallet.png"
+                src="../../../public/e-wallet.png"
               ></img>
             </a>
           </div>

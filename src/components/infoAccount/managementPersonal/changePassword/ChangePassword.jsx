@@ -54,7 +54,7 @@ const ChangePassword = () => {
         } 
         else {
             setError('');
-            post("/api/v1/user/password",{
+            post("/v1/user/password",{
                 oldPassword: oldPasswordInput,
                 newPassword: newPasswordInput
             })

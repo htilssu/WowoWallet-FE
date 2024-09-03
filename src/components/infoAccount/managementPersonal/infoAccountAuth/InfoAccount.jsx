@@ -17,7 +17,7 @@ const InfoAccount = () => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    get("/api/v1/user")
+    get("/v1/user")
     .then((res) => 
     {
       setUser(res.data);

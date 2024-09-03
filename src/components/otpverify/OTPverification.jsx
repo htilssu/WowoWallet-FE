@@ -3,7 +3,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
 import { PinInput } from "@mantine/core";
 import { post } from "../../util/requestUtil.js";
-import { useAuth } from "../../hooks/useAuth.jsx";
+import { useAuth } from "../../modules/hooks/useAuth.jsx";
 
 const OTPverification = () => {
   const { user } = useAuth();
@@ -31,7 +31,7 @@ const OTPverification = () => {
     }
 
     try {
-      post("/api/v1/otp/verify", {
+      post("/v1/otp/verify", {
         otp: otp,
       })
         .then((res) => {
@@ -64,7 +64,7 @@ const OTPverification = () => {
     setLoading(true); // Bắt đầu loading
 
     try {
-      post("/api/v1/otp", {
+      post("/v1/otp", {
         otpType: "email",
       })
         .then((res) => {
@@ -96,14 +96,14 @@ const OTPverification = () => {
 
   const handlePaymentRequest = () => {
     const { pid } = location.state || {};
-    post(`/api/v1/prequest/${pid}`, {}).then((res) => {
+    post(`/v1/prequest/${pid}`, {}).then((res) => {
       navigate(`/transactions/transaction/success/${res.data.id}`);
     });
   };
 
   const handleSendMoney = () => {
     try {
-      post("/api/v1/transfer", {
+      post("/v1/transfer", {
         transactionTarget: "wallet",
         type: type,
         sendTo: recipientEmail,

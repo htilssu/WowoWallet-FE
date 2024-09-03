@@ -37,7 +37,7 @@ const NavbarAvatar = ({ logout }) => {
   //lấy thông tin người dùng
   const [user, setUser] = useState({});
   useEffect(() => {
-    get("/api/v1/user").then((res) => {
+    get("/v1/user").then((res) => {
       setUser(res.data);
     }).catch((e) => {
       toast.error('Không lấy thông tin User!');

@@ -29,7 +29,7 @@ const AtmLinked = () => {
     }, []);
 
     useEffect(() => {
-        get("/api/v1/card")
+        get("/v1/card")
             .then((res) => {
                 if (res.data && Array.isArray(res.data)) {
                     setBankInfo(res.data);
@@ -50,7 +50,7 @@ const AtmLinked = () => {
     };
 
     const handleDelete = (cardNumber) => {
-        deleteR(`/api/v1/card/${cardNumber}`).then(() => {
+        deleteR(`/v1/card/${cardNumber}`).then(() => {
             setBankInfo(prev => prev.filter(card => card.cardNumber !== cardNumber));
             toast.success('Thẻ đã được xóa thành công!');
         }).catch(() => {

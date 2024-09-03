@@ -39,7 +39,7 @@ const TransactionHistory = () => {
     }, []);
 
     useEffect(() => {
-        get(`/api/v1/transaction/history?offset=5&page=${page}`).then((res) => {
+        get(`/v1/transaction/history?offset=5&page=${page}`).then((res) => {
             setTransactions(res.data);
         }).catch((e) => {
             toast.error('Không thể lấy lịch sử giao dịch!');

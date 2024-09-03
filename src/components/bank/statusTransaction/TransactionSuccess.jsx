@@ -9,7 +9,7 @@ const TransactionSuccess = () => {
     const [transaction, setTransaction] = useState({});
     const {id} = useParams();
     useEffect(() => {
-        get(`/api/v1/transaction/${id}`).then(res =>{
+        get(`/v1/transaction/${id}`).then(res =>{
             setTransaction(res.data);
         }).catch((e) => {
             navigate("/404")

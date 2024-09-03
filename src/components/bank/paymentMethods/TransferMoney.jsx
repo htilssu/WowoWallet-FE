@@ -48,7 +48,7 @@ const TransferMoney = () => {
   //lấy thông tin Ví
   const [user, setUser] = useState({});
   useEffect(() => {
-    get("/api/v1/user/wallet")
+    get("/v1/user/wallet")
       .then((res) => {
         setUser(res.data);
       })
@@ -79,7 +79,7 @@ const TransferMoney = () => {
     }
 
     try {
-      post("/api/v1/otp", {
+      post("/v1/otp", {
         otpType: "email",
       })
         .then((res) => {
@@ -112,7 +112,7 @@ const TransferMoney = () => {
 
     // Thiết lập timeout mới
     const newTimeout = setTimeout(() => {
-      get(`/api/v1/user/check/${value}`)
+      get(`/v1/user/check/${value}`)
         .then((res) => {
           setReceiver(res.data);
           setError(null);

@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { post } from "../../util/requestUtil.js";
 import { useState } from "react";
 
-const RegistrationForm = ({ loginLink }) => {
+const SignUpPage = ({ loginLink }) => {
 
   const form = useForm({
     initialValues: {
@@ -50,7 +50,7 @@ const RegistrationForm = ({ loginLink }) => {
     form.validate();
 
     if (form.isValid()) {
-      post("/api/v1/auth/register", {
+      post("/v1/auth/sign-up", {
         userName: form.values.userName,
         firstName: form.values.firstName,
         lastName: form.values.lastName,
@@ -67,7 +67,7 @@ const RegistrationForm = ({ loginLink }) => {
           if (res.data.user) {
             localStorage.setItem("user", JSON.stringify(res.data.user));
             localStorage.setItem("token", res.data.token);
-            location.href = "/login";
+            location.href = "/sign-in";
           } else {
             setError(res.data.message);
           }
@@ -238,7 +238,7 @@ const RegistrationForm = ({ loginLink }) => {
                   </form>
                 </div>
                 <a
-                  href={loginLink ? loginLink : "/login"}
+                  href={loginLink ? loginLink : "/sign-in"}
                   className={"hover:no-underline hover:text-primary mt-2"}
                 >
                   Đăng nhập
@@ -267,4 +267,4 @@ const RegistrationForm = ({ loginLink }) => {
   );
 };
 
-export default RegistrationForm;
+export default SignUpPage;

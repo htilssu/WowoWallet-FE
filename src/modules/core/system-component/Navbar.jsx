@@ -1,4 +1,4 @@
-﻿import { useAuth } from "../../../hooks/useAuth.jsx";
+﻿import { useAuth } from "../../hooks/useAuth.jsx";
 import { TiThMenu } from "react-icons/ti";
 import { Link } from "react-router-dom";
 import NavbarAvatar from "./Navbar.Avatar.jsx";
@@ -60,7 +60,7 @@ const Navbar = () => {
         </a>
         <div className="h-full relative gap-2 flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           {user == null ? (
-            <Link className="h-[90%]" to={"/login"}>
+            <Link className="h-[90%]" to={"/sign-in"}>
               <button
                 type="button"
                 className="h-full hover:text-white border-primary bg-blue-200 border-1 text-primary bg-opacity-50 hover:bg-primary font-medium px-2 rounded-lg transition-colors ease-in-out"

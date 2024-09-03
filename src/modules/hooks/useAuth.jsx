@@ -1,20 +1,22 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 
 const Context = createContext({});
 export const useAuth = () => useContext(Context);
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
+  const [isAuthenticate, setIsAuthenticate] = useState(true)
 
   function handleSetUser(user) {
     localStorage.setItem("user", JSON.stringify(user));
     setUser(user);
+    setIsAuthenticate(true)
   }
 
   function handleLogout() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
+    setIsAuthenticate(false)
   }
 
   useEffect(() => {
@@ -26,13 +28,9 @@ export const AuthProvider = (props) => {
 
   return (
     <Context.Provider
-      value={{ user, setUser: handleSetUser, logout: handleLogout }}
+      value={{ user, login: handleSetUser, logout: handleLogout, isAuthenticate }}
     >
       {props.children}
     </Context.Provider>
   );
-};
-
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };

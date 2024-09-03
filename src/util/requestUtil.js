@@ -1,40 +1,41 @@
 ﻿import axios from "axios";
-import { getCookie } from "./cookieUtil.js";
 
-const apiUrl = "https://api.htilssu.com";
-// const apiUrl = "http://localhost:8080/";
+// const apiUrl = "https://api.htilssu.com";
+const apiUrl = "http://localhost:8080";
 
 const request = axios.create({
-  baseURL: apiUrl,
-  withCredentials: true,
+    baseURL: apiUrl,
+    withCredentials: true,
+    headers: {
+        "Accept": "application/json",
+    }
 });
 
 const post = async (url, data) => {
-  //get cookies from browser
-  const token = localStorage.getItem("token");
-  if (token) {
-    request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  }
-  request.defaults.headers.common["Accept"] = `*`;
-  return await request.post(url, data);
+    //get cookies from browser
+    const token = localStorage.getItem("token");
+    if (token) {
+        request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+    return await request.post(url, data);
 };
 
 const get = async (url) => {
-  //get cookies from browser
-  const token = localStorage.getItem("token");
-  if (token) {
-    request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  }
-  return await request.get(url);
+    //get cookies from browser
+    const token = localStorage.getItem("token");
+    if (token) {
+        request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+    return await request.get(url);
 };
 
 const deleteR = async (url) => {
-  //get cookies from browser
-  const token = localStorage.getItem("token");
-  if (token) {
-    request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  }
-  return await request.delete(url);
+    //get cookies from browser
+    const token = localStorage.getItem("token");
+    if (token) {
+        request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+    return await request.delete(url);
 };
 
-export { request, post, get, deleteR };
+export {request, post, get, deleteR};

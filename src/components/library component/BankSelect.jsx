@@ -1,5 +1,6 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import {ScrollRestoration, useNavigate} from "react-router-dom";
+import {get} from "../../util/requestUtil.js";
 
 const banks = [
   {
@@ -64,6 +65,15 @@ const BankSelect = ({show, onClose, amount, methodPay}) => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedBank, setSelectedBank] = useState(null);
+    const [linkedBank, setLinkedBank] = useState([]);
+
+    useEffect(() => {
+        get("/v1/bank/linked").then(res  => {
+            if (res.data){
+                setLinkedBank(res.data);
+            }
+        });
+    }, []);
 
     if (!show) return null;
 

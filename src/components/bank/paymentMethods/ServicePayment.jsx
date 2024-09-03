@@ -20,7 +20,7 @@ const ServicePayment = () => {
   });
   const { id } = useParams();
   useEffect(() => {
-    get(`/api/v1/prequest/${id}`)
+    get(`/v1/prequest/${id}`)
       .then((res) => {
         setPartner(res.data);
       })
@@ -32,7 +32,7 @@ const ServicePayment = () => {
     balance: 0,
   });
   useEffect(() => {
-    get("/api/v1/user/wallet")
+    get("/v1/user/wallet")
       .then((res) => {
         setUser(res.data);
       })
@@ -67,7 +67,7 @@ const ServicePayment = () => {
       return;
     }
     try {
-      post("/api/v1/otp", {
+      post("/v1/otp", {
         otpType: "email",
       })
         .then((res) => {
