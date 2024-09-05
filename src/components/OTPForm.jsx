@@ -2,10 +2,10 @@
 import { toast, ToastContainer } from "react-toastify";
 import { ScrollRestoration, useLocation, useNavigate } from "react-router-dom";
 import { PinInput } from "@mantine/core";
-import { post } from "../../util/requestUtil.js";
-import { useAuth } from "../../modules/hooks/useAuth.jsx";
+import { post } from "../util/requestUtil.js";
+import { useAuth } from "../modules/hooks/useAuth.jsx";
 
-const OTPverification = () => {
+const OTPForm = () => {
   const { user } = useAuth();
   const [otp, setOtp] = useState("");
   const [resendTime, setResendTime] = useState(50);
@@ -201,4 +201,4 @@ const OTPverification = () => {
   );
 };
 
-export default OTPverification;
+export default OTPForm;

@@ -1,4 +1,4 @@
-import SignInPage from "./SignInPage.jsx";
+import SignInPage from "../../pages/SignInPage.jsx";
 
 const LoginRegister = () => {
 

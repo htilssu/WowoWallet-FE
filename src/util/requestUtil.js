@@ -1,7 +1,7 @@
 ﻿import axios from "axios";
 
-// const apiUrl = "https://api.htilssu.com";
-const apiUrl = "http://localhost:8080";
+// eslint-disable-next-line no-undef
+const apiUrl = import.meta.env.BASE_URL
 
 const request = axios.create({
     baseURL: apiUrl,

@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { MdOutlinePayments } from "react-icons/md";
-import { MyWallet } from "../../infoAccount/PersonalInfoForm.jsx";
-import {BiBarcode, BiBarcodeReader} from "react-icons/bi";
-import {ScrollRestoration} from "react-router-dom";
+import {useState} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCircleExclamation} from '@fortawesome/free-solid-svg-icons';
+import {MdOutlinePayments} from 'react-icons/md';
+import {MyWallet} from '../../infoAccount/PersonalInfoForm.jsx';
+import {BiBarcode, BiBarcodeReader} from 'react-icons/bi';
+import {ScrollRestoration} from 'react-router-dom';
 
-const QRPayment = () => {
-    const [showQRCode, setShowQRCode] = useState(true);
+function QRPayment() {
+  const [showQRCode, setShowQRCode] = useState(true);
 
     return (
         <div className="flex justify-center items-center min-h-screen">

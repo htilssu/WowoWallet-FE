@@ -4,16 +4,14 @@ const Context = createContext({});
 export const useAuth = () => useContext(Context);
 export const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
-  const [isAuthenticate, setIsAuthenticate] = useState(true)
+  const [isAuthenticate, setIsAuthenticate] = useState(false)
 
   function handleSetUser(user) {
-    localStorage.setItem("user", JSON.stringify(user));
     setUser(user);
     setIsAuthenticate(true)
   }
 
   function handleLogout() {
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
     setIsAuthenticate(false)
