@@ -9,12 +9,10 @@ import {ComponentPreviews, useInitial} from './dev/index.js';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-      <AuthProvider>
         <DevSupport ComponentPreviews={ComponentPreviews}
                     useInitialHook={useInitial}
         >
           <App/>
         </DevSupport>
-      </AuthProvider>
     </React.StrictMode>,
 );

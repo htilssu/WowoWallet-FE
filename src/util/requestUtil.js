@@ -1,41 +1,47 @@
-﻿import axios from "axios";
+﻿import axios from 'axios';
 
 // eslint-disable-next-line no-undef
-const apiUrl = import.meta.env.BASE_URL
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const request = axios.create({
-    baseURL: apiUrl,
-    withCredentials: true,
-    headers: {
-        "Accept": "application/json",
-    }
+  baseURL: apiUrl,
+  withCredentials: true,
+  headers: {
+    'Accept': 'application/json',
+  },
 });
 
 const post = async (url, data) => {
-    //get cookies from browser
-    const token = localStorage.getItem("token");
-    if (token) {
-        request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    }
+  //get token from browser
+  const token = localStorage.getItem('token');
+  if (token) {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+  try {
     return await request.post(url, data);
+  }
+  catch (e) {
+    console.log(e.message);
+    return Promise.reject(new Error(e.message))
+  }
 };
 
 const get = async (url) => {
-    //get cookies from browser
-    const token = localStorage.getItem("token");
-    if (token) {
-        request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    }
-    return await request.get(url);
+  //get cookies from browser
+  const token = localStorage.getItem('token');
+  if (token) {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+  return await request.get(url);
 };
 
-const deleteR = async (url) => {
-    //get cookies from browser
-    const token = localStorage.getItem("token");
-    if (token) {
-        request.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    }
-    return await request.delete(url);
+const deleteRequest = async (url) => {
+  //get cookies from browser
+  const token = localStorage.getItem('token');
+  if (token) {
+    request.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+  return await request.delete(url);
 };
 
-export {request, post, get, deleteR};
+export {request, post, get, deleteRequest};
