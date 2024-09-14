@@ -18,10 +18,8 @@ export const AuthProvider = (props) => {
     }));
   }
 
-  console.log(auth);
   useEffect(() => {
     getUser().then(value => {
-      console.log(value);
       setAuth(prevState => {
         return {
           ...prevState,
