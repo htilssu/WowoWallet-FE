@@ -1,13 +1,13 @@
 import {FaEdit} from 'react-icons/fa';
 import {HiMiniCheckBadge} from 'react-icons/hi2';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import AvatarStatus from '../library component/AvatarStatus.jsx';
-import {get} from '../../util/requestUtil.js';
-import {toast, ToastContainer} from 'react-toastify';
-import {useEffect, useState} from 'react';
+import {ToastContainer} from 'react-toastify';
+import {useState} from 'react';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {useQuery} from '@tanstack/react-query';
 import {getUserWallet} from '../../modules/user/user.js';
+import {formatCurrency} from '../../util/currencyUtil.js';
 
 function MyWallet() {
   //lấy thông tin Ví
@@ -17,18 +17,10 @@ function MyWallet() {
   const result = useQuery({
     queryKey: ['user-wallet', 'wallet'],
     queryFn: async () => {
-      return await getUserWallet(user.id);
+      const wallet = (await getUserWallet(user.id)).data;
+      setWallet(wallet);
     },
   });
-
-  // Hàm định dạng số tiền
-  const formatCurrency = (amount) => {
-    if (typeof amount !== 'number') return '';
-    return amount.toLocaleString('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    });
-  };
 
   return (
       <div className="p-4 border-2 border-gray-200 rounded-2xl bg-white">
@@ -58,37 +50,25 @@ function MyWallet() {
 }
 
 function TopUpBtn() {
-  const navigate = useNavigate();
 
-  const handleTopup = (e) => {
-    e.preventDefault();
-    navigate('/topup');
-  };
   return (
       <div className={'p-5'}>
-        <div className="text-center" onClick={handleTopup}>
+        <div className="text-center">
           <button className="bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline
                     transition duration-300 ease-in-out hover:bg-green-800 hover:text-white">
-            Nạp tiền vào ví
+            <Link to={'/top-up'} className={'h-full w-full hover:no-underline active:no-underline'}>Nạp tiền</Link>
           </button>
         </div>
       </div>
   );
 }
 
-const PersonalInfoForm = () => {
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    get('/v1/user').then((res) => {
-      setUser(res.data);
-    })
-  }, []);
-
+const InformationCard = () => {
+  const {user} = useAuth();
   const navigate = useNavigate();
-  const handleMpersonal = (e) => {
+  const handleMPersonal = (e) => {
     e.preventDefault();
-    navigate('/management-personal/info-account');
+    navigate('/me');
   };
 
   return (
@@ -102,14 +82,14 @@ const PersonalInfoForm = () => {
                     <h2 className="text-white text-3xl font-bold mb-2">Thông tin cá nhân</h2>
                   </div>
                   <div className="flex items-center text-green-400 hover:text-red-400"
-                       onClick={handleMpersonal}>
+                       onClick={handleMPersonal}>
                     <FaEdit size={20} className="cursor-pointer mr-2"/>
                     <span className="cursor-pointer">Sửa</span>
                   </div>
                 </div>
                 <div className="flex items-center px-6 py-4">
                   <div className="flex cursor-pointer mr-4 border-2 border-white rounded-full"
-                       onClick={handleMpersonal}>
+                       onClick={handleMPersonal}>
                     <AvatarStatus
                         src="/avatarH.png"
                         alt="avatar"
@@ -156,5 +136,5 @@ const PersonalInfoForm = () => {
   );
 };
 
-export default PersonalInfoForm;
+export default InformationCard;
 export {MyWallet, TopUpBtn};

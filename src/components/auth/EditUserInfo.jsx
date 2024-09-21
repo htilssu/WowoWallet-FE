@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { Button, PasswordInput, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 
-const InputInformationForm = () => {
+const EditUserInfo = () => {
   const form = useForm({
     name: "registerForm",
     initialValues: {
@@ -105,4 +105,4 @@ const InputInformationForm = () => {
   );
 };
 
-export default InputInformationForm;
+export default EditUserInfo;

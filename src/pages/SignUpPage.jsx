@@ -3,12 +3,14 @@ import {MantineProvider, PasswordInput, TextInput} from '@mantine/core';
 import {useForm} from '@mantine/form';
 import {post} from '../util/requestUtil.js';
 import {useState} from 'react';
+import {useAuth} from '../modules/hooks/useAuth.jsx';
 
 const SignUpPage = ({loginLink}) => {
+  const {login} = useAuth();
 
   const form = useForm({
     initialValues: {
-      userName: '',
+      username: '',
       firstName: '',
       lastName: '',
       email: '',
@@ -22,7 +24,7 @@ const SignUpPage = ({loginLink}) => {
       job: '',
     },
     validate: {
-      userName: (value) => (value ? null : 'Vui lòng nhập tên đăng nhập'), // can be null
+      username: (value) => (value ? null : 'Vui lòng nhập tên đăng nhập'), // can be null
       firstName: (value) => (value ? null : 'Vui lòng nhập tên'),
       lastName: (value) => (value ? null : 'Vui lòng nhập họ'),
       email: (value) => {
@@ -51,26 +53,12 @@ const SignUpPage = ({loginLink}) => {
 
     if (form.isValid()) {
       post('/v1/auth/sign-up', {
-        userName: form.values.userName,
-        firstName: form.values.firstName,
-        lastName: form.values.lastName,
-        email: form.values.email,
-        password: form.values.password,
-        phoneNumber: form.values.phoneNumber,
-        address: form.values.address,
-        city: form.values.city,
-        dob: form.values.dob,
-        gender: form.values.gender,
-        job: form.values.job,
+        ...form.values,
       })
           .then((res) => {
             if (res.data.user) {
-              localStorage.setItem('user', JSON.stringify(res.data.user));
-              localStorage.setItem('token', res.data.token);
+              login(res.data);
               location.href = '/sign-in';
-            }
-            else {
-              setError(res.data.message);
             }
           })
           .catch((res) => {
@@ -119,9 +107,9 @@ const SignUpPage = ({loginLink}) => {
                       <div>
                         <TextInput
                             size={'md'}
-                            key={form.key('userName')}
+                            key={form.key('username')}
                             placeholder={'User Name'}
-                            {...form.getInputProps('userName')}
+                            {...form.getInputProps('username')}
                         />
                       </div>
                       <div className="mt-3">

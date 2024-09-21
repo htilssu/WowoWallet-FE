@@ -1,10 +1,10 @@
 import {useNavigate} from 'react-router-dom';
 import {GrTransaction} from 'react-icons/gr';
 import {IoIosAddCircle} from 'react-icons/io';
-import CardAtmComponents from '../components/atm_linked/CardAtmComponents.jsx'; // Import the CardAtmComponents component
-import Card from '../components/atm_linked/Card.jsx';
+import CardAtmComponents from '../components/atm/CardAtmComponents.jsx'; // Import the CardAtmComponents component
+import Card from '../components/atm/Card.jsx';
 import {useEffect, useState} from 'react';
-import {deleteR, get} from '../util/requestUtil.js';
+import {deleteRequest, get} from '../util/requestUtil.js';
 import {toast} from 'react-toastify';
 import axios from 'axios';
 
@@ -51,7 +51,7 @@ const AtmPage = () => {
   };
 
   const handleDelete = (cardNumber) => {
-    deleteR(`/v1/card/${cardNumber}`).then(() => {
+    deleteRequest(`/v1/card/${cardNumber}`).then(() => {
       setBankInfo(prev => prev.filter(card => card.cardNumber !== cardNumber));
       toast.success('Thẻ đã được xóa thành công!');
     }).catch(() => {

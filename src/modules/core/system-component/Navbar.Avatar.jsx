@@ -1,7 +1,6 @@
-﻿import {useEffect, useRef, useState} from "react";
-import { Link } from "react-router-dom";
-import {get} from "../../../util/requestUtil.js";
-import {toast} from "react-toastify";
+﻿import {useRef} from 'react';
+import {Link} from 'react-router-dom';
+import {useAuth} from '../../hooks/useAuth.jsx';
 
 const NavbarAvatar = ({ logout }) => {
   const dropDownSection = useRef();
@@ -35,14 +34,7 @@ const NavbarAvatar = ({ logout }) => {
   }
 
   //lấy thông tin người dùng
-  const [user, setUser] = useState({});
-  useEffect(() => {
-    get("/v1/user").then((res) => {
-      setUser(res.data);
-    }).catch((e) => {
-      toast.error('Không lấy thông tin User!');
-    });
-  }, []);
+  const {user}= useAuth();
 
   return (
     <div className={"h-full"}>

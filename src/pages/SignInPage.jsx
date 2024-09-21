@@ -2,19 +2,26 @@ import 'rsuite/dist/rsuite.min.css';
 import {Checkbox} from 'rsuite';
 import {MantineProvider, PasswordInput, TextInput} from '@mantine/core';
 import {useForm} from '@mantine/form';
-import {post} from '../util/requestUtil.js';
 import {useState} from 'react';
 import {useAuth} from '../modules/hooks/useAuth.jsx';
-import {Navigate} from 'react-router-dom';
+import {Link, Navigate, useNavigate} from 'react-router-dom';
+import {signIn} from '../modules/auth/auth.js';
+import {setCookie} from '../util/cookieUtil.js';
+import {setTitle} from '../util/titleUtil.js';
 
 const SignInPage = ({registrationLink}) => {
-  const {login, isAuthenticate} = useAuth();
-  const returnPathName = new URLSearchParams(location.search).get('returnUrl');
+  setTitle('Đăng nhập - WoWoWallet');
 
-  if (isAuthenticate) {return <Navigate to={`/${returnPathName ?? ''}`}/>;}
+  const {
+    login,
+    isAuthenticate,
+  } = useAuth();
+  const navigate = useNavigate();
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const form = useForm({
     initialValues: {
-      userName: '',
+      username: '',
       password: '',
       isRemember: false,
     },
@@ -23,42 +30,46 @@ const SignInPage = ({registrationLink}) => {
         if (userN === '') {
           return 'Vui lòng nhập tên đăng nhập';
         }
-
         return null;
       },
       password: (pass) => {
         if (pass === '') return 'Yêu cầu nhập mật khẩu';
-        else return null;
+        return null;
       },
     },
   });
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [error, setError] = useState(null);
+  if (isAuthenticate) return <Navigate to={'/home'}/>;
 
   async function handeLogin() {
     form.validate();
-
     if (form.isValid) {
-      post('v1/auth/sign-in', {
-        username: form.values.userName,
-        password: form.values.password,
-        isRemember: form.values.isRemember,
-      })
-          .then((res) => {
-            if (res.data.user) {
-              login(res.data.user);
-              localStorage.setItem('token', res.data.token);
-              location.href = returnPathName;
-            }
-            else {
-              setError(res.data.message);
-            }
-          })
-          .catch((res) => {
-            if (res.response && res.response.data.message) {
-              setError(res.response.data.message);
-            }
-          });
+      try {
+        signIn(form.values)
+            .then((res) => {
+              if (res.data.user) {
+                const data = res.data;
+                login(data.user);
+
+                const token = data.token;
+                setCookie('token', token);
+                navigate('/');
+              }
+              else {
+                setError(res.data.message);
+              }
+            })
+            .catch((res) => {
+              if (res.response && res.response.data.message) {
+                setError(res.response.data.message);
+              }
+            });
+      }
+      catch (e) {
+        console.log(e);
+      }
     }
     else {
       setError(null);
@@ -100,9 +111,9 @@ const SignInPage = ({registrationLink}) => {
                       <div>
                         <TextInput
                             size={'md'}
-                            key={form.key('userName')}
+                            key={form.key('username')}
                             placeholder={'Nhập email'}
-                            {...form.getInputProps('userName')}
+                            {...form.getInputProps('username')}
                         />
                       </div>
                       <div className="mt-3">
@@ -136,12 +147,12 @@ const SignInPage = ({registrationLink}) => {
                         </span>
                         </div>
                         <div>
-                          <a
+                          <Link
                               className="hover:text-primary hover:no-underline text-sm sm:text-base"
-                              href={'/reset-password'}
+                              to={'/reset-password'}
                           >
                             Quên mật khẩu?
-                          </a>
+                          </Link>
                         </div>
                       </div>
                       <div className="px-2">
@@ -154,12 +165,12 @@ const SignInPage = ({registrationLink}) => {
                       </div>
                     </form>
                   </div>
-                  <a
-                      href={registrationLink ? registrationLink : '/sign-up'}
+                  <Link
+                      to={registrationLink ? registrationLink : '/sign-up'}
                       className={'hover:no-underline hover:text-primary mt-2'}
                   >
                     Tạo tài khoản mới
-                  </a>
+                  </Link>
                 </div>
                 <div
                     className={'hidden w-full h-full opacity-15 z-100'}

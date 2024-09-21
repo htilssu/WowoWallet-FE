@@ -1,5 +1,5 @@
 import { FaIdCard } from "react-icons/fa";
-import ManualIdentityAuth from './ManualIdentityAuth';
+import ManualIdentityAuth from './ManualIdentityAuth.jsx';
 import { useState } from "react";
 
 const IdentityAuth = () => {

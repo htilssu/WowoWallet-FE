@@ -1,7 +1,7 @@
 import {FaUpload} from 'react-icons/fa';
 import {useState} from 'react';
 import {CiBank} from 'react-icons/ci';
-import {MyWallet} from '../components/infoAccount/PersonalInfoForm.jsx';
+import {MyWallet} from '../components/account/InformationCard.jsx';
 
 const WithdrawPage = () => {
   const [amount, setAmount] = useState('');
