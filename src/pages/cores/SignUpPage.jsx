@@ -6,7 +6,7 @@ import {useState} from 'react';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
 
 const SignUpPage = ({loginLink}) => {
-  const {handleSetUser} = useAuth();
+  const {login} = useAuth();
 
   const form = useForm({
     initialValues: {
@@ -53,26 +53,12 @@ const SignUpPage = ({loginLink}) => {
 
     if (form.isValid()) {
       post('/v1/auth/sign-up', {
-        username: form.values.username,
-        firstName: form.values.firstName,
-        lastName: form.values.lastName,
-        email: form.values.email,
-        password: form.values.password,
-        phoneNumber: form.values.phoneNumber,
-        address: form.values.address,
-        city: form.values.city,
-        dob: form.values.dob,
-        gender: form.values.gender,
-        job: form.values.job,
+        ...form.values,
       })
           .then((res) => {
             if (res.data.user) {
-              localStorage.setItem('user', JSON.stringify(res.data.user));
-              localStorage.setItem('token', res.data.token);
+              login(res.data);
               location.href = '/sign-in';
-            }
-            else {
-              handleSetUser(res.data.user)
             }
           })
           .catch((res) => {

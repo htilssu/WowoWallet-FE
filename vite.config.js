@@ -9,7 +9,8 @@ export default defineConfig({
       name: "remote",
       filename: "remoteEntry.js",
       exposes: {
-        "./Remote": "./src/modules/federation/remoteEntry.jsx",
+        "./SignInPage": "./src/modules/federation/SignInFederation.jsx",
+        "./SignUpPage": "./src/modules/federation/SignUpFederation.jsx",
       },
       shared: [
         "react",

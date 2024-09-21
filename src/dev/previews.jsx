@@ -1,35 +1,16 @@
 import {ComponentPreview, Previews} from '@react-buddy/ide-toolbox';
 import {PaletteTree} from './palette';
-import QRPayment from '../components/payment/QRPayment.jsx';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {AuthProvider} from '../modules/hooks/useAuth.jsx';
-import CardAtmComponents from '../components/atm/CardAtmComponents.jsx';
-import SignUpPage from '../modules/federation/SignUpPage.jsx';
-
-const client = new QueryClient();
+import SignInFederation from '../modules/federation/SignInFederation.jsx';
+import SignUpFederation from '../modules/federation/SignUpFederation.jsx';
 
 const ComponentPreviews = () => {
   return (
       <Previews palette={<PaletteTree/>}>
-        <QueryClientProvider client={client}>
-          <ComponentPreview path="/QRPayment">
-            <QRPayment/>
-          </ComponentPreview>
-        </QueryClientProvider>
-        <ComponentPreview path="/PaletteTree">
-          <PaletteTree/>
+        <ComponentPreview path="/SignInFederation">
+          <SignInFederation/>
         </ComponentPreview>
-        <ComponentPreview path="/AuthProvider">
-          <AuthProvider/>
-        </ComponentPreview>
-        <ComponentPreview path="/CardAtmComponents">
-          <CardAtmComponents/>
-        </ComponentPreview>
-        <ComponentPreview path="/QRPayment">
-          <QRPayment/>
-        </ComponentPreview>
-        <ComponentPreview path="/SignUpPage">
-          <SignUpPage/>
+        <ComponentPreview path="/SignUpFederation">
+          <SignUpFederation/>
         </ComponentPreview>
       </Previews>
   );

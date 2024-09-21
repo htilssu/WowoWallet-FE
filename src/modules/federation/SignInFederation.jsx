@@ -1,25 +1,28 @@
-import React from 'react';
+import {setTitle} from '../../util/titleUtil.js';
 
-const SignInPage = () => {
+const SignInFederation = () => {
+  setTitle('Đăng nhập - WoWo Wallet');
+
   return (
-      <div className="font-[sans-serif]">
+
+      <div className="">
         <div className="min-h-screen flex fle-col items-center justify-center py-6 px-4">
           <div className="grid md:grid-cols-2 items-center gap-4 max-w-6xl w-full">
             <div
-                className="border border-gray-300 rounded-lg p-6 max-w-md shadow-[0_2px_22px_-4px_rgba(93,96,127,0.2)] max-md:mx-auto">
+                className="border border-gray-300 rounded-lg p-6 max-w-md max-md:mx-auto">
               <form className="space-y-4">
                 <div className="mb-8">
                   <h3 className="text-gray-800 text-3xl font-extrabold">Đăng nhập</h3>
-                  <p className="text-gray-500 text-sm mt-4 leading-relaxed">Sign in to your account and explore a world
-                    of possibilities. Your journey begins here.</p>
+                  <p className="text-gray-500 text-sm mt-4 leading-relaxed">Đăng nhập để tiếp tục sử dụng dịch vụ của
+                    chúng tôi</p>
                 </div>
 
                 <div>
-                  <label className="text-gray-800 text-sm mb-2 block">User name</label>
+                  <label className="text-gray-800 text-sm mb-2 block">Tên đăng nhập</label>
                   <div className="relative flex items-center">
                     <input name="username" type="text" required
-                           className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-lg outline-blue-600"
-                           placeholder="Nhập username"/>
+                           className="w-full bg-white text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-lg outline-blue-600"
+                           placeholder="Email hoặc username"/>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                          className="w-[18px] h-[18px] absolute right-4" viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -33,7 +36,7 @@ const SignInPage = () => {
                   <label className="text-gray-800 text-sm mb-2 block">Mật khẩu</label>
                   <div className="relative flex items-center">
                     <input name="password" type="password" required
-                           className="w-full text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-lg outline-blue-600"
+                           className="w-full bg-white text-sm text-gray-800 border border-gray-300 px-4 py-3 rounded-lg outline-blue-600"
                            placeholder="Nhập mật khẩu"/>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                          className="w-[18px] h-[18px] absolute right-4 cursor-pointer" viewBox="0 0 128 128">
@@ -47,12 +50,13 @@ const SignInPage = () => {
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center">
                     <input id="remember-me" name="remember-me" type="checkbox"
-                           className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"/>
+                           className="h-4 bg-white w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"/>
+
                     <label htmlFor="remember-me" className="ml-3 block text-sm text-gray-800">Ghi nhớ thiết bị</label>
                   </div>
 
                   <div className="text-sm">
-                    <a href="jajvascript:void(0);" className="text-blue-600 hover:underline font-semibold">
+                    <a href="javascript:void(0);" className="text-blue-600 hover:underline font-semibold">
                       Quên mật khẩu?
                     </a>
                   </div>
@@ -66,11 +70,12 @@ const SignInPage = () => {
                 </div>
 
                 <p className="text-sm !mt-8 text-center text-gray-800">Chưa có tài khoản? <a
-                    href="javascript:void(0);"
-                    className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Đăng ký ở đây</a></p>
+                    href="/sign-up"
+                    className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Đăng ký ở đây</a>
+                </p>
               </form>
             </div>
-            <div className="lg:h-[400px] md:h-[300px] max-md:mt-8">
+            <div className="lg:h-[400px] hidden md:block md:h-[300px] max-md:mt-8">
               <img src="https://readymadeui.com/login-image.webp"
                    className="w-full h-full max-md:w-4/5 mx-auto block object-cover" alt="Dining Experience"/>
             </div>
@@ -80,4 +85,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default SignInFederation;

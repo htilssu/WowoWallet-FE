@@ -7,8 +7,11 @@ import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {Link, Navigate, useNavigate} from 'react-router-dom';
 import {signIn} from '../../modules/auth/auth.js';
 import {setCookie} from '../../util/cookieUtil.js';
+import {setTitle} from '../../util/titleUtil.js';
 
 const SignInPage = ({registrationLink}) => {
+  setTitle("Đăng nhập - WoWoWallet");
+
   const {
     login,
     isAuthenticate,

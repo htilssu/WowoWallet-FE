@@ -1,15 +1,15 @@
 import {useEffect} from 'react';
 import {setTitle} from '../../util/titleUtil.js';
 
-const SignUpPage = () => {
+const SignUpFederation = () => {
 
   useEffect(() => {
-    setTitle("Tạo tài khoản - WoWo Wallet");
+    setTitle('Tạo tài khoản - WoWo Wallet');
   }, []);
 
   return (
       <div>
-        <div className="flex flex-col justify-center items-center font-[sans-serif] bg-white md:h-screen">
+        <div className="flex flex-col justify-center items-center bg-white md:h-screen">
           <div
               className="grid md:grid-cols-2 items-center gap-y-8 max-w-7xl w-full shadow-[0_2px_13px_-6px_rgba(0,0,0,0.4)] m-6 rounded-xl relative overflow-hidden">
             <div className="max-md:order-1 p-4 bg-gray-50 h-full">
@@ -20,16 +20,16 @@ const SignUpPage = () => {
             <div className="flex items-center p-6 max-w-md w-full h-full mx-auto">
               <form className="w-full">
                 <div className="mb-12">
-                  <h3 className="text-blue-500 lg:text-3xl text-2xl font-extrabold max-md:text-center">Create an
-                    account</h3>
+                  <h3 className="text-blue-500 lg:text-3xl text-2xl font-extrabold max-md:text-center">Tạo tài
+                    khoản</h3>
                 </div>
 
                 <div>
-                  <label className="text-gray-800 text-sm font-semibold block mb-3">Full Name</label>
+                  <label className="text-gray-800 text-sm font-semibold block mb-3">Email</label>
                   <div className="relative flex items-center">
                     <input name="name" type="text" required
                            className="w-full bg-transparent text-sm text-gray-800 border-2 focus:border-blue-500 pl-4 pr-12 py-3.5 outline-none rounded-xl"
-                           placeholder="Enter name"/>
+                           placeholder="Nhập email"/>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                          className="w-[18px] h-[18px] absolute right-4" viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -42,7 +42,7 @@ const SignUpPage = () => {
                 <div className="mt-12">
                   <button type="button"
                           className="w-full shadow-xl py-3.5 px-8 text-sm tracking-wide font-semibold rounded-xl bg-blue-500 hover:bg-blue-600 text-white border focus:outline-none transition-all">
-                    Next Step
+                    Tiếp theo
                   </button>
 
                   <div className="flex items-center justify-center gap-4 mt-12">
@@ -60,4 +60,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+export default SignUpFederation;

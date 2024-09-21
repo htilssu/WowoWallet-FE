@@ -16,24 +16,24 @@ import AntdPalette from "@react-buddy/palette-antd";
 import ReactIntlPalette from "@react-buddy/palette-react-intl";
 
 export const PaletteTree = () => (
-  <Palette>
-    <AntdPalette/> 
-    <ReactIntlPalette/>
-    <Category name="App templates">
-      <Component name="Card">
-        <Variant name="Loading">
-          <Card title="Card title">
-            <Skeleton loading={true} avatar active>
+    <Palette>
+      <AntdPalette/>
+      <ReactIntlPalette/>
+      <Category name="App templates">
+        <Component name="Card">
+          <Variant name="Loading">
+            <Card title="Card title">
+              <Skeleton loading={true} avatar active>
                 Card content
-            </Skeleton>
-          </Card>
-        </Variant>
-      </Component>
-      <Component name="Form">
-        <Variant proto={FormTemplate}/>
-      </Component>
-    </Category>
-  </Palette>
+              </Skeleton>
+            </Card>
+          </Variant>
+        </Component>
+        <Component name="Form">
+          <Variant proto={FormTemplate}/>
+        </Component>
+      </Category>
+    </Palette>
 )
 ```
 
@@ -42,7 +42,7 @@ props.
 
 ```jsx
 <ComponentPreview path="/Page">
-    <Page title={'Hello'}/>
+  <Page title={'Hello'}/>
 </ComponentPreview>
 ```
 

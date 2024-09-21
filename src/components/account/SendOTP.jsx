@@ -7,9 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 const SendOTP = () => {
     const [OTP, setOTP] = useState("");
 
-    //Check OTP
-    const correctOTP = '1111';
-
     const handleSubmit = () => {
         if (OTP !== correctOTP) {
             toast.error('Mã OTP không chính xác, vui lòng nhập lại !');
