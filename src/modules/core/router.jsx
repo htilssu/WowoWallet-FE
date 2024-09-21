@@ -14,12 +14,18 @@ import TransactionHistoryPage from '../../pages/TransactionHistoryPage.jsx';
 import AtmPage from '../../pages/AtmPage.jsx';
 import AnalysisPage from '../../components/bdsd/bdsd.jsx';
 import AuthorizedView from './system-component/AuthorizedView.jsx';
+import GroupFundPage from "../../pages/GroupFundPage.jsx";
+import NewFund from "../../components/GrounpFund/NewFund.jsx";
+import FundDetailPage from "../../components/GrounpFund/FundDetailPage.jsx";
 
 function AdminLayout() {
   return null;
 }
 
 export const router = createBrowserRouter([
+  {
+    path: '/group-fund', element: <GroupFundPage />
+  },
   {
     path: '/', element: <ProtectedLayout/>, children: [
       {
@@ -44,6 +50,12 @@ export const router = createBrowserRouter([
           },
           {
             path: 'analysis', element: <AnalysisPage/>,
+          },
+          {
+            path : '/fund/:id', element: <FundDetailPage />
+          },
+          {
+            path : '/new-fund', element: <NewFund />
           },
         ],
       },
