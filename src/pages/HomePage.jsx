@@ -1,12 +1,12 @@
 import {BsFillMenuButtonWideFill} from 'react-icons/bs';
 import {Link, ScrollRestoration, useNavigate} from 'react-router-dom';
-import InformationCard from '../../components/account/InformationCard.jsx';
-import ScrollableCardList from '../../components/home/ScrollableCardList.jsx';
-import Slider from '../../components/library component/Slider.jsx';
-import Statistical from '../../components/home/Statistical.jsx';
+import InformationCard from '../components/account/InformationCard.jsx';
+import ScrollableCardList from '../components/home/ScrollableCardList.jsx';
+import Slider from '../components/library component/Slider.jsx';
+import Statistical from '../components/home/Statistical.jsx';
 import {useEffect} from 'react';
-import {useAuth} from '../../modules/hooks/useAuth.jsx';
-import {FeatureItem} from '../../components/home/FeatureItem.jsx';
+import {useAuth} from '../modules/hooks/useAuth.jsx';
+import {FeatureItem} from '../components/home/FeatureItem.jsx';
 
 const Card = ({icon, title, onClick}) => {
   return (

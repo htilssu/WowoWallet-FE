@@ -1,7 +1,7 @@
 import {TextInput} from '@mantine/core';
 import {isEmail, useForm} from '@mantine/form';
 import {Link} from 'react-router-dom';
-import {resetPassword} from '../../modules/user/user.js';
+import {resetPassword} from '../modules/user/user.js';
 
 const ResetPasswordPage = () => {
   const form = useForm({
