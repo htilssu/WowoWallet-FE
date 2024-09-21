@@ -1,4 +1,4 @@
-import {MyWallet} from '../infoAccount/PersonalInfoForm.jsx';
+import {MyWallet} from '../account/InformationCard.jsx';
 import {ScrollRestoration} from 'react-router-dom';
 import InfoPopup from './InfoPopup.jsx';
 

@@ -43,7 +43,6 @@ const Navbar = () => {
 
   function handleLogout() {
     logout();
-    location.reload();
   }
 
   return (
@@ -58,7 +57,7 @@ const Navbar = () => {
           </span>
         </Link>
         <div className="h-full relative gap-2 flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          {user == null ? (
+          {!isAuthenticate ? (
             <Link className="h-[90%]" to={"/sign-in"}>
               <button
                 type="button"
