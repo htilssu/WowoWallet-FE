@@ -3,8 +3,8 @@ import { FaLock } from "react-icons/fa"; // lock-icon
 import ReCAPTCHA from "react-google-recaptcha"; // reCAPTCHA
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { post } from '../../../../util/requestUtil';
-import ManagementPersonalInfo from './../ManagementPersonalInfo';
+import { post } from '../../util/requestUtil.js';
+import ManagementPersonalInfo from './ManagementPersonalInfo.jsx';
 
 const ChangePassword = () => {
     const [showOldPassword, setShowOldPassword] = useState(false);

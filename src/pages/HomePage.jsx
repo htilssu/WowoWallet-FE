@@ -1,12 +1,12 @@
 import {BsFillMenuButtonWideFill} from 'react-icons/bs';
 import {Link, ScrollRestoration, useNavigate} from 'react-router-dom';
-import PersonalInfoForm from '../components/infoAccount/PersonalInfoForm.jsx';
-import navbarItems from '../components/home/navbarItems.jsx';
+import InformationCard from '../components/account/InformationCard.jsx';
 import ScrollableCardList from '../components/home/ScrollableCardList.jsx';
 import Slider from '../components/library component/Slider.jsx';
 import Statistical from '../components/home/Statistical.jsx';
 import {useEffect} from 'react';
 import {useAuth} from '../modules/hooks/useAuth.jsx';
+import {FeatureItem} from '../components/home/FeatureItem.jsx';
 
 const Card = ({icon, title, onClick}) => {
   return (
@@ -39,7 +39,7 @@ const HomePage = () => {
         <div className={'flex w-full justify-center items-center '}>
           <div className={'flex w-full flex-col xg:flex-row justify-center'}>
             <div className={'order-first xg:order-last md:ml-9'}>
-              <PersonalInfoForm/>
+              <InformationCard/>
             </div>
             <div className="min-h-screen flex flex-col max-w-3xl">
               <div className="flex items-center justify-between p-4 w-full bg-white">
@@ -51,7 +51,7 @@ const HomePage = () => {
               <div className="flex-1 p-4">
                 <div className="max-w-5xl mx-auto">
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-                    {navbarItems.map((item, index) => (
+                    {FeatureItem.map((item, index) => (
                         <Link
                             to={item.link}
                             key={index}

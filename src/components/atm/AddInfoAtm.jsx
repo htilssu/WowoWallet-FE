@@ -159,7 +159,7 @@ const AddInfoAtm = () => {
                         transition: Bounce,
                     });
                     setTimeout(() => {
-                        navigate('/atm/link');
+                        navigate('/bank');
                     }, 3000);
                 } else {
                     toast.error(res.data.message || 'Có lỗi xảy ra.');

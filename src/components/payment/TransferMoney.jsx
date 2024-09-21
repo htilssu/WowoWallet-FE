@@ -3,7 +3,7 @@ import { HiMiniCheckBadge } from "react-icons/hi2";
 import { FaRobot } from "react-icons/fa";
 import { Checkbox } from "rsuite";
 import { ScrollRestoration, useNavigate } from "react-router-dom";
-import { get, post } from "../../../util/requestUtil.js";
+import { get, post } from "../../util/requestUtil.js";
 import { toast, ToastContainer } from "react-toastify";
 
 const TransferMoney = () => {

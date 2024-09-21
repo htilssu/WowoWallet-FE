@@ -82,7 +82,7 @@ const UserTable = ({ users }) => {
                                     </span>
                             ))}
                         </td>
-                        <td className="border px-4 py-2">{user.transactions}</td>
+                        <td className="border px-4 py-2">{user.list}</td>
                         <td className="border px-4 py-2">
                             <div className="relative" ref={menuRef}>
                                 <div className="flex space-x-2">

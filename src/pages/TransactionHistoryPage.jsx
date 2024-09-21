@@ -244,7 +244,7 @@ const TransactionHistory = () => {
             {filteredTransactions.length === 0 ? (
                 <NotFound/>
             ) : (
-                 <TransactionTable setPage={setPage} transactions={transactions}/>
+                 <TransactionTable setPage={setPage} list={transactions}/>
              )}
           </div>
         </div>

@@ -1,6 +1,6 @@
 import "react-toastify/dist/ReactToastify.css";
 import { ScrollRestoration, useNavigate, useParams } from "react-router-dom";
-import { get, post } from "../../../util/requestUtil.js";
+import { get, post } from "../../util/requestUtil.js";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -37,7 +37,6 @@ const ServicePayment = () => {
         setUser(res.data);
       })
       .catch((e) => {
-        toast.error("Không lấy thông tin Ví User!");
       });
   }, []);
 
