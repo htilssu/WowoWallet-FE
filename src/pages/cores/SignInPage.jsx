@@ -3,14 +3,14 @@ import {Checkbox} from 'rsuite';
 import {MantineProvider, PasswordInput, TextInput} from '@mantine/core';
 import {useForm} from '@mantine/form';
 import {useState} from 'react';
-import {useAuth} from '../../modules/hooks/useAuth.jsx';
+import {useAuth} from '../modules/hooks/useAuth.jsx';
 import {Link, Navigate, useNavigate} from 'react-router-dom';
-import {signIn} from '../../modules/auth/auth.js';
-import {setCookie} from '../../util/cookieUtil.js';
-import {setTitle} from '../../util/titleUtil.js';
+import {signIn} from '../modules/auth/auth.js';
+import {setCookie} from '../util/cookieUtil.js';
+import {setTitle} from '../util/titleUtil.js';
 
 const SignInPage = ({registrationLink}) => {
-  setTitle("Đăng nhập - WoWoWallet");
+  setTitle('Đăng nhập - WoWoWallet');
 
   const {
     login,
@@ -21,7 +21,7 @@ const SignInPage = ({registrationLink}) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const form = useForm({
     initialValues: {
-      userName: '',
+      username: '',
       password: '',
       isRemember: false,
     },
@@ -45,7 +45,6 @@ const SignInPage = ({registrationLink}) => {
 
   async function handeLogin() {
     form.validate();
-
     if (form.isValid) {
       try {
         signIn(form.values)
@@ -112,9 +111,9 @@ const SignInPage = ({registrationLink}) => {
                       <div>
                         <TextInput
                             size={'md'}
-                            key={form.key('userName')}
+                            key={form.key('username')}
                             placeholder={'Nhập email'}
-                            {...form.getInputProps('userName')}
+                            {...form.getInputProps('username')}
                         />
                       </div>
                       <div className="mt-3">

@@ -3,7 +3,7 @@ import {MantineProvider, PasswordInput, TextInput} from '@mantine/core';
 import {useForm} from '@mantine/form';
 import {post} from '../../util/requestUtil.js';
 import {useState} from 'react';
-import {useAuth} from '../../modules/hooks/useAuth.jsx';
+import {useAuth} from '../modules/hooks/useAuth.jsx';
 
 const SignUpPage = ({loginLink}) => {
   const {login} = useAuth();

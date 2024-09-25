@@ -1,33 +1,29 @@
 ﻿import {createBrowserRouter} from 'react-router-dom';
 import {PageNotFound} from './system-component/PageNotFound.jsx';
 import ProtectedLayout from './layouts/ProtectedLayout.jsx';
-import SignInPage from '../../pages/cores/SignInPage.jsx';
-import SignUpPage from '../../pages/cores/SignUpPage.jsx';
+import SignInPage from '../../pages/SignInPage.jsx';
+import SignUpPage from '../../pages/SignUpPage.jsx';
 import {MainLayout} from './layouts/MainLayout.jsx';
-import Home from '../../pages/cores/HomePage.jsx';
-import IntroPage from '../../pages/cores/IntroPage.jsx';
+import Home from '../../pages/HomePage.jsx';
+import IntroPage from '../../pages/IntroPage.jsx';
 import TopUp from '../../components/topup/TopUp.jsx';
 import InformationCard from '../../components/account/InformationCard.jsx';
 import ServicePayment from '../../components/payment/ServicePayment.jsx';
-import TransactionHistoryPage from '../../pages/cores/TransactionHistoryPage.jsx';
-import AtmPage from '../../pages/cores/AtmPage.jsx';
+import TransactionHistoryPage from '../../pages/TransactionHistoryPage.jsx';
+import AtmPage from '../../pages/AtmPage.jsx';
 import AnalysisPage from '../../components/bdsd/bdsd.jsx';
 import AuthorizedView from './system-component/AuthorizedView.jsx';
 import QRPayment from '../../components/payment/QRPayment.jsx';
 import {AdminLayout} from '../../components/admin/dashboard/Admin.jsx';
 import AdminDashboard from '../../pages/admin/AdminDashboard.jsx';
-import ResetPasswordPage from '../../pages/cores/ResetPasswordPage.jsx';
+import ResetPasswordPage from '../../pages/ResetPasswordPage.jsx';
 import SignInFederation from '../federation/SignInFederation.jsx';
-import GroupFundPage from "../../pages/GroupFundPage.jsx";
-import NewFund from "../../components/GrounpFund/NewFund.jsx";
-import FundDetailPage from "../../components/GrounpFund/FundDetailPage.jsx";
 
 export const router = createBrowserRouter([
   {
-    path: '/group-fund', element: <GroupFundPage />
-  },
-  {
-    path: '/', element: <ProtectedLayout/>, children: [
+    path: '/',
+    element: <ProtectedLayout/>,
+    children: [
       {
         element: <MainLayout/>,
         children: [
@@ -62,12 +58,6 @@ export const router = createBrowserRouter([
           {
             path: 'qr-payment',
             element: <QRPayment/>,
-          },
-          {
-            path : '/fund/:id', element: <FundDetailPage />
-          },
-          {
-            path : '/new-fund', element: <NewFund />
           },
         ],
       },
