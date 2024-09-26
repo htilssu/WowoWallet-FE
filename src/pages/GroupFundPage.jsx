@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import NewFund from "../components/GrounpFund/NewFund.jsx";
-import FundDetailPage from "../components/GrounpFund/FundDetailPage.jsx"; // Hook để điều hướng
+import InviteFund from "../components/GrounpFund/InviteFundGroup.jsx";
 
 const createdFunds = [
     {
@@ -42,23 +41,24 @@ const GroupFundPage = () => {
 
     // Hàm điều hướng đến trang tạo quỹ mới
     const handleCreateNewFund = () => {
-        navigate('/new-fund'); // Điều hướng đến trang tạo quỹ mới
+        navigate('/group-fund/new-group'); // Điều hướng đến trang tạo quỹ mới
     };
 
     return (
         <div>
-            <NewFund/>
-            <FundDetailPage/>
             <div className="min-h-screen bg-gradient-to-b from-gray-100 to-blue-50 p-6">
                 <div className="max-w-7xl mx-auto flex flex-col items-center justify-center">
                     {/* Header */}
-                    <div className="bg-emerald-500 w-full rounded-lg p-6 mb-10 shadow-lg text-center">
+                    <div className="bg-emerald-500 w-full rounded-lg p-6 mb-2 shadow-lg text-center">
                         <h1 className="text-4xl font-extrabold text-white mb-4">Quỹ Nhóm của Bạn</h1>
                         <p className="text-lg text-gray-100">
                             Quản lý tất cả các quỹ mà bạn đã tạo hoặc đang tham gia.
                         </p>
                     </div>
-
+                    {/*lời mời tham gia quỹ*/}
+                    <div>
+                        <InviteFund/>
+                    </div>
                     {/* Created Funds */}
                     <div className="w-full mb-12">
                         <h2 className="text-3xl font-semibold text-gray-700 mb-2">Quỹ Đã Tạo</h2>

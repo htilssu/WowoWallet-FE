@@ -10,11 +10,15 @@ const sampleFunds = [
         contributionAmount: "10,000,000 VNĐ",
         contributionDeadline: "2024-12-31",
         fundManager: "Nguyễn Anh Tuấn",
+        fundManagerMail: "tuanmeo980@gmail.com",
         spendingRules: "Chi tiêu cho khách sạn và vé máy bay.",
         fundImage: "/sanmay.png",
-        members: ["example1@gmail.com", "example2@gmail.com"]
+        members: ["tuanmeo980@gmail.com","example1@gmail.com", "example2@gmail.com"]
     }
 ];
+const user = {
+    Gmail: "tuanmeo980@gmail.com",
+}
 
 const FundDetailPage = () => {
     const { id } = useParams(); // Lấy ID của quỹ từ URL
@@ -24,6 +28,8 @@ const FundDetailPage = () => {
     if (!fundData) {
         return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Không tìm thấy dữ liệu quỹ.</div>;
     }
+
+    const isFundManager = fundData.fundManagerMail === user.Gmail;
 
     return (
         <div className="flex justify-center min-h-screen bg-gray-100 p-4 sm:p-8">
@@ -49,14 +55,18 @@ const FundDetailPage = () => {
                             className="px-2 py-2 ssm:px-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 mr-2">
                             Góp Quỹ
                         </button>
-                        <button
-                            className="px-2 py-2 ssm:px-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 mr-2">
-                            Nhắc Đóng Quỹ
-                        </button>
-                        <button
-                            className="px-2 py-2 ssm:px-4 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600">
-                            Rút Quỹ
-                        </button>
+                        {isFundManager && ( // Only show buttons if user is fund manager
+                            <>
+                                <button
+                                    className="px-2 py-2 ssm:px-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 mr-2">
+                                    Nhắc Đóng Quỹ
+                                </button>
+                                <button
+                                    className="px-2 py-2 ssm:px-4 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600">
+                                    Rút Quỹ
+                                </button>
+                            </>
+                        )}
                     </div>
 
                     {/* Contribution Details */}
@@ -94,13 +104,18 @@ const FundDetailPage = () => {
                     {/* Fund Manager */}
                     <div className="mb-6">
                         <h3 className="text-xl font-semibold mb-2">Quản Lý Quỹ</h3>
-                        <div className={"flex flex-col sm:flex-row sm:justify-between items-center"}>
+                        <div className={"flex flex-col sm:flex-row sm:justify-start items-center gap-1"}>
                             <img
                                 src={"/avatarH.png"}
-                                className="w-10 h-10 rounded-full object-cover mr-2"
+                                className="w-12 h-12 rounded-full object-cover mr-2"
                             />
-                            <div className="flex-1">
-                                <p className="text-gray-700">{fundData.fundManager}</p>
+                            <div>
+                                <div className="flex-1">
+                                    <p className="text-primary">{fundData.fundManager}</p>
+                                </div>
+                                <div className="flex-1">
+                                    <p className="text-gray-500">{fundData.fundManagerMail}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -126,12 +141,21 @@ const FundDetailPage = () => {
                         </ul>
                     </div>
 
-                    {/* Edit Fund Button */}
-                    <div>
-                        <button className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow-md hover:bg-indigo-600">
-                            Chỉnh Sửa Quỹ
-                        </button>
-                    </div>
+                    {isFundManager && (
+                        <div>
+                            <button
+                                className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow-md hover:bg-indigo-600">
+                                Chỉnh Sửa Quỹ
+                            </button>
+                        </div>
+                    )}
+                    {!isFundManager && (
+                        <div>
+                            <button className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-indigo-600">
+                                Rời quỹ
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

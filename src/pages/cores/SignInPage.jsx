@@ -3,11 +3,11 @@ import {Checkbox} from 'rsuite';
 import {MantineProvider, PasswordInput, TextInput} from '@mantine/core';
 import {useForm} from '@mantine/form';
 import {useState} from 'react';
-import {useAuth} from '../modules/hooks/useAuth.jsx';
 import {Link, Navigate, useNavigate} from 'react-router-dom';
-import {signIn} from '../modules/auth/auth.js';
-import {setCookie} from '../util/cookieUtil.js';
-import {setTitle} from '../util/titleUtil.js';
+import {setTitle} from "../../util/titleUtil.js";
+import {useAuth} from "../../modules/hooks/useAuth.jsx";
+import {signIn} from "../../modules/auth/auth.js";
+import {setCookie} from "../../util/cookieUtil.js";
 
 const SignInPage = ({registrationLink}) => {
   setTitle('Đăng nhập - WoWoWallet');

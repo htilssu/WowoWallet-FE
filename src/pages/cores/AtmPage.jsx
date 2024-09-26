@@ -1,12 +1,12 @@
 import {useNavigate} from 'react-router-dom';
 import {GrTransaction} from 'react-icons/gr';
 import {IoIosAddCircle} from 'react-icons/io';
-import CardAtmComponents from '../components/atm/CardAtmComponents.jsx'; // Import the CardAtmComponents component
-import Card from '../components/atm/Card.jsx';
 import {useEffect, useState} from 'react';
-import {deleteRequest, get} from '../util/requestUtil.js';
 import {toast} from 'react-toastify';
-import axios from 'axios';
+import {deleteRequest, get} from "../../util/requestUtil.js";
+import {Card} from "@mantine/core";
+import CardAtmComponents from "../../components/atm/CardAtmComponents.jsx";
+import axios from "axios";
 
 const fetchBankList = () => {
   return axios.get('https://api.vietqr.io/v2/banks');
