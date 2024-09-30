@@ -1,7 +1,21 @@
+import { useState } from "react";
 import { FaUserCheck } from "react-icons/fa6"; // icon check-user
 import ReCAPTCHA from "react-google-recaptcha"; // reCAPTCHA
+import InfoAccount from "./InfoAccount";
 
 const ManualIdentityAuth = () => {
+
+    const [stateBack, setBack] = useState(false);
+
+
+    const backClick = () => {
+        setBack(true);
+    }
+
+    if (stateBack) {
+        return <InfoAccount/> 
+    }
+
     return (
         <div className="transaction-account ml-2 bg-white w-auto h-auto rounded-lg p-2 pb-9">
             <div className="info-header  ml-2 items-center mt-2 flex mb-1">
@@ -169,7 +183,7 @@ const ManualIdentityAuth = () => {
                         <div className="flex items-center mt-6 justify-end">
                             <button
                                 className=" hover:bg-primaryColor hover:text-white text-primaryColor rounded-md border mb-3 lg:mb-0 border-primaryColor py-2 px-4 font-medium"
-                                
+                                onClick={backClick}
                                 >
                                 Quay lại
                             </button>

@@ -18,6 +18,11 @@ import {AdminLayout} from '../../components/admin/dashboard/Admin.jsx';
 import AdminDashboard from '../../pages/admin/AdminDashboard.jsx';
 import ResetPasswordPage from '../../pages/ResetPasswordPage.jsx';
 import SignInFederation from '../federation/SignInFederation.jsx';
+import ManagementPersonalInfo from '../../components/account/ManagementPersonalInfo.jsx';
+import InfoAccount from './../../components/account/InfoAccount';
+import ChangePassword from './../../components/account/ChangePassword';
+import SettingAdmitTransaction from './../../components/account/SettingAdmitTransaction';
+import IdentityAuth from '../../components/account/IdentityAuth.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +63,24 @@ export const router = createBrowserRouter([
           {
             path: 'qr-payment',
             element: <QRPayment/>,
+          },
+          {
+            path: 'management',
+            element: <ManagementPersonalInfo/>,
+            children: [
+              {
+                path: 'info-account',
+                element: <InfoAccount/>,
+              },
+              {
+                path: 'change-password',
+                element: <ChangePassword/>,
+              },
+              {
+                path: 'setting-transaction',
+                element: <SettingAdmitTransaction/>,
+              }
+            ]
           },
         ],
       },
