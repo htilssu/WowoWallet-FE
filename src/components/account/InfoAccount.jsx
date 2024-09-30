@@ -17,7 +17,7 @@ const InfoAccount = () => {
   const [stateChangeEmail, setChangeEmail] = useState(false);
 
   // SwitchCheckBox
-  const [state, setState] = useState(false);
+  const [state, setState] = useState(true);
 
   const { user } = useAuth();
 

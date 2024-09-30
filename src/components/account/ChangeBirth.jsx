@@ -5,12 +5,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { post } from '../../util/requestUtil.js';
 import ManagementPersonalInfo from './ManagementPersonalInfo.jsx';
+import InfoAccount from './InfoAccount';
 
 const ChangeBirth = () => {
     const [birthDateInput, setBirthDateInput] = useState('');
     const [birthDateTouched, setBirthDateTouched] = useState(false);
     const [recaptchaVerified, setRecaptchaVerified] = useState(false);
     const [changeBirthCompleted, setChangeBirthCompleted] = useState(false); 
+    const [stateBack, setBack] = useState(false);
 
     const handleRecaptchaChange = (value) => {
         setRecaptchaVerified(!!value);
@@ -58,11 +60,15 @@ const ChangeBirth = () => {
     };
 
     const handleGoBack = () => {
-        
+        setBack(true);
     };
 
-    if (changeBirthCompleted) {
-        return <ManagementPersonalInfo />;
+    if (stateBack) {
+        return <InfoAccount />;
+    }
+
+    if(changeBirthCompleted){
+        return <ManagementPersonalInfo/>
     }
 
     return (
