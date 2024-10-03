@@ -24,16 +24,6 @@ const Card = ({icon, title, onClick}) => {
 
 const HomePage = () => {
 
-  const {user, isAuthenticate} = useAuth();
-  const pathName = location.pathname;
-
-  const router = useNavigate();
-  useEffect(() => {
-    if (isAuthenticate) {
-      router('/sign-in?returnUrl=' + pathName);
-    }
-  }, [isAuthenticate]);
-
   return (
       <div className={'flex flex-col bg-gray-100 '}>
         <div className={'flex w-full justify-center items-center '}>

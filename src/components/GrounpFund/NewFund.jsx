@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Checkbox, Anchor } from "@mantine/core";
-import {useNavigate} from "react-router-dom";
+import {ScrollRestoration, useNavigate} from "react-router-dom";
 
 // Hàm định dạng số tiền theo VND
 const formatCurrency = (value) => {
@@ -249,6 +249,7 @@ const NewFund = () => {
                     </div>
                 </div>
             </div>
+            <ScrollRestoration/>
         </div>
     );
 };

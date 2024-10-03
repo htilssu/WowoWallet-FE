@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { ScrollRestoration, useLocation } from 'react-router-dom';
 import RecentActivities from "./recentActivitiesFund.jsx";
 import { useParams } from 'react-router-dom';
 
@@ -158,6 +158,7 @@ const FundDetailPage = () => {
                     )}
                 </div>
             </div>
+            <ScrollRestoration/>
         </div>
     );
 };

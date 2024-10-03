@@ -1,10 +1,10 @@
 
-import UserListComponent from "./UserList/UserListComponent.jsx";
+import UserListComponent from "./UserList.jsx";
 
 const CutomerManage = () => {
     return (
         <div>
-            <div className="flex flex-col items-center justify-center min-h-screen">
+            <div className="flex flex-col justify-center min-h-screen">
                 <div>
                     <UserListComponent/>
                 </div>
