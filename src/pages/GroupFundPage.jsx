@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import InviteFund from "../components/GrounpFund/InviteFundGroup.jsx";
+import InviteFund from "../components/GroupFund/InviteFundGroup.jsx";
 
 const createdFunds = [
     {
