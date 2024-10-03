@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 const navbarItem = [
   {
-    name: "Home",
+    name: "Trang chủ",
     link: "/home",
   },
   {

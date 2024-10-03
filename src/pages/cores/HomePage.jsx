@@ -1,12 +1,12 @@
 import {BsFillMenuButtonWideFill} from 'react-icons/bs';
 import {Link, ScrollRestoration, useNavigate} from 'react-router-dom';
-import InformationCard from '../components/account/InformationCard.jsx';
-import ScrollableCardList from '../components/home/ScrollableCardList.jsx';
-import Slider from '../components/library component/Slider.jsx';
-import Statistical from '../components/home/Statistical.jsx';
 import {useEffect} from 'react';
-import {useAuth} from '../modules/hooks/useAuth.jsx';
-import {FeatureItem} from '../components/home/FeatureItem.jsx';
+import {useAuth} from "../../modules/hooks/useAuth.jsx";
+import InformationCard from "../../components/account/InformationCard.jsx";
+import {FeatureItem} from "../../components/home/FeatureItem.jsx";
+import ScrollableCardList from "../../components/home/ScrollableCardList.jsx";
+import {Slider} from "rsuite";
+import Statistical from "../../components/home/Statistical.jsx";
 
 const Card = ({icon, title, onClick}) => {
   return (
@@ -23,16 +23,6 @@ const Card = ({icon, title, onClick}) => {
 };
 
 const HomePage = () => {
-
-  const {user, isAuthenticate} = useAuth();
-  const pathName = location.pathname;
-
-  const router = useNavigate();
-  useEffect(() => {
-    if (!isAuthenticate) {
-      router('/sign-in?returnUrl=' + pathName);
-    }
-  }, [isAuthenticate]);
 
   return (
       <div className={'flex flex-col bg-gray-100 '}>
