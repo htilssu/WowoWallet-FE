@@ -29,9 +29,9 @@ const Sidebar = ({isSidebarOpen, setIsSidebarOpen, isDarkMode, setIsDarkMode}) =
 
     // Sub-menu items
     const tableSubItems = [
-        {name: 'Quản lý Giao dịch', link: '/admin1/', icon: <RiFileList3Fill/>}, // Bạn có thể thay đổi icon nếu muốn
+        {name: 'Quản lý Giao dịch', link: '/admin1/', icon: <RiFileList3Fill/>},
         {name: 'Quản lý Khách hàng', link: '/admin1/customer-manage', icon: <BsPersonVcardFill/>},
-        {name: 'Quản lý Nhân viên', link: '/admin1/staff-manage', icon: <MdGroups2/>},
+        {name: 'Quản lý Nhân viên', link: '/admin1/employee-manage', icon: <MdGroups2/>},
         {name: 'Quản lý Partner', link: '/admin1/partner-manage', icon: <IoMdPersonAdd />},
     ];
 
@@ -119,10 +119,14 @@ const Sidebar = ({isSidebarOpen, setIsSidebarOpen, isDarkMode, setIsDarkMode}) =
                                         <NavLink
                                             key={subIdx}
                                             to={subItem.link}
-                                            className="text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 p-2 rounded-lg bg-[#2E3B4E] mt-1 flex items-center space-x-2"
+                                            className={`text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 p-2 rounded-lg bg-[#2E3B4E] mt-1 flex items-center 
+        ${isSidebarOpen ? 'space-x-2' : 'justify-end mr-2'}`
+                                            }
                                         >
                                             {subItem.icon}
-                                            <span>{subItem.name}</span>
+                                            {isSidebarOpen && (
+                                                <span>{subItem.name}</span>
+                                            )}
                                         </NavLink>
                                     ))}
                                 </div>

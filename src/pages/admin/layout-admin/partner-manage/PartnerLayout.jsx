@@ -9,7 +9,7 @@ function PartnerLayout() {
 
     return (
         <div className="min-h-screen bg-gray-100 p-6">
-            <h1 className="text-4xl font-bold text-center text-blue-700 mb-8">
+            <h1 className="text-4xl font-bold text-center text-primaryColor mb-8">
                 Quản Lý Đối Tác
             </h1>
 

@@ -24,6 +24,7 @@ import Dashboard from "../../components/admin/dashboard/Dashboard.jsx";
 import CustomerManage from "../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx";
 import PartnerLayout from "../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx";
 import StatisticalLayout from "../../pages/admin/layout-admin/statistics-manage/StatisticalLayout.jsx";
+import EmployeeLayout from "../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx";
 
 export const router = createBrowserRouter([
     {
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
                 {
                     path: 'statistic-manage',
                     element: <StatisticalLayout/>,
+                },
+                {
+                    path: 'employee-manage',
+                    element: <EmployeeLayout/>,
                 },
             ],
     },
