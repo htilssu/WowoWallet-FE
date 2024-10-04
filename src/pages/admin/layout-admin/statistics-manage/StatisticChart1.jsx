@@ -12,7 +12,7 @@ ChartJS.register(CategoryScale,LinearScale,
     Filler
 );
 
-const StatisticLayout = () => {
+const StatisticChart1 = () => {
     const [statistics, setStatistics] = useState({
         totalTransactions: 1200,
         totalUsers: 300,
@@ -123,4 +123,4 @@ const StatisticLayout = () => {
     );
 }
 
-export default StatisticLayout;
+export default StatisticChart1;

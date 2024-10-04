@@ -4,7 +4,7 @@ import {MdHome, MdSettings, MdAssessment, MdManageAccounts, MdGroups2} from "rea
 import {Collapse} from '@material-tailwind/react';
 import {useState} from "react";
 import {SiGoogletagmanager} from "react-icons/si";
-import {IoIosArrowForward} from "react-icons/io";
+import {IoIosArrowForward, IoMdPersonAdd} from "react-icons/io";
 import {BsPersonVcardFill} from "react-icons/bs";
 import {RiFileList3Fill} from "react-icons/ri";
 import {NavLink} from "react-router-dom";
@@ -29,9 +29,10 @@ const Sidebar = ({isSidebarOpen, setIsSidebarOpen, isDarkMode, setIsDarkMode}) =
 
     // Sub-menu items
     const tableSubItems = [
-        {name: 'Quản lý Bài đăng', link: '/admin1/', icon: <RiFileList3Fill/>}, // Bạn có thể thay đổi icon nếu muốn
+        {name: 'Quản lý Giao dịch', link: '/admin1/', icon: <RiFileList3Fill/>}, // Bạn có thể thay đổi icon nếu muốn
         {name: 'Quản lý Khách hàng', link: '/admin1/customer-manage', icon: <BsPersonVcardFill/>},
         {name: 'Quản lý Nhân viên', link: '/admin1/staff-manage', icon: <MdGroups2/>},
+        {name: 'Quản lý Partner', link: '/admin1/partner-manage', icon: <IoMdPersonAdd />},
     ];
 
     return (
@@ -91,7 +92,7 @@ const Sidebar = ({isSidebarOpen, setIsSidebarOpen, isDarkMode, setIsDarkMode}) =
                     <div key={idx}>
                         <NavLink
                             to={item.link}
-                            className={`hover:ml-4 ${isSidebarOpen ? 'pl-8' : 'justify-end pr-5'} text-white hover:text-green-400 dark:hover:text-green-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex items-center space-x-3`}
+                            className={`hover:ml-4 ${isSidebarOpen ? 'pl-8' : 'justify-end pr-5'} text-white hover:no-underline hover:text-green-400 dark:hover:text-green-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex items-center space-x-3`}
                             onClick={() => {
                                 if (item.name === 'Quản Lý') {
                                     setOpenTable(!openTable);
@@ -118,7 +119,7 @@ const Sidebar = ({isSidebarOpen, setIsSidebarOpen, isDarkMode, setIsDarkMode}) =
                                         <NavLink
                                             key={subIdx}
                                             to={subItem.link}
-                                            className="text-white hover:text-green-400 dark:hover:text-green-500 p-2 rounded-lg bg-[#2E3B4E] mt-1 flex items-center space-x-2"
+                                            className="text-white hover:no-underline hover:text-green-400 dark:hover:text-green-500 p-2 rounded-lg bg-[#2E3B4E] mt-1 flex items-center space-x-2"
                                         >
                                             {subItem.icon}
                                             <span>{subItem.name}</span>
