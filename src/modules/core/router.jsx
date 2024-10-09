@@ -17,7 +17,7 @@ import QRPayment from '../../components/payment/QRPayment.jsx';
 import {AdminLayout} from '../../components/admin/dashboard/Admin.jsx';
 import AdminDashboard from '../../pages/admin/AdminDashboard.jsx';
 import ResetPasswordPage from '../../pages/ResetPasswordPage.jsx';
-import SignInFederation from '../federation/SignInFederation.jsx';
+import CallBackHandler, {callBackUrl} from '../../pages/CallBackHandler.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -110,10 +110,9 @@ export const router = createBrowserRouter([
             element: <ResetPasswordPage/>, //TODO: change password page
           },
         ],
-      },
-      {
-        path: 'test',
-        element: <SignInFederation/>,
+      }, {
+        path: callBackUrl,
+        element: <CallBackHandler/>,
       },
     ],
   },
