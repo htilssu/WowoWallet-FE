@@ -59,6 +59,26 @@ export const router = createBrowserRouter([
         element: <AuthorizedView ROLE={'ADMIN'}/>,
         children:
             [
+                {
+                    index: true,
+                    element: <Dashboard/>,
+                },
+                {
+                    path: 'customer-manage',
+                    element: <CustomerManage/>,
+                },
+                {
+                    path: 'partner-manage',
+                    element: <PartnerLayout/>,
+                },
+                {
+                    path: 'statistic-manage',
+                    element: <StatisticalLayout/>,
+                },
+                {
+                    path: 'employee-manage',
+                    element: <EmployeeLayout/>,
+                },
             ],
     },
     {
