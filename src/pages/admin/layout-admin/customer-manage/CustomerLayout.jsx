@@ -1,12 +1,10 @@
 
-import UserListComponent from "./UserList.jsx";
-
 const CutomerManage = () => {
     return (
         <div>
-            <div className="flex flex-col justify-center min-h-screen">
+            <div className="min-h-screen bg-gray-100 p-6">
                 <div>
-                    <UserListComponent/>
+                    Chỉ bỏ Component vào đây để dễ quản lý không code quá nhiều trong Layout này.
                 </div>
             </div>
         </div>

@@ -22,7 +22,9 @@ import NewFund from "../../components/GroupFund/NewFund.jsx";
 import FundDetailPage from "../../components/GroupFund/FundDetailPage.jsx";
 import Dashboard from "../../components/admin/dashboard/Dashboard.jsx";
 import CustomerManage from "../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx";
-import StatisticLayout from "../../pages/admin/layout-admin/statistics-manage/StatisticLayout.jsx";
+import PartnerLayout from "../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx";
+import StatisticalLayout from "../../pages/admin/layout-admin/statistics-manage/StatisticalLayout.jsx";
+import EmployeeLayout from "../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx";
 
 export const router = createBrowserRouter([
     {
@@ -39,8 +41,16 @@ export const router = createBrowserRouter([
                     element: <CustomerManage/>,
                 },
                 {
+                    path: 'partner-manage',
+                    element: <PartnerLayout/>,
+                },
+                {
                     path: 'statistic-manage',
-                    element: <StatisticLayout/>,
+                    element: <StatisticalLayout/>,
+                },
+                {
+                    path: 'employee-manage',
+                    element: <EmployeeLayout/>,
                 },
             ],
     },

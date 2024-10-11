@@ -12,7 +12,7 @@ ChartJS.register(CategoryScale,LinearScale,
     Filler
 );
 
-const StatisticLayout = () => {
+const StatisticChart1 = () => {
     const [statistics, setStatistics] = useState({
         totalTransactions: 1200,
         totalUsers: 300,
@@ -92,7 +92,7 @@ const StatisticLayout = () => {
 
     return (
         <div className="p-8">
-            <h1 className="text-3xl font-bold mb-4">Thống Kê</h1>
+            <h1 className="text-3xl font-bold mb-4 text-primaryColor">Thống Kê</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <div className="bg-white shadow-lg rounded-lg p-4">
                     <h2 className="text-lg font-medium">Total Transactions</h2>
@@ -123,4 +123,4 @@ const StatisticLayout = () => {
     );
 }
 
-export default StatisticLayout;
+export default StatisticChart1;
