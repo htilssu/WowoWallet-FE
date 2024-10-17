@@ -1,8 +1,8 @@
 import 'rsuite/dist/rsuite.min.css';
 import {Button, MantineProvider} from '@mantine/core';
-import {setTitle} from '../util/titleUtil.js';
-import {sso} from '../SSO.jsx';
-import {callBackUrl} from './CallBackHandler.jsx';
+import {setTitle} from '../../util/titleUtil.js';
+import {callBackUrl} from '../CallBackHandler.jsx';
+import {sso} from '../../SSO.jsx';
 
 const SignInPage = () => {
   setTitle('Đăng nhập - WoWoWallet');
