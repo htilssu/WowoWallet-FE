@@ -1,7 +1,7 @@
 import {FaCheckCircle} from 'react-icons/fa';
 import {Link, ScrollRestoration, useNavigate, useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import {get} from '../../util/requestUtil.js';
+import {wGet} from '../../util/requestUtil.js';
 
 const PaymentSuccessful = () => {
   //chuyen trang
@@ -11,7 +11,7 @@ const PaymentSuccessful = () => {
 
 
   useEffect(() => {
-    get(`/v1/transaction/${id}`).then(res => {
+    wGet(`/v1/transaction/${id}`).then(res => {
       setTransaction(res.data);
     }).catch((e) => {
       navigate('/404');

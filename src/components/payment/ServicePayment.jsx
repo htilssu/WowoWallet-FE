@@ -1,6 +1,6 @@
 import "react-toastify/dist/ReactToastify.css";
 import { ScrollRestoration, useNavigate, useParams } from "react-router-dom";
-import { get, post } from "../../util/requestUtil.js";
+import { wGet, wPost } from "../../util/requestUtil.js";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -20,7 +20,7 @@ const ServicePayment = () => {
   });
   const { id } = useParams();
   useEffect(() => {
-    get(`/v1/prequest/${id}`)
+    wGet(`/v1/prequest/${id}`)
       .then((res) => {
         setPartner(res.data);
       })
@@ -32,7 +32,7 @@ const ServicePayment = () => {
     balance: 0,
   });
   useEffect(() => {
-    get("/v1/user/wallet")
+    wGet("/v1/user/wallet")
       .then((res) => {
         setUser(res.data);
       })
@@ -66,7 +66,7 @@ const ServicePayment = () => {
       return;
     }
     try {
-      post("/v1/otp", {
+      wPost("/v1/otp", {
         otpType: "email",
       })
         .then((res) => {

@@ -3,7 +3,7 @@ import { HiMiniCheckBadge } from "react-icons/hi2";
 import { FaRobot } from "react-icons/fa";
 import { Checkbox } from "rsuite";
 import { ScrollRestoration, useNavigate } from "react-router-dom";
-import { get, post } from "../../util/requestUtil.js";
+import { wGet, wPost } from "../../util/requestUtil.js";
 import { toast, ToastContainer } from "react-toastify";
 
 const TransferMoney = () => {
@@ -48,7 +48,7 @@ const TransferMoney = () => {
   //lấy thông tin Ví
   const [user, setUser] = useState({});
   useEffect(() => {
-    get("/v1/user/wallet")
+    wGet("/v1/user/wallet")
       .then((res) => {
         setUser(res.data);
       })
@@ -79,7 +79,7 @@ const TransferMoney = () => {
     }
 
     try {
-      post("/v1/otp", {
+      wPost("/v1/otp", {
         otpType: "email",
       })
         .then((res) => {
@@ -112,7 +112,7 @@ const TransferMoney = () => {
 
     // Thiết lập timeout mới
     const newTimeout = setTimeout(() => {
-      get(`/v1/user/check/${value}`)
+      wGet(`/v1/user/check/${value}`)
         .then((res) => {
           setReceiver(res.data);
           setError(null);

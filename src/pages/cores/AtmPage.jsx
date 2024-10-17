@@ -3,7 +3,7 @@ import {GrTransaction} from 'react-icons/gr';
 import {IoIosAddCircle} from 'react-icons/io';
 import {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
-import {deleteRequest, get} from "../../util/requestUtil.js";
+import {wDelete, wGet} from "../../util/requestUtil.js";
 import {Card} from "@mantine/core";
 import CardAtmComponents from "../../components/atm/CardAtmComponents.jsx";
 import axios from "axios";
@@ -29,7 +29,7 @@ const AtmPage = () => {
   }, []);
 
   useEffect(() => {
-    get('/v1/card')
+    wGet('/v1/card')
         .then((res) => {
           if (res.data && Array.isArray(res.data)) {
             setBankInfo(res.data);
@@ -51,7 +51,7 @@ const AtmPage = () => {
   };
 
   const handleDelete = (cardNumber) => {
-    deleteRequest(`/v1/card/${cardNumber}`).then(() => {
+    wDelete(`/v1/card/${cardNumber}`).then(() => {
       setBankInfo(prev => prev.filter(card => card.cardNumber !== cardNumber));
       toast.success('Thẻ đã được xóa thành công!');
     }).catch(() => {

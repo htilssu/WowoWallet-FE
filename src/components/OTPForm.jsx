@@ -2,7 +2,7 @@
 import {toast, ToastContainer} from 'react-toastify';
 import {ScrollRestoration, useLocation, useNavigate} from 'react-router-dom';
 import {PinInput} from '@mantine/core';
-import {post} from '../util/requestUtil.js';
+import {wPost} from '../util/requestUtil.js';
 import {useAuth} from '../modules/hooks/useAuth.jsx';
 
 const OTPForm = () => {
@@ -31,7 +31,7 @@ const OTPForm = () => {
         }
 
         try {
-          post('/v1/otp/verify', {
+          wPost('/v1/otp/verify', {
             otp: otp,
           })
               .then((res) => {
@@ -63,7 +63,7 @@ const OTPForm = () => {
         setError(null);
         setLoading(true); // Bắt đầu loading
 
-        post('/v1/otp', {
+        wPost('/v1/otp', {
           otpType: 'email',
         })
             .then((res) => {
@@ -91,14 +91,14 @@ const OTPForm = () => {
 
       const handlePaymentRequest = () => {
         const {pid} = location.state || {};
-        post(`/v1/prequest/${pid}`, {}).then((res) => {
+        wPost(`/v1/prequest/${pid}`, {}).then((res) => {
           navigate(`/transactions/transaction/success/${res.data.id}`);
         });
       };
 
       const handleSendMoney = () => {
         try {
-          post('/v1/transfer', {
+          wPost('/v1/transfer', {
             transactionTarget: 'wallet',
             type: type,
             sendTo: recipientEmail,

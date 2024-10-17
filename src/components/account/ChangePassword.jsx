@@ -3,7 +3,7 @@ import { FaLock } from "react-icons/fa"; // lock-icon
 import ReCAPTCHA from "react-google-recaptcha"; // reCAPTCHA
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { post } from '../../util/requestUtil.js';
+import { wPost } from '../../util/requestUtil.js';
 import ManagementPersonalInfo from './ManagementPersonalInfo.jsx';
 
 const ChangePassword = () => {
@@ -54,7 +54,7 @@ const ChangePassword = () => {
         } 
         else {
             setError('');
-            post("/v1/user/password",{
+            wPost("/v1/user/password",{
                 oldPassword: oldPasswordInput,
                 newPassword: newPasswordInput
             })

@@ -10,7 +10,7 @@ const request = axios.create({
   },
 });
 
-const post = async (url, data) => {
+const wPost = async (url, data) => {
   try {
     return await request.post(url, data);
   }
@@ -19,12 +19,12 @@ const post = async (url, data) => {
   }
 };
 
-const get = async (url) => {
+const wGet = async (url) => {
   return await request.get(url);
 };
 
-const deleteRequest = async (url) => {
+const wDelete = async (url) => {
   return await request.delete(url);
 };
 
-export {request, post, get, deleteRequest};
+export {request, wPost, wGet, wDelete};
