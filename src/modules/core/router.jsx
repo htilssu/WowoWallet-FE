@@ -10,7 +10,7 @@ import AuthorizedView from './system-component/AuthorizedView.jsx';
 import QRPayment from '../../components/payment/QRPayment.jsx';
 import AdminDashboard from '../../pages/admin/AdminDashboard.jsx';
 import ResetPasswordPage from '../../pages/ResetPasswordPage.jsx';
-import SignInFederation from '../federation/SignInFederation.jsx';
+import CallBackHandler, {callBackUrl} from '../../pages/CallBackHandler.jsx';
 import TransactionHistoryPage from "../../pages/cores/TransactionHistoryPage.jsx";
 import AtmPage from "../../pages/cores/AtmPage.jsx";
 import IntroPage from "../../pages/cores/IntroPage.jsx";
@@ -22,7 +22,9 @@ import NewFund from "../../components/GroupFund/NewFund.jsx";
 import FundDetailPage from "../../components/GroupFund/FundDetailPage.jsx";
 import Dashboard from "../../components/admin/dashboard/Dashboard.jsx";
 import CustomerManage from "../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx";
-import StatisticLayout from "../../pages/admin/layout-admin/statistics-manage/StatisticLayout.jsx";
+import PartnerLayout from "../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx";
+import StatisticalLayout from "../../pages/admin/layout-admin/statistics-manage/StatisticalLayout.jsx";
+import EmployeeLayout from "../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx";
 
 export const router = createBrowserRouter([
     {
@@ -39,8 +41,16 @@ export const router = createBrowserRouter([
                     element: <CustomerManage/>,
                 },
                 {
+                    path: 'partner-manage',
+                    element: <PartnerLayout/>,
+                },
+                {
                     path: 'statistic-manage',
-                    element: <StatisticLayout/>,
+                    element: <StatisticalLayout/>,
+                },
+                {
+                    path: 'employee-manage',
+                    element: <EmployeeLayout/>,
                 },
             ],
     },
@@ -114,33 +124,32 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <IntroPage/>,
-            },
+          },
         ],
-    },
-    {
+  },
+  {
+    children: [
+      {
+        path: '/sign-in',
+        element: <SignInPage/>,
+      }, {
+        path: '/sign-up',
+        element: <SignUpPage/>,
+      }, {
+        path: 'password',
         children: [
-            {
-                path: '/sign-in',
-                element: <SignInPage/>,
-            }, {
-                path: '/sign-up',
-                element: <SignUpPage/>,
-            }, {
-                path: 'password',
-                children: [
-                    {
-                        path: 'reset',
-                        element: <ResetPasswordPage/>,
-                    },
-                    {
-                        path: 'change',
-                        element: <ResetPasswordPage/>, //TODO: change password page
-                    },
-                ],
-            },
-            {
-                path: 'test',
-                element: <SignInFederation/>,
+          {
+            path: 'reset',
+            element: <ResetPasswordPage/>,
+          },
+          {
+            path: 'change',
+            element: <ResetPasswordPage/>, //TODO: change password page
+          },
+        ],
+      }, {
+              path: callBackUrl,
+                element: <CallBackHandler/>,
             },
         ],
     },
