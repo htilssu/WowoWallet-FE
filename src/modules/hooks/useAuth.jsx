@@ -2,10 +2,11 @@ import {createContext, useContext, useEffect, useState} from 'react';
 import {getUser} from '../user/user.js';
 
 const AuthContext = createContext({});
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = (props) => {
   const [auth, setAuth] = useState({
-    user: {},
+    user: null,
     isAuthenticate: false,
   });
 
@@ -29,24 +30,6 @@ export const AuthProvider = (props) => {
       })
     });
   }, []);
-
-
-  function reloadUser() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        getUser().then(value => {
-          setAuth({
-            ...auth,
-            user: value.data.user,
-          });
-        });
-
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
 
   function handleLogout() {
     localStorage.removeItem('token');

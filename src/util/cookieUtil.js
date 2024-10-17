@@ -1,15 +1,16 @@
-﻿function getCookie(name) {
-  const cookieArr = document.cookie.split(';');
-  for (let i = 0; i < cookieArr.length; i++) {
-    let cookiePair = cookieArr[i].split('=');
-    if (name === cookiePair[0].trim()) {
-      return decodeURIComponent(cookiePair[1]);
-    }
+﻿import {parse} from 'cookie';
+
+function getCookie(name) {
+  if (document?.cookie) {
+    const cookies = parse(document.cookie);
+    return cookies[name];
   }
+
+  return null;
 }
 
-function setCookie(key, value) {
-  document.cookie.concat(';', key, '=', value);
+function setCookie(key, value, age) {
+  document.cookie = `${key}=${value}; path=/;max-age=${age}`;
 }
 
 export {getCookie, setCookie};

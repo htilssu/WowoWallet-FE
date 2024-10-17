@@ -1,5 +1,6 @@
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import {setCookie} from '../util/cookieUtil.js';
+import {useEffect} from 'react';
 
 export const callBackUrl = '/sso/callback';
 
@@ -8,15 +9,20 @@ const CallBackHandler = () => {
   const navigate = useNavigate();
 
   const token = searchParams.get('Token');
-  if (token) {
-    try {
-      setCookie('Token', token);
-      navigate('/')
-    } catch (e) {
-      navigate('/sign-in')
+  useEffect(() => {
+    if (token) {
+      try {
+        setCookie('Token', token);
+        navigate('/');
+      }
+      catch (e) {
+        navigate('/sign-in');
+      }
     }
-  }
-  navigate('/sign-in');
+    else {
+      navigate('/sign-in');
+    }
+  }, [navigate, token]);
   return (
       <div/>
   );
