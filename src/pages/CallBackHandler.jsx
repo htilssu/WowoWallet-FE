@@ -9,7 +9,12 @@ const CallBackHandler = () => {
 
   const token = searchParams.get('Token');
   if (token) {
-    setCookie('Token', token);
+    try {
+      setCookie('Token', token);
+      navigate('/')
+    } catch (e) {
+      navigate('/sign-in')
+    }
   }
   navigate('/sign-in');
   return (
