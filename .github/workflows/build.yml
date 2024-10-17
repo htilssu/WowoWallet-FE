@@ -15,16 +15,11 @@ on:
 jobs:
 
   build:
-    strategy:
-      matrix:
-        os: [ ubuntu-latest ]
-        node: [ 20 ]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 9
           run_install: false
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -33,7 +28,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm run build
