@@ -3,7 +3,7 @@ import {GrTransaction} from 'react-icons/gr';
 import {IoIosAddCircle} from 'react-icons/io';
 import {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
-import {wDelete, wGet} from "../../util/requestUtil.js";
+import {wDelete, wGet} from "../../util/request.util.js";
 import {Card} from "@mantine/core";
 import CardAtmComponents from "../../components/atm/CardAtmComponents.jsx";
 import axios from "axios";

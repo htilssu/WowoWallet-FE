@@ -1,5 +1,5 @@
 import {useNavigate, useSearchParams} from 'react-router-dom';
-import {setCookie} from '../util/cookieUtil.js';
+import {setCookie} from '../util/cookie.util.js';
 import {useEffect} from 'react';
 
 export const callBackUrl = '/sso/callback';

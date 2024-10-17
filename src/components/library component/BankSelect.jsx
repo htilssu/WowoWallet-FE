@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {ScrollRestoration, useNavigate} from "react-router-dom";
-import {wGet} from "../../util/requestUtil.js";
+import {wGet} from "../../util/request.util.js";
 
 const banks = [
   {

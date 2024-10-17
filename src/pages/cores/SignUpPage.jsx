@@ -1,7 +1,7 @@
 import 'rsuite/dist/rsuite.min.css';
 import {MantineProvider, PasswordInput, TextInput} from '@mantine/core';
 import {useForm} from '@mantine/form';
-import {wPost} from '../../util/requestUtil.js';
+import {wPost} from '../../util/request.util.js';
 import {useState} from 'react';
 import {useAuth} from "../../modules/hooks/useAuth.jsx";
 

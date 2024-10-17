@@ -7,7 +7,7 @@ import {useState} from 'react';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {useQuery} from '@tanstack/react-query';
 import {getUserWallet} from '../../modules/user/user.js';
-import {formatCurrency} from '../../util/currencyUtil.js';
+import {formatCurrency} from '../../util/currency.util.js';
 
 function MyWallet() {
   //lấy thông tin Ví

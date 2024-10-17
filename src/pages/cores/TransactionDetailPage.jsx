@@ -2,7 +2,7 @@ import {FaCreditCard, FaDownload, FaExchangeAlt, FaUndoAlt, FaUpload} from 'reac
 import {ScrollRestoration, useNavigate, useParams} from 'react-router-dom';
 import {IoArrowBackSharp} from 'react-icons/io5';
 import {useEffect, useState} from 'react';
-import {wGet} from '../../util/requestUtil.js';
+import {wGet} from '../../util/request.util.js';
 
 // Các icon và màu sắc trạng thái
 const transactionIcons = {

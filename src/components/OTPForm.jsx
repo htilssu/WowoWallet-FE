@@ -2,7 +2,7 @@
 import {toast, ToastContainer} from 'react-toastify';
 import {ScrollRestoration, useLocation, useNavigate} from 'react-router-dom';
 import {PinInput} from '@mantine/core';
-import {wPost} from '../util/requestUtil.js';
+import {wPost} from '../util/request.util.js';
 import {useAuth} from '../modules/hooks/useAuth.jsx';
 
 const OTPForm = () => {

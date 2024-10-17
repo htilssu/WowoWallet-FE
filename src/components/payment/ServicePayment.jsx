@@ -1,6 +1,6 @@
 import "react-toastify/dist/ReactToastify.css";
 import { ScrollRestoration, useNavigate, useParams } from "react-router-dom";
-import { wGet, wPost } from "../../util/requestUtil.js";
+import { wGet, wPost } from "../../util/request.util.js";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 

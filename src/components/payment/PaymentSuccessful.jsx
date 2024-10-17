@@ -1,7 +1,7 @@
 import {FaCheckCircle} from 'react-icons/fa';
 import {Link, ScrollRestoration, useNavigate, useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import {wGet} from '../../util/requestUtil.js';
+import {wGet} from '../../util/request.util.js';
 
 const PaymentSuccessful = () => {
   //chuyen trang

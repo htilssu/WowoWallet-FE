@@ -1,4 +1,4 @@
-import {wPost} from '../../util/requestUtil.js';
+import {wPost} from '../../util/request.util.js';
 
 export async function signIn(userData) {
   console.log(userData);

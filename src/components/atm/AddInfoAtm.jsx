@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {ToastContainer, toast, Bounce} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {wPost} from "../../util/requestUtil.js";
+import {wPost} from "../../util/request.util.js";
 import {useNavigate} from "react-router-dom";
 
 
