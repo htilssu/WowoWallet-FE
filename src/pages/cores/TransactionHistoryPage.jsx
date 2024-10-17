@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {CiSearch} from 'react-icons/ci';
-import TransactionTable from '../components/history/TransactionTable.jsx';
-import {get} from '../util/requestUtil.js';
+import TransactionTable from '../../components/history/TransactionTable.jsx';
+import {get} from '../../util/requestUtil.js';
 import {toast} from 'react-toastify';
 
 //Tạo Thành Phần Button:
