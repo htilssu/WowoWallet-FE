@@ -1,5 +1,5 @@
 import {FaDownload} from "react-icons/fa";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import BankSelect from "../library component/BankSelect.jsx";
 import {ScrollRestoration} from "react-router-dom";
 
@@ -9,6 +9,11 @@ const InfoPopup = () => {
     const [methodPay, setMethodPay] = useState('');
     const [error, setError] = useState(false); // Thêm state để theo dõi lỗi
     const [showModal, setShowModal] = useState(false);  //chon ngan hang
+
+
+    useEffect(() => {
+
+    }, []);
 
     const handleAmountChange = (e) => {
         const value = e.target.value; //Lấy giá trị người dùng nhập vào.
@@ -21,7 +26,7 @@ const InfoPopup = () => {
     };
 
     const handleAmountBlur = () => {
-        if (amount) {
+        if (amount && amount >= 0) {
             //Kiểm tra nếu amount không rỗng, thực hiện định dạng số tiền theo định dạng tiền tệ Việt Nam (vi-VN) và lưu vào formattedAmount.
             const formattedAmount = new Intl.NumberFormat("vi-VN", {
                 style: "currency",
@@ -33,10 +38,6 @@ const InfoPopup = () => {
 
     // Hàm này được gọi khi người dùng chọn một phương thức thanh toán khác nhau.
     const handleMethodChange = (methodPay) => {
-        if (!amount) {
-            setError(true); // Đặt trạng thái lỗi nếu chưa nhập số tiền
-            return;
-        }
         setMethodPay(methodPay);
         // Reset trạng thái lỗi khi chọn phương thức thanh toán mới
         setError(false);
@@ -46,10 +47,10 @@ const InfoPopup = () => {
 
     const suggestedAmounts = [20000, 50000, 100000, 200000, 500000, 1000000];
     const paymentMethods = [
-        {label: "Online bằng thẻ ATM", minAmount: 10000},
-        {label: "Online bằng Internet banking", minAmount: 10000},
-        {label: "Chuyển khoản nhận ngay", minAmount: 50000},
-        {label: "Chuyển khoản offline", minAmount: 10000},
+        // {label: "Online bằng thẻ ATM", minAmount: 10000},
+        // {label: "Online bằng Internet banking", minAmount: 10000},
+        // {label: "Chuyển khoản nhận ngay", minAmount: 50000},
+        // {label: "Chuyển khoản offline", minAmount: 10000},
         {label: "Online bằng thẻ liên kết", minAmount: 10000, fee: "0,33%"},
     ];
 

@@ -11,17 +11,17 @@ import { BiSolidMoviePlay } from "react-icons/bi";
 import { FaAnchorLock, FaGroupArrowsRotate } from "react-icons/fa6"; // Import các icon từ thư viện React Icons
 
 const items = [
-    { link: "/servicepayment", icon: <TbCreditCardPay size={35} className="text-green-500" />, title: "Thanh toán hóa đơn" },
-    { link: "/atm/link", icon: <FaLink size={30} className="text-indigo-500" />, title: "Liên kết thẻ" },
+    { link: "/invoices", icon: <TbCreditCardPay size={35} className="text-green-500" />, title: "Thanh toán hóa đơn" },
+    { link: "/bank", icon: <FaLink size={30} className="text-indigo-500" />, title: "Liên kết thẻ" },
     { link: "/bdsd", icon: <FaChartLine size={30} className="text-yellow-400" />, title: "Biến động số dư" },
+    { link: "/group-fund", icon: <FaGroupArrowsRotate size={30} className="text-red-500" />, title: "Quỹ nhóm" },
     { link: "/profile", icon: <MdOutlineLtePlusMobiledata size={45} className="text-blue-500" />, title: "Data 4G/5G" },
     { link: "/", icon: <FaCreditCard size={30} className="text-red-500" />, title: "Thẻ tín dụng" },
     { link: "/", icon: <MdTravelExplore size={30} className="text-teal-500" />, title: "Du lịch-Đi lại" },
     { link: "/", icon: <FaMobileAlt size={30} className="text-yellow-500" />, title: "Nạp tiền Điện thoại" },
     { link: "/", icon: <BiSolidMoviePlay size={30} className="text-indigo-500" />, title: "Mua vé xem phim" },
     { link: "/", icon: <FaCode size={30} className="text-green-500" />, title: "Ví trả sau" },
-    { link: "/", icon: <FaGroupArrowsRotate size={30} className="text-red-500" />, title: "Quỹ nhóm" },
-    { link: "/", icon: <FaAnchorLock size={30} className="text-fuchsia-600" />, title: "Quản lý chi tiêu" },
+    { link: "/outcome", icon: <FaAnchorLock size={30} className="text-fuchsia-600" />, title: "Quản lý chi tiêu" },
 ];
 
 const ScrollableCardList = () => {

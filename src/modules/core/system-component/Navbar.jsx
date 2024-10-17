@@ -1,4 +1,4 @@
-﻿import { useAuth } from "../../../hooks/useAuth.jsx";
+﻿import { useAuth } from "../../hooks/useAuth.jsx";
 import { TiThMenu } from "react-icons/ti";
 import { Link } from "react-router-dom";
 import NavbarAvatar from "./Navbar.Avatar.jsx";
@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 
 const navbarItem = [
   {
-    name: "Home",
+    name: "Trang chủ",
     link: "/home",
   },
   {
     name: "Nạp tiền",
-    link: "/topup",
+    link: "/top-up",
     items: [
       {
         name: "Test 1",
@@ -27,7 +27,7 @@ const navbarItem = [
 ];
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticate } = useAuth();
   const [isShowLinkItem, setIsShowLinkItem] = useState(false);
   function resetDropdownStatus() {
     if (window.innerWidth >= 786) setIsShowLinkItem(false);
@@ -43,24 +43,22 @@ const Navbar = () => {
 
   function handleLogout() {
     logout();
-    location.reload();
   }
 
   return (
     <nav className="w-full h-20 items-center z-10 shadow bg-white fixed top-0 left-0 border-gray-200 ">
       <div className="h-full md:px-20 sm:px-10 w-full max-w-screen-xl flex items-center justify-between mx-auto p-4">
-        <a
-          href="/"
+        <Link
           className="h-full hover:no-underline flex items-center space-x-3 rtl:space-x-reverse"
-        >
+         to={isAuthenticate ? "/home" : "/"}>
           <img src="/e-wallet.png" className="h-full" alt="logo" />
           <span className="self-center hidden md:block text-2xl font-semibold whitespace-nowrap text-primary">
             EWallet
           </span>
-        </a>
+        </Link>
         <div className="h-full relative gap-2 flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          {user == null ? (
-            <Link className="h-[90%]" to={"/login"}>
+          {!isAuthenticate ? (
+            <Link className="h-[90%]" to={"/sign-in"}>
               <button
                 type="button"
                 className="h-full hover:text-white border-primary bg-blue-200 border-1 text-primary bg-opacity-50 hover:bg-primary font-medium px-2 rounded-lg transition-colors ease-in-out"
