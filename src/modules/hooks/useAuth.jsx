@@ -1,15 +1,14 @@
 import {createContext, useContext, useEffect, useState} from 'react';
-import {getUser} from '../user/user.js';
+import {getAuthByToken, removeToken} from '../../util/token.util.js';
 
 const AuthContext = createContext({});
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = (props) => {
   const [auth, setAuth] = useState({
-    user: null,
-    isAuthenticate: false,
+    user: getAuthByToken(),
+    isAuthenticate: true,
   });
-
 
   function handleSetUser(user) {
     setAuth((prevAuth) => ({
@@ -20,27 +19,30 @@ export const AuthProvider = (props) => {
   }
 
   useEffect(() => {
-    getUser().then(value => {
-      setAuth(prevState => {
-        return {
-          ...prevState,
-          user: value.data,
-          isAuthenticate: true
-        }
-      })
-    });
-  }, []);
+    if (!auth.user) {
+      setAuth({
+        user: null,
+        isAuthenticate: false,
+      });
+    }
+  }, [auth]);
 
   function handleLogout() {
-    localStorage.removeItem('token');
+    removeToken();
     setAuth({
       user: null,
       isAuthenticate: false,
     });
   }
+
   return (
       <AuthContext.Provider
-          value={{user: auth.user, login: handleSetUser, logout: handleLogout, isAuthenticate: auth.isAuthenticate}}
+          value={{
+            user: auth.user,
+            login: handleSetUser,
+            logout: handleLogout,
+            isAuthenticate: auth.isAuthenticate,
+          }}
       >
         {props.children}
       </AuthContext.Provider>

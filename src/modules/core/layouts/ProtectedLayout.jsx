@@ -4,7 +4,8 @@ import {useAuth} from '../../hooks/useAuth.jsx';
 const ProtectedLayout = () => {
   const {isAuthenticate} = useAuth();
 
-  if (isAuthenticate) {
+  if (!isAuthenticate) {
+    console.log(123);
     return <Navigate to="/sign-in" replace={true}/>;
   }
 

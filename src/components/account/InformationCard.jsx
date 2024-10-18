@@ -6,18 +6,18 @@ import {ToastContainer} from 'react-toastify';
 import {useState} from 'react';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {useQuery} from '@tanstack/react-query';
-import {getUserWallet} from '../../modules/user/user.js';
 import {formatCurrency} from '../../util/currency.util.js';
+import {getMyWallet} from '../../modules/wallet/wallet.js';
 
 function MyWallet() {
   //lấy thông tin Ví
   const {user} = useAuth();
   const [wallet, setWallet] = useState({});
 
-  const result = useQuery({
+  useQuery({
     queryKey: ['user-wallet', 'wallet'],
     queryFn: async () => {
-      const wallet = (await getUserWallet(user.id)).data;
+      const wallet = (await getMyWallet(user.id)).data;
       setWallet(wallet);
     },
   });

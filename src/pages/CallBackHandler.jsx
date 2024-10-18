@@ -1,6 +1,7 @@
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import {setCookie} from '../util/cookie.util.js';
 import {useEffect} from 'react';
+import {ssoCallback} from '../modules/auth/auth.js';
 
 export const callBackUrl = '/sso/callback';
 
@@ -13,6 +14,7 @@ const CallBackHandler = () => {
     if (token) {
       try {
         setCookie('Token', token);
+        ssoCallback().then();
         navigate('/');
       }
       catch (e) {

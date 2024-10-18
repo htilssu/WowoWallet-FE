@@ -1,7 +1,6 @@
-import {wPost} from '../../util/request.util.js';
+import {wGet, wPost} from '../../util/request.util.js';
 
 export async function signIn(userData) {
-  console.log(userData);
   if (userData.username && userData.password) {
     return await wPost('/v1/auth/sign-in', userData);
   }
@@ -15,4 +14,8 @@ export async function signUp(userData) {
   }
 
   throw new Error('username hoặc password không được để trống');
+}
+
+export async function ssoCallback() {
+  return await wPost('/v1/auth/sso');
 }
