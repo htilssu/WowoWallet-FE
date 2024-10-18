@@ -11,6 +11,9 @@ export function getToken() {
 
 export function setToken(token) {
   setCookie('Token', token, 60 * 60 * 24 * 7);
+  console.log(token);
+  console.log(location.hostname);
+  console.log(document.cookie);
 }
 
 export function removeToken() {
