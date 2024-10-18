@@ -10,7 +10,7 @@ function getCookie(name) {
 }
 
 function setCookie(key, value, age) {
-  if (document?.cookie) document.cookie = `${key}=${value}; path=/;max-age=${age}`;
+  if (document?.cookie) document.cookie = `${key}=${value}; path=/;max-age=${age}; domain=${window.location.hostname}`;
 }
 
 function removeCookie(key) {
