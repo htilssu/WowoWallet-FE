@@ -7,8 +7,8 @@ import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {Navigate} from 'react-router-dom';
 
 const IntroPage = () => {
-  const {isAuthenticate} = useAuth();
-  if (isAuthenticate) return (<Navigate to={'/home'}/>);
+  const {user} = useAuth();
+  if (user) return (<Navigate to={'/home'}/>);
 
   const services = [
     {

@@ -2,10 +2,9 @@ import {Navigate, Outlet} from 'react-router-dom';
 import {useAuth} from '../../hooks/useAuth.jsx';
 
 const ProtectedLayout = () => {
-  const {isAuthenticate} = useAuth();
+  const {user} = useAuth();
 
-  if (!isAuthenticate) {
-    console.log(123);
+  if (!user) {
     return <Navigate to="/sign-in" replace={true}/>;
   }
 

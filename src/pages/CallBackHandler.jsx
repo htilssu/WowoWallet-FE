@@ -13,7 +13,7 @@ const CallBackHandler = () => {
   useEffect(() => {
     if (token) {
       try {
-        setCookie('Token', token);
+        setCookie('Token', token, 60 * 60 * 24 * 7);
         ssoCallback().then();
         navigate('/');
       }

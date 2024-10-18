@@ -7,22 +7,21 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = (props) => {
   const [auth, setAuth] = useState({
     user: getAuthByToken(),
-    isAuthenticate: true,
   });
 
   function handleSetUser(user) {
     setAuth((prevAuth) => ({
       ...prevAuth,
       user: user,
-      isAuthenticate: true,
     }));
   }
 
+
   useEffect(() => {
-    if (!auth.user) {
+    console.log(123);
+    if (!auth) {
       setAuth({
         user: null,
-        isAuthenticate: false,
       });
     }
   }, [auth]);
@@ -31,7 +30,6 @@ export const AuthProvider = (props) => {
     removeToken();
     setAuth({
       user: null,
-      isAuthenticate: false,
     });
   }
 
@@ -41,7 +39,6 @@ export const AuthProvider = (props) => {
             user: auth.user,
             login: handleSetUser,
             logout: handleLogout,
-            isAuthenticate: auth.isAuthenticate,
           }}
       >
         {props.children}

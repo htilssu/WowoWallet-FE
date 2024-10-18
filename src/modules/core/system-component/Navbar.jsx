@@ -28,9 +28,8 @@ const navbarItem = [
 
 const Navbar = () => {
   const {
-    user,
     logout,
-    isAuthenticate,
+    user,
   } = useAuth();
   const [isShowLinkItem, setIsShowLinkItem] = useState(false);
 
@@ -55,7 +54,7 @@ const Navbar = () => {
         <div className="h-full md:px-20 sm:px-10 w-full max-w-screen-xl flex items-center justify-between mx-auto p-4">
           <Link
               className="h-full hover:no-underline flex items-center space-x-3 rtl:space-x-reverse"
-              to={isAuthenticate ? '/home' : '/'}>
+              to={user ? '/home' : '/'}>
             <img src="/e-wallet.png" className="h-full" alt="logo"/>
             <span className="self-center hidden md:block text-2xl font-semibold whitespace-nowrap text-primary">
             EWallet
@@ -63,7 +62,7 @@ const Navbar = () => {
           </Link>
           <div
               className="h-full relative gap-2 flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-            {!isAuthenticate ? (
+            {!user ? (
                 <Link className="h-[90%]" to={'/sign-in'}>
                   <button
                       type="button"
