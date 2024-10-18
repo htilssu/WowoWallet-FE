@@ -10,7 +10,8 @@ function getCookie(name) {
 }
 
 function setCookie(key, value, age) {
-  if (document?.cookie) document.cookie = `${key}=${value};Path=/; Max-Age=${age}; Domain=${location.hostname}`;
+  const secure = location.protocol === 'https:' ? 'Secure' : '';
+  if (document?.cookie) document.cookie = `${key}=${value};Path=/; Max-Age=${age}; Domain=${location.hostname};${secure}`;
 }
 
 function removeCookie(key) {
