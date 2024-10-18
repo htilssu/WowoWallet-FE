@@ -3,10 +3,8 @@ import {removeCookie, setCookie} from './cookie.util.js';
 import {decodeJwt} from 'jose';
 
 export function getToken() {
-  if (document?.cookie) {
     const cookies = parse(document.cookie);
     return cookies['Token'];
-  }
 }
 
 export function setToken(token) {
