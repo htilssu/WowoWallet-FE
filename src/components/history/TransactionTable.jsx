@@ -1,7 +1,7 @@
 import {FaCreditCard, FaDownload, FaExchangeAlt, FaUndoAlt, FaUpload} from 'react-icons/fa';
 import {Link, ScrollRestoration, useNavigate} from 'react-router-dom';
 import {Pagination, Paper} from '@mantine/core';
-import {formatCurrency} from '../../util/currencyUtil.js';
+import {formatCurrency} from '../../util/currency.util.js';
 import {MdRemoveRedEye} from 'react-icons/md';
 
 // Các icon và màu sắc trạng thái

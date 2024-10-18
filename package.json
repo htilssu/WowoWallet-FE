@@ -30,6 +30,7 @@
     "chart.js": "^4.4.3",
     "cookie": "^1.0.1",
     "dayjs": "^1.11.11",
+    "jose": "^5.9.4",
     "jsonwebtoken": "^9.0.2",
     "otp-input-react": "^0.3.0",
     "qrcode.react": "^4.0.1",

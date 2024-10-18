@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {ToastContainer, toast, Bounce} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {post} from "../../util/requestUtil.js";
+import {wPost} from "../../util/request.util.js";
 import {useNavigate} from "react-router-dom";
 
 
@@ -139,7 +139,7 @@ const AddInfoAtm = () => {
 
         e.preventDefault();
         if (handleValidation()) {
-            post("/v1/card", {
+            wPost("/v1/card", {
                 cardNumber: accountNumber,
                 holderName: accountName,
                 expired: expired,

@@ -1,15 +1,15 @@
-import {get, post} from '../../util/requestUtil.js';
+import {wGet, wPost} from '../../util/request.util.js';
 
 export async function getUserWallet(userId) {
-  return await get(`/v1/user/${userId}/wallet`);
+  return await wGet(`/v1/user/${userId}/wallet`);
 }
 
 export async function getUser() {
-  return await get('/v1/user');
+  return await wGet('/v1/user');
 }
 
 export async function resetPassword(email) {
-  return await post("/v1/password/reset", {
+  return await wPost("/v1/password/reset", {
     email: email
   })
 }
