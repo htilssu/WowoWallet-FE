@@ -1,5 +1,5 @@
 import {parse} from 'cookie';
-import {removeCookie} from './cookie.util.js';
+import {removeCookie, setCookie} from './cookie.util.js';
 import {decodeJwt} from 'jose';
 
 export function getToken() {
@@ -7,6 +7,10 @@ export function getToken() {
     const cookies = parse(document.cookie);
     return cookies['Token'];
   }
+}
+
+export function setToken(token) {
+  setCookie('Token', token, 60 * 60 * 24 * 7);
 }
 
 export function removeToken() {
