@@ -1,4 +1,4 @@
-import {wGet, wPost} from '../../util/request.util.js';
+import {wPost} from '../../util/request.util.js';
 
 export async function signIn(userData) {
   if (userData.username && userData.password) {
