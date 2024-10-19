@@ -1,34 +1,34 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 
 // Component hiển thị thông tin lời mời
 const InviteCard = ({ inviter, avatar, groupName, groupDescription, onJoin, onDecline }) => {
     return (
-        <div className="bg-white shadow-lg rounded-lg p-6 max-w-md mx-auto my-4">
-            <div className="mb-4">
-                <h3 className="text-lg font-semibold text-gray-800">{groupName}</h3>
-                <p className="text-gray-600">{groupDescription}</p>
+        <div className="bg-white shadow-md rounded-xl p-6 max-w-sm mx-auto my-4 transition-transform transform hover:scale-105 duration-300">
+            <div className="mb-4 text-center">
+                <h3 className="text-xl font-semibold text-gray-800">{groupName}</h3>
+                <p className="text-gray-600 text-sm">{groupDescription}</p>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
                 <img
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-green-500"
                     src={avatar}
                     alt={`${inviter}'s avatar`}
                 />
-                <div className="ml-4">
-                    <h2 className="text-sm font-semibold">{inviter}</h2>
+                <div>
+                    <h2 className="text-lg font-semibold text-gray-800">{inviter}</h2>
                     <p className="text-sm text-gray-500">(Người lập quỹ)</p>
                 </div>
             </div>
 
-            <div className="mt-6 flex justify-end space-x-4">
+            <div className="mt-6 flex justify-center space-x-6">
                 <button
-                    className="bg-gray-200 text-gray-900 px-4 py-2 rounded hover:bg-gray-300"
+                    className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                     onClick={onDecline}
                 >
                     Từ chối
                 </button>
                 <button
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                    className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200 shadow-lg"
                     onClick={onJoin}
                 >
                     Tham gia
@@ -61,6 +61,29 @@ const InviteFund = () => {
         },
     ]);
 
+    const [invitations, setInvitations] = useState([]);
+    const [error, setError] = useState(null);
+
+    const recipientId = 1;
+
+    const fetchInvitations = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/v1/invitations/received/${recipientId}`);
+            if (!response.ok) {
+                throw new Error(`Mã lỗi: ${response.status}`);
+            }
+            const data = await response.json();
+            setInvitations(data);
+        } catch (error) {
+            console.log(error)
+            setError(error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchInvitations();
+    }, [recipientId]);
+
     // Hàm xử lý tham gia
     const handleJoin = (groupName) => {
         alert(`Bạn đã tham gia quỹ nhóm: ${groupName}`);
@@ -72,8 +95,9 @@ const InviteFund = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="bg-gray-100 py-4">
+            <div className="text-2xl font-bold text-center text-gray-800 mb-4">Lời mời tham gia quỹ</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4">
                 {invites.map((invite, index) => (
                     <InviteCard
                         key={index}
@@ -87,6 +111,7 @@ const InviteFund = () => {
                 ))}
             </div>
         </div>
-    )};
+    );
+};
 
 export default InviteFund;

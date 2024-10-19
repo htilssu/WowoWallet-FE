@@ -1,18 +1,20 @@
-import { useState } from "react";
-import { Checkbox, Anchor } from "@mantine/core";
+import {useState} from "react";
+import {Checkbox, Anchor} from "@mantine/core";
 import {ScrollRestoration, useNavigate} from "react-router-dom";
+import axios from "axios";
+import {TextField} from "@mui/material";
 
 // Hàm định dạng số tiền theo VND
 const formatCurrency = (value) => {
     const number = parseFloat(value.replace(/[^\d]/g, "")) || 0;
-    return number.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
+    return number.toLocaleString("vi-VN", {style: "currency", currency: "VND"});
 };
 
 // Các loại quỹ
 const fundTypes = ["Du lịch", "Tiết kiệm", "Sinh nhật", "Khác"];
 
 const NewFund = () => {
-    const [formData, setFormData] = useState({
+    const [fundData, setFundData] = useState({
         fundName: "",
         purpose: "",
         contributionAmount: "",
@@ -22,51 +24,33 @@ const NewFund = () => {
         fundType: "",
     });
     const [errors, setErrors] = useState({});
-    const [email, setEmail] = useState("");
-    const [emailExists, setEmailExists] = useState(null);
-    const [memberList, setMemberList] = useState([]);
-    const [selectedType, setSelectedType] = useState("");
+
+    const navigate = useNavigate();
 
     const handleTypeSelect = (type) => {
-        setSelectedType(type);
-        setFormData({ ...formData, fundType: type });
+        setFundData({...fundData, fundType: type});
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         if (name === "contributionAmount") {
-            setFormData({ ...formData, [name]: formatCurrency(value) });
+            setFundData({...fundData, [name]: formatCurrency(value)});
         } else {
-            setFormData({ ...formData, [name]: value });
+            setFundData({...fundData, [name]: value});
         }
-    };
-
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-        setEmailExists(null);
-    };
-
-    const handleInvite = () => {
-        if (email.includes("@") && email.includes(".com")) {
-            setEmailExists(true);
-            setMemberList([...memberList, email]);
-        } else {
-            setEmailExists(false);
-        }
-        setEmail("");
     };
 
     const validateForm = () => {
         let newErrors = {};
         // Kiểm tra tên quỹ (bắt buộc nhập)
-        if (!formData.fundName.trim()) {
+        if (!fundData.fundName.trim()) {
             newErrors.fundName = "Vui lòng nhập tên quỹ.";
         }
         // Kiểm tra ngày đóng góp hợp lệ
-        if (!formData.contributionDeadline.trim()) {
-            newErrors.contributionDeadline = "Vui lòng nhập ngày đóng góp.";
+        if (!fundData.contributionDeadline.trim()) {
+            newErrors.contributionDeadline = "Vui lòng nhập ngày hạn quỹ.";
         } else {
-            const deadline = new Date(formData.contributionDeadline);
+            const deadline = new Date(fundData.contributionDeadline);
             const today = new Date();
 
             if (isNaN(deadline.getTime())) {
@@ -77,59 +61,75 @@ const NewFund = () => {
         }
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Nếu không có lỗi, trả về true
+        return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            //vo trang chi tiet quy do
-            navigate("/fund/${id}");
-        }else {
+            try {
+                const response = await axios.post('http://localhost:8080/v1/group-fund', {
+                    name: fundData.fundName,
+                    image: "/sanmay.png",
+                    type: fundData.fundType,
+                    description: fundData.purpose,
+                    target: fundData.contributionAmount.replace(/[^\d]/g, ''),
+                    targetDate: fundData.contributionDeadline,
+                    owner: {
+                        "id": 1
+                    },
+                });
+                console.log('Quỹ được tạo thành công:', response.data);
+                navigate(`/fund/${response.data.id}`);
+            } catch (error) {
+                console.error('Có lỗi xảy ra khi tạo quỹ:', error);
+            }
+        } else {
             console.log("Form có lỗi");
         }
     };
 
-    const navigate = useNavigate();
     const handleBack = (e) => {
         e.preventDefault();
         navigate(-1); // Quay lại trang trước
     };
 
     return (
-        <div className={"mb-8"}>
-            <div
-                className="min-h-screen bg-gradient-to-r from-blue-100 via-purple-50 to-green-100 flex justify-center items-center">
-                <div className="bg-white shadow-lg rounded-lg p-8 max-w-xl w-full">
-                    <h2 className="text-3xl font-semibold mb-6 text-center text-indigo-600">Tạo Quỹ Nhóm</h2>
+        <div className={"mb-10"}>
+            <div className="flex justify-center items-center bg-gray-100">
+                <div className="bg-white shadow-2xl rounded-3xl px-10 py-6 max-w-2xl w-full">
+                    {/* Tiêu đề */}
+                    <h2 className="text-3xl font-bold mb-8 text-center text-indigo-600">
+                        Tạo Quỹ Nhóm
+                    </h2>
                     <div>
                         {/* Tên quỹ nhóm */}
                         <div className="mb-4">
-                            <label className="block text-gray-700">Tên Quỹ</label>
-                            <input
+                            <TextField
+                                label={"Tên quỹ nhóm"}
                                 type="text"
                                 name="fundName"
-                                value={formData.fundName}
+                                value={fundData.fundName}
                                 onChange={handleInputChange}
                                 placeholder="Nhập tên quỹ"
-                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                                className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 required
                             />
-                            {errors.fundName && <p className={"text-red-500"}>{errors.fundName}</p>}
+                            {errors.fundName && <p className="text-red-500 mt-2">{errors.fundName}</p>}
                         </div>
 
                         {/* Thể loại quỹ */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Bạn Tạo Quỹ Để</label>
-                            <div className="mt-2 flex flex-wrap gap-2">
+                        <div className="mb-6">
+                            <label className="block text-lg text-gray-700 mb-2">Bạn Tạo Quỹ Để</label>
+                            <div className="flex flex-wrap gap-3">
                                 {fundTypes.map((type) => (
                                     <button
                                         key={type}
                                         type="button"
                                         onClick={() => handleTypeSelect(type)}
-                                        className={`px-4 py-2 rounded-md transition-all duration-200 ${
-                                            selectedType === type
-                                                ? "bg-blue-500 text-white"
+                                        className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                                            fundData.fundType === type
+                                                ? "bg-indigo-500 text-white"
                                                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                                         }`}
                                     >
@@ -141,90 +141,58 @@ const NewFund = () => {
 
                         {/* Số tiền đóng góp */}
                         <div className="mb-4">
-                            <label className="block text-gray-700">Số Tiền Mục Tiêu (nếu có)</label>
-                            <input
+                            <TextField
+                                label={"Số tiền mục tiêu"}
                                 type="text"
                                 name="contributionAmount"
-                                value={formData.contributionAmount}
+                                value={fundData.contributionAmount}
                                 onChange={handleInputChange}
-                                placeholder="Nhập số tiền"
-                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                                placeholder="Nhập số tiền(nếu có)"
+                                className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 required
                             />
                         </div>
 
                         {/* Ngày hoàn thành mục tiêu */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Ngày Hoàn Thành Mục Tiêu</label>
+                        <div className="mb-6">
+                            <label className="block text-lg text-gray-700 mb-2">
+                                Ngày Hoàn Thành Mục Tiêu
+                            </label>
                             <input
                                 type="date"
                                 name="contributionDeadline"
-                                value={formData.contributionDeadline}
+                                value={fundData.contributionDeadline}
                                 onChange={handleInputChange}
                                 min={new Date().toISOString().split("T")[0]}
-                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                                className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 required
                             />
-                            {errors.contributionDeadline && <p className={"text-red-500"}>{errors.contributionDeadline}</p>}
-                        </div>
-
-                        {/* Mô tả quỹ */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Mô tả quỹ (0/300)</label>
-                            <textarea
-                                name="purpose"
-                                value={formData.purpose}
-                                onChange={handleInputChange}
-                                placeholder="Đi trốn trên Đà Lạt.."
-                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                                required
-                            />
-                        </div>
-
-                        {/* Mời thành viên tham gia */}
-                        <div className="mb-6">
-                            <label className="block text-gray-700">Mời Thành Viên Tham Gia</label>
-                            <div className="flex">
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    placeholder="Nhập email thành viên"
-                                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleInvite}
-                                    className="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200"
-                                >
-                                    Mời
-                                </button>
-                            </div>
-                            {emailExists === false && (
-                                <p className="text-red-500 mt-2">Email không tồn tại.</p>
+                            {errors.contributionDeadline && (
+                                <p className="text-red-500 mt-2">{errors.contributionDeadline}</p>
                             )}
                         </div>
 
-                        {/* Danh sách thành viên */}
-                        {memberList.length > 0 && (
-                            <div className="mb-4">
-                                <h4 className="text-gray-700">Thành viên đã mời:</h4>
-                                <ul className="list-disc list-inside">
-                                    {memberList.map((member, index) => (
-                                        <li key={index}>{member}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
+                        {/* Mô tả quỹ */}
+                        <div className="mb-6">
+                            <TextField
+                                label={"Mô tả quỹ (0/200)"}
+                                name="purpose"
+                                value={fundData.purpose}
+                                onChange={handleInputChange}
+                                placeholder="Đi trốn trên Đà Lạt.."
+                                className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                required
+                            />
+                        </div>
 
                         {/* Điều khoản */}
-                        <div>
+                        <div className="mb-4">
                             <Checkbox
                                 label={
-                                    <div className={"text-gray-700"}>
-                                        I accept{" "}
+                                    <div className="text-gray-700">
+                                        Tôi chấp nhận{" "}
                                         <Anchor href="https://mantine.dev" target="_blank" inherit>
-                                            terms and conditions
+                                            điều khoản và điều kiện
                                         </Anchor>
                                     </div>
                                 }
@@ -232,16 +200,16 @@ const NewFund = () => {
                         </div>
 
                         {/* Nút điều khiển */}
-                        <div className="flex justify-between gap-4 mt-4">
+                        <div className="flex justify-between gap-6">
                             <button
                                 onClick={handleBack}
-                                className="w-full text-gray p-3 rounded-md hover:bg-gray-200 transition duration-200"
+                                className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition duration-200"
                             >
                                 Quay về
                             </button>
                             <button
                                 onClick={handleSubmit}
-                                className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600 transition duration-200"
+                                className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition duration-200 shadow-lg"
                             >
                                 Tạo Quỹ Nhóm
                             </button>
@@ -249,6 +217,7 @@ const NewFund = () => {
                     </div>
                 </div>
             </div>
+
             <ScrollRestoration/>
         </div>
     );

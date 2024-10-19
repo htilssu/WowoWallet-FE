@@ -129,7 +129,7 @@ export const router = createBrowserRouter([
                         element: <NewFund/>,
                     },
                     {
-                        path: 'fund/:id?',
+                        path: 'group-fund/:fundId',
                         element: <FundDetailPage/>,
                     },
                 ],
