@@ -18,7 +18,6 @@ export const AuthProvider = (props) => {
 
 
   useEffect(() => {
-    console.log(123);
     if (!auth) {
       setAuth({
         user: null,

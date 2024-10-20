@@ -1,5 +1,5 @@
 import {FaCreditCard, FaDownload, FaExchangeAlt, FaUndoAlt, FaUpload} from 'react-icons/fa';
-import {Link, ScrollRestoration, useNavigate} from 'react-router-dom';
+import {Link, ScrollRestoration} from 'react-router-dom';
 import {Pagination, Paper} from '@mantine/core';
 import {formatCurrency} from '../../util/currency.util.js';
 import {MdRemoveRedEye} from 'react-icons/md';
@@ -28,7 +28,6 @@ const TransactionTable = ({
   setPage,
   list,
 }) => {
-  const navigate = useNavigate();
 
   // Hàm xác định màu của số tiền
   const getAmountColor = (transactionType) => {
@@ -61,17 +60,17 @@ const TransactionTable = ({
               {list.map((transaction, index) => (
                   <tr key={index} className="border-2 border-gray-200 hover:bg-gray-100 text-center">
                     <td className="py-6">{transaction.id}</td>
-                    <td className="py-6">{transaction.billCode}</td>
+                    <td className="py-6">{transaction.billCode ?? '-'}</td>
                     <td className="py-6 flex items-center gap-2">
                       <div className="text-xl text-green-500">
                         {transactionIcons[transaction.transactionType]}
                       </div>
-                      {transaction.transactionType === 'transfer' ? 'Chuyển Tiền' : 'Thanh Toán'}
+                      {transaction.type}
                     </td>
-                    <td className={`py-6 ${getAmountColor(transaction.transactionType)}`}>
-                      -{formatCurrency(transaction.money)}
+                    <td className={`py-6 ${getAmountColor(transaction.type)}`}>
+                      -{formatCurrency(transaction.amount)}
                     </td>
-                    <td className="py-6">{transaction.created}</td>
+                    <td className="py-6">{new Date(transaction.created).toLocaleDateString()}</td>
                     <td className={`py-6 font-semibold ${statusColor[transaction.status]}`}>{transaction.status}</td>
                     <td className="py-6">{transaction.receiverAccount}</td>
                     <td className="py-6 font-semibold text-gray-700 hover:text-green-400 cursor-pointer flex justify-center"
@@ -91,7 +90,7 @@ const TransactionTable = ({
               <div key={index} className="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50">
                 <div className="flex items-center justify-between">
                   <div className={'flex flex-col'}>
-                    <p className="font-semibold flex items-center gap-2">{transactionIcons[transaction.transactionType]} {transaction.transactionType}</p>
+                    <p className="font-semibold flex items-center gap-2">{transactionIcons[transaction.typeN]} {transaction.transactionType}</p>
                     <p className="text-green-500">{transaction.money} VND</p>
                   </div>
                 </div>
@@ -100,10 +99,11 @@ const TransactionTable = ({
                   <p><strong>Mã hoá đơn:</strong> {transaction.billCode}</p>
                   <p>{transaction.status}</p>
                   <p><strong>Chuyển đến: </strong> {transaction.receiverAccount}</p>
-                  <button className="mt-1 px-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                          onClick={() => handleSelectTran(transaction)}>
+                  <Link to={`/transaction/${transaction.id}`}
+                        className="mt-1 px-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
                     Xem Chi tiết
-                  </button>
+                  </Link>
                 </div>
               </div>
           ))}
@@ -112,7 +112,7 @@ const TransactionTable = ({
           <Pagination
               page={page}
               onChange={(page) => setPage(page)}
-              total={totalPages}
+              total={10}
               style={{marginTop: '20px'}}
           />
         </div>
