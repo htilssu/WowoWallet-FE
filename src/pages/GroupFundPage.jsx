@@ -9,7 +9,6 @@ const GroupFundPage = ({userId}) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
-        // Gọi API lấy danh sách quỹ nhóm của user
         const fetchGroupFunds = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/v1/group-fund/user/${1}`);
