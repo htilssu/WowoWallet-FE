@@ -25,6 +25,7 @@ import CustomerManage from "../../pages/admin/layout-admin/customer-manage/Custo
 import PartnerLayout from "../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx";
 import StatisticalLayout from "../../pages/admin/layout-admin/statistics-manage/StatisticalLayout.jsx";
 import EmployeeLayout from "../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx";
+import CallBackHandler, {callBackUrl} from "../../pages/CallBackHandler.jsx";
 
 export const router = createBrowserRouter([
     {

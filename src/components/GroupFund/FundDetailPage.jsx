@@ -1,5 +1,4 @@
 import {ScrollRestoration, useNavigate} from 'react-router-dom';
-import { ScrollRestoration, useLocation } from 'react-router-dom';
 import RecentActivities from "./recentActivitiesFund.jsx";
 import { useParams } from 'react-router-dom';
 import {useEffect, useState} from "react";
@@ -205,8 +204,7 @@ const FundDetailPage = () => {
                             </div>
                         )}
                     </div>
-                </div>
-            </div>
+
             <ScrollRestoration/>
         </div>
     );
