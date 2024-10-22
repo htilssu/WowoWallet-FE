@@ -144,33 +144,32 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <IntroPage/>,
-            },
+          },
         ],
-    },
-    {
+  },
+  {
+    children: [
+      {
+        path: '/sign-in',
+        element: <SignInPage/>,
+      }, {
+        path: '/sign-up',
+        element: <SignUpPage/>,
+      }, {
+        path: 'password',
         children: [
-            {
-                path: '/sign-in',
-                element: <SignInPage/>,
-            }, {
-                path: '/sign-up',
-                element: <SignUpPage/>,
-            }, {
-                path: 'password',
-                children: [
-                    {
-                        path: 'reset',
-                        element: <ResetPasswordPage/>,
-                    },
-                    {
-                        path: 'change',
-                        element: <ResetPasswordPage/>, //TODO: change password page
-                    },
-                ],
-            },
-            {
-                path: 'test',
-                element: <SignInFederation/>,
+          {
+            path: 'reset',
+            element: <ResetPasswordPage/>,
+          },
+          {
+            path: 'change',
+            element: <ResetPasswordPage/>, //TODO: change password page
+          },
+        ],
+      }, {
+              path: callBackUrl,
+                element: <CallBackHandler/>,
             },
         ],
     },

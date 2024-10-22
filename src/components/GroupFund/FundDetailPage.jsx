@@ -1,9 +1,24 @@
 import {ScrollRestoration, useNavigate} from 'react-router-dom';
+import { ScrollRestoration, useLocation } from 'react-router-dom';
 import RecentActivities from "./recentActivitiesFund.jsx";
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {useEffect, useState} from "react";
 import axios from "axios";
 
+// Sample data for funds
+const sampleFunds = [
+    {
+        fundName: "Quỹ Du Lịch Đà Lạt",
+        purpose: "Đi du lịch Đà Lạt vào mùa hè tới.",
+        contributionAmount: "10,000,000 VNĐ",
+        contributionDeadline: "2024-12-31",
+        fundManager: "Nguyễn Anh Tuấn",
+        fundManagerMail: "tuanmeo980@gmail.com",
+        spendingRules: "Chi tiêu cho khách sạn và vé máy bay.",
+        fundImage: "/sanmay.png",
+        members: ["tuanmeo980@gmail.com","example1@gmail.com", "example2@gmail.com"]
+    }
+];
 const user = {
     Gmail: "tuanmeo980@gmail.com",
 }
@@ -111,8 +126,14 @@ const FundDetailPage = () => {
                                     <span className="font-semibold text-gray-700">Hạn đến:</span>
                                     <span className="ml-2 text-gray-600">{fundData.targetDate}</span>
                                 </div>
+                                <span className="font-medium"></span>
+                            </div>
+                            <div className="flex justify-end items-center gap-2">
+                                <span className="font-medium">Hạn đến:</span>
+                                <span className="font-light">{fundData.contributionDeadline}</span>
                             </div>
                         </div>
+                    </div>
 
                         {/* Progress Bar */}
                         <div className="relative bg-gray-300 rounded-full h-4 mb-8">
@@ -137,8 +158,12 @@ const FundDetailPage = () => {
                                     <p className="font-semibold text-gray-800">{fundData.fundManager}</p>
                                     <p className="text-gray-600">{fundData.owner.id}</p>
                                 </div>
+                                <div className="flex-1">
+                                    <p className="text-gray-500">{fundData.fundManagerMail}</p>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
                         {/* Members */}
                         <div className="mb-8">

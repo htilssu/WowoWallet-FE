@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {CiSearch} from 'react-icons/ci';
 import TransactionTable from '../../components/history/TransactionTable.jsx';
-import {get} from '../../util/requestUtil.js';
+import {wGet} from '../../util/request.util.js';
 import {toast} from 'react-toastify';
 
 //Tạo Thành Phần Button:
@@ -41,7 +41,7 @@ const TransactionHistory = () => {
   }, []);
 
   useEffect(() => {
-    get(`/v1/transaction/history?offset=5&page=${page}`).then((res) => {
+    wGet(`/v1/transaction/history?offset=5&page=${page}`).then((res) => {
       setTransactions(res.data);
     }).catch((e) => {
       toast.error('Không thể lấy lịch sử giao dịch!');

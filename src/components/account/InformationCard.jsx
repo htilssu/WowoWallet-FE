@@ -6,20 +6,14 @@ import {ToastContainer} from 'react-toastify';
 import {useState} from 'react';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {useQuery} from '@tanstack/react-query';
-import {getUserWallet} from '../../modules/user/user.js';
-import {formatCurrency} from '../../util/currencyUtil.js';
+import {getMyWallet} from '../../modules/wallet/wallet.js';
+import {Skeleton} from '@mantine/core';
+import {formatCurrency} from '../../util/currency.util.js';
 
 function MyWallet() {
-  //lấy thông tin Ví
-  const {user} = useAuth();
-  const [wallet, setWallet] = useState({});
-
-  const result = useQuery({
+  const {data: wallet} = useQuery({
     queryKey: ['user-wallet', 'wallet'],
-    queryFn: async () => {
-      const wallet = (await getUserWallet(user.id)).data;
-      setWallet(wallet);
-    },
+    queryFn: getMyWallet,
   });
 
   return (
@@ -29,7 +23,9 @@ function MyWallet() {
           <div className="flex flex-wrap">
             <div className={'p-2 me-5'}>
               <p className="text-sm text-gray-600">Số dư tổng</p>
-              <p className="text-lg text-rose-600 font-semibold">{formatCurrency(user.balance)}</p>
+              <div className="text-lg text-rose-600 font-semibold">
+                {wallet ? formatCurrency(wallet.balance) : <Skeleton width={100}/>}
+              </div>
             </div>
             <div className={'p-2 me-5 '}>
               <p className="text-sm text-gray-600">Số dư khả dụng</p>
