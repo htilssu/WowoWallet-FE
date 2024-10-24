@@ -28,6 +28,7 @@ import EmployeeLayout from '../../pages/admin/layout-admin/employee-manage/Emplo
 import WithdrawPage from '../../pages/cores/WithdrawPage.jsx';
 import TransferMoney from '../../components/payment/TransferMoney.jsx';
 import AddInfoAtm from '../../components/atm/AddInfoAtm.jsx';
+import FunForm from "../../components/GroupFund/FundForm/DonateForm.jsx";
 
 export const router = createBrowserRouter([
   {

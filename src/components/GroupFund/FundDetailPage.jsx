@@ -1,6 +1,8 @@
 import { ScrollRestoration, useLocation } from 'react-router-dom';
 import RecentActivities from "./recentActivitiesFund.jsx";
 import { useParams } from 'react-router-dom';
+import DonateForm from "./FundForm/DonateForm.jsx";
+import {useState} from "react";
 
 // Sample data for funds
 const sampleFunds = [
@@ -24,7 +26,14 @@ const FundDetailPage = () => {
     const { id } = useParams(); // Lấy ID của quỹ từ URL
     const location = useLocation();
     const fundData = location.state?.fundData || sampleFunds[0]; // Sử dụng dữ liệu mẫu nếu không có dữ liệu từ location.state
+    const [isDonateFormOpen, setIsDonateFormOpen] = useState(false);
+    const handleDonateClick = () => {
+        setIsDonateFormOpen(true); // Mở form
+    };
 
+    const handleCloseDonateForm = () => {
+        setIsDonateFormOpen(false); // Đóng form
+    };
     if (!fundData) {
         return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Không tìm thấy dữ liệu quỹ.</div>;
     }
@@ -52,7 +61,8 @@ const FundDetailPage = () => {
                     {/* Action Buttons */}
                     <div className="mb-2 sm:mb-6 flex justify-center sm:justify-start">
                         <button
-                            className="px-2 py-2 ssm:px-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 mr-2">
+                            className="px-2 py-2 ssm:px-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 mr-2"
+                            onClick={handleDonateClick}  >
                             Góp Quỹ
                         </button>
                         {isFundManager && ( // Only show buttons if user is fund manager
@@ -159,6 +169,7 @@ const FundDetailPage = () => {
                 </div>
             </div>
             <ScrollRestoration/>
+            {isDonateFormOpen && <DonateForm onClose={handleCloseDonateForm} />}
         </div>
     );
 };

@@ -64,10 +64,10 @@ const AddInfoAtm = () => {
             }));
             return false;
         }
-        if (year > currentYear % 100 || (year === currentYear % 100 && month > currentMonth)) {
+        if (year < currentYear % 100 || (year === currentYear % 100 && month <= currentMonth)) {
             setErrors(prevErrors => ({
                 ...prevErrors,
-                expired: 'Năm không hợp lệ hoặc vượt quá thời gian hiện tại. Vui lòng nhập lại.'
+                expired: 'Ngày hết hạn phải sau thời gian hiện tại. Vui lòng nhập lại.'
             }));
             return false;
         }
