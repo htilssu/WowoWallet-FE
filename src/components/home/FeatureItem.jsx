@@ -17,11 +17,11 @@ export const FeatureItem = [
     icon: <PiHandWithdrawBold size={30} className="text-green-500"/>,
     title: 'Rút tiền',
   }, {
-    link: '/transaction',
+    link: '/history',
     icon: <FaBook size={30} className="text-green-500"/>,
     title: 'Lịch sử giao dịch',
   }
-  ,{
+  , {
     link: '/group-fund',
     icon: <HiUserGroup size={30} className="text-green-500"/>,
     title: 'Quỹ nhóm',

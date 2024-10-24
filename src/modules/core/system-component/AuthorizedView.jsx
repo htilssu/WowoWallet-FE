@@ -1,4 +1,3 @@
-import React from 'react';
 import {useAuth} from "../../hooks/useAuth.jsx";
 
 const AuthorizedView = ({children, ROLE}) => {

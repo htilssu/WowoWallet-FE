@@ -47,7 +47,7 @@ const AtmPage = () => {
 
   const handleShowNganHang = (event) => {
     event.preventDefault();
-    navigate('/AddInfoAtm'); // Navigate to AddInfoAtm page
+    navigate('/bank/add'); // Navigate to AddInfoAtm page
   };
 
   const handleDelete = (cardNumber) => {
