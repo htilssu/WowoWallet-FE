@@ -89,7 +89,7 @@ const AtmPage = () => {
                   const month = splitDate[0];
                   const year = splitDate[1];
                   return (
-                      <div key={card.id} className={'w-full'}>
+                      <div key={card.id} className={'w-full relative'}>
                         <ATMCard
                             scale={1}
                             year={year}
@@ -98,6 +98,15 @@ const AtmPage = () => {
                               <img className={'w-2/6'} src={bank.logo} alt={"bank logo"}/>
                             }
                         />
+
+                        <div className={'absolute right-10 top-2'}>
+                          <button
+                              className={'text-red-500'}
+                              onClick={() => handleDelete(card.id)}
+                          >
+                            Xóa
+                          </button>
+                        </div>
                       </div>
                   );
                 })}
