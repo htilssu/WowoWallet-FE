@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCircleExclamation} from '@fortawesome/free-solid-svg-icons';
 import {MdOutlinePayments} from 'react-icons/md';
-import {MyWallet} from '../account/InformationCard.jsx';
+import {WalletSection} from '../account/WalletSection.jsx';
 import {BiBarcode, BiBarcodeReader} from 'react-icons/bi';
 import {ScrollRestoration} from 'react-router-dom';
 import {QRCodeSVG} from 'qrcode.react';
@@ -55,7 +55,7 @@ function QRPayment() {
                 </div>
               </div>
               <div className="max-w-full order-first md:order-last md:mb-0">
-                <MyWallet/>
+                <WalletSection/>
               </div>
             </div>
           </div>

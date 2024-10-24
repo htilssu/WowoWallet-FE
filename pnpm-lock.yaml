@@ -44,9 +44,6 @@ importers:
       '@mui/material':
         specifier: ^6.1.4
         version: 6.1.4(@emotion/react@11.13.3(@types/react@18.3.8)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.8)(react@18.3.1))(@types/react@18.3.8)(react@18.3.1))(@types/react@18.3.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@react-buddy/ide-toolbox':
-        specifier: ^2.4.0
-        version: 2.4.0(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.53.3
         version: 5.56.2(react@18.3.1)
@@ -823,11 +820,6 @@ packages:
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
-
-  '@react-buddy/ide-toolbox@2.4.0':
-    resolution: {integrity: sha512-TWHX6gwa0Gop7215uHhjFMbYLLdjM/b9rr0wYE3E0m7GNJ56gbPpbZiq86w9uI8zksl827acqGeT437MkuO64w==}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0
 
   '@remix-run/router@1.19.2':
     resolution: {integrity: sha512-baiMx18+IMuD1yyvOGaHM9QrVUPGGG0jC+z+IPHnRJWUAUvaKuWKyE8gjDj2rzv3sz9zOGoRSPgeBVHRhZnBlA==}
@@ -4291,10 +4283,6 @@ snapshots:
       config-chain: 1.1.13
 
   '@popperjs/core@2.11.8': {}
-
-  '@react-buddy/ide-toolbox@2.4.0(react@18.3.1)':
-    dependencies:
-      react: 18.3.1
 
   '@remix-run/router@1.19.2': {}
 
