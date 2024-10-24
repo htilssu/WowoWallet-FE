@@ -26,6 +26,7 @@
     "@react-buddy/ide-toolbox": "^2.4.0",
     "@tanstack/react-query": "^5.53.3",
     "@tanstack/react-query-devtools": "^5.54.0",
+    "atm-card-react": "^1.4.1",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
     "cookie": "^1.0.1",

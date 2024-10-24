@@ -12,7 +12,7 @@ const request = axios.create({
 
 const wPost = async (url, data) => {
   try {
-    return await request.post(url, data);
+    return (await request.post(url, data)).data;
   }
   catch (e) {
     return Promise.reject(new Error(e.message));
@@ -20,11 +20,11 @@ const wPost = async (url, data) => {
 };
 
 const wGet = async (url) => {
-  return await request.get(url);
+  return (await request.get(url)).data;
 };
 
 const wDelete = async (url) => {
-  return await request.delete(url);
+  return (await request.delete(url)).data;
 };
 
 export {request, wPost, wGet, wDelete};
