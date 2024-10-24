@@ -8,7 +8,8 @@ import {FaCreditCard, FaMobileAlt, FaCode, FaLink, FaChartLine} from 'react-icon
 import { MdOutlineLtePlusMobiledata, MdTravelExplore } from "react-icons/md";
 import { TbCreditCardPay } from "react-icons/tb";
 import { BiSolidMoviePlay } from "react-icons/bi";
-import { FaAnchorLock, FaGroupArrowsRotate } from "react-icons/fa6"; // Import các icon từ thư viện React Icons
+import { FaAnchorLock, FaGroupArrowsRotate } from "react-icons/fa6";
+import {Link} from 'react-router-dom'; // Import các icon từ thư viện React Icons
 
 const items = [
     { link: "/invoices", icon: <TbCreditCardPay size={35} className="text-green-500" />, title: "Thanh toán hóa đơn" },
@@ -48,7 +49,7 @@ const ScrollableCardList = () => {
                     >
                         {items.map((item, index) => (
                             <SwiperSlide key={index}>
-                                <a href={item.link} className="flex-none p-2" style={{ textDecoration: 'none' }}>
+                                <Link to={item.link} className="flex-none p-2" style={{ textDecoration: 'none' }}>
                                     <div className="w-full h-32 sm:w-32 sm:h-40 bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center">
                                         <div className="h-16 w-full flex items-center justify-center">
                                             {item.icon}
@@ -57,7 +58,7 @@ const ScrollableCardList = () => {
                                             <div className="font-semibold mb-1">{item.title}</div>
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                             </SwiperSlide>
                         ))}
                     </Swiper>

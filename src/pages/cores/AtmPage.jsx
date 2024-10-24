@@ -3,59 +3,39 @@ import {GrTransaction} from 'react-icons/gr';
 import {IoIosAddCircle} from 'react-icons/io';
 import {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
-import {wDelete, wGet} from "../../util/request.util.js";
-import {Card} from "@mantine/core";
-import CardAtmComponents from "../../components/atm/CardAtmComponents.jsx";
-import axios from "axios";
-
-const fetchBankList = () => {
-  return axios.get('https://api.vietqr.io/v2/banks');
-};
+import {wDelete, wGet} from '../../util/request.util.js';
+import CardAtmComponents from '../../components/atm/CardAtmComponents.jsx';
+import {ATMCard} from 'atm-card-react';
 
 const AtmPage = () => {
   const [bankList, setBankList] = useState([]);
-  const [bankInfo, setBankInfo] = useState([]);
+  const [atmCardList, setAtmCardList] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchBankList()
-        .then(result => {
-          setBankList(result.data.data);
-          localStorage.setItem('atm', JSON.stringify(result.data.data));
-        })
-        .catch(error => {
-          console.error('Error fetching bank list:', error);
-        });
+    wGet('/v1/banks').then((res) => {
+      setBankList(res);
+    });
   }, []);
 
   useEffect(() => {
     wGet('/v1/card')
         .then((res) => {
-          if (res.data && Array.isArray(res.data)) {
-            setBankInfo(res.data);
+          if (res && Array.isArray(res)) {
+            setAtmCardList(res);
           }
-          else {
-            console.error('Dữ liệu trả về không đúng định dạng:', res.data);
-            toast.error('Dữ liệu trả về không đúng định dạng!');
-          }
-        })
-        .catch((error) => {
-          console.error('Lỗi khi lấy thông tin thẻ:', error);
-          toast.error('Lỗi khi lấy thông tin thẻ!');
         });
   }, []);
 
   const handleShowNganHang = (event) => {
     event.preventDefault();
-    navigate('/bank/add'); // Navigate to AddInfoAtm page
+    navigate('/bank/add');
   };
 
   const handleDelete = (cardNumber) => {
     wDelete(`/v1/card/${cardNumber}`).then(() => {
-      setBankInfo(prev => prev.filter(card => card.cardNumber !== cardNumber));
+      setAtmCardList(prev => prev.filter(card => card.cardNumber !== cardNumber));
       toast.success('Thẻ đã được xóa thành công!');
-    }).catch(() => {
-      toast.error('Lỗi khi xóa thẻ!');
     });
   };
 
@@ -102,18 +82,33 @@ const AtmPage = () => {
 
               {/* Cards Container */}
               <div
-                  className="atm-container grid grid-cols-1  min-w-[781px]:grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 ">
-                {bankInfo.map((card, index) => {
+                  className="atm-container grid min-w-[781px]:grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 ">
+                {atmCardList && atmCardList.map((card) => {
                   const bank = findBankById(card.atmId); // Tìm ngân hàng dựa vào id
+                  const splitDate = card.expired.split('/');
+                  const month = splitDate[0];
+                  const year = splitDate[1];
                   return (
-                      <Card
-                          key={index}
-                          cardNumber={card.cardNumber}
-                          cardHolder={card.holderName.toUpperCase()}
-                          expiryDate={card.expired}
-                          bankName={bank.shortName || 'Ngân hàng không xác định'} // Hiển thị tên ngân hàng
-                          onDelete={handleDelete}
-                      />
+                      <div key={card.id} className={'w-full relative'}>
+                        <ATMCard
+                            scale={1}
+                            year={year}
+                            number={card.cardNumber}
+                            month={month}
+                            bankLogo={
+                              <img className={'w-2/6'} src={bank.logo} alt={"bank logo"}/>
+                            }
+                        />
+
+                        <div className={'absolute right-10 top-2'}>
+                          <button
+                              className={'text-red-500'}
+                              onClick={() => handleDelete(card.id)}
+                          >
+                            Xóa
+                          </button>
+                        </div>
+                      </div>
                   );
                 })}
                 <CardAtmComponents

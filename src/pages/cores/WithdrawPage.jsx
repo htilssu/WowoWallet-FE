@@ -1,7 +1,7 @@
 import {FaUpload} from 'react-icons/fa';
 import {useState} from 'react';
 import {CiBank} from 'react-icons/ci';
-import {MyWallet} from '../../components/account/InformationCard.jsx';
+import {WalletSection} from '../../components/account/WalletSection.jsx';
 
 const WithdrawPage = () => {
   const [amount, setAmount] = useState('');
@@ -149,7 +149,7 @@ const WithdrawPage = () => {
           </form>
         </div>
         <div className="order-first md:order-last w-full md:w-1/3 lg:w-1/4 mb-6 md:mb-0 md:ml-9">
-          <MyWallet/>
+          <WalletSection/>
         </div>
       </div>
   );
