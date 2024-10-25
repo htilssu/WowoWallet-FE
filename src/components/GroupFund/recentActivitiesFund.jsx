@@ -1,5 +1,4 @@
-
-// Sample recent activities data with type
+// Dữ liệu hoạt động gần đây
 const recentActivities = [
     {
         name: "Nguyễn Anh Tuấn",
@@ -22,54 +21,68 @@ const recentActivities = [
         avatar: "/avatarT.jpeg",
         type: "Góp quỹ"
     },
-    // Add more activities here
+    // Thêm nhiều hoạt động khác nếu cần
 ];
 
 const RecentActivities = () => {
+    // Hàm xử lý style cho các loại hoạt động
     const getTypeStyles = (type) => {
         switch (type) {
-            case 'Góp quỹ':
+            case "Góp quỹ":
                 return {
-                    textColor: 'text-blue-600',
-                    symbol: '+'
+                    textColor: "text-green-600",
+                    bgColor: "bg-green-100",
+                    symbol: "+"
                 };
-            case 'Rút quỹ':
+            case "Rút quỹ":
                 return {
-                    textColor: 'text-red-600',
-                    symbol: '-'
+                    textColor: "text-red-600",
+                    bgColor: "bg-red-100",
+                    symbol: "-"
                 };
             default:
                 return {
-                    textColor: 'text-gray-600',
-                    symbol: '?'
+                    textColor: "text-gray-600",
+                    bgColor: "bg-gray-100",
+                    symbol: "?"
                 };
         }
     };
 
     return (
-        <div className="mb-6">
-            <div className={"flex flex-grow items-center justify-between bg-gray-100 p-4"}>
-                <h3 className="text-xl font-semibold mb-2">Hoạt động gần đây</h3>
-                <a href="#" className="text-blue-500 hover:underline mb-4 block">Xem tất cả</a>
+        <div className="mb-8">
+            {/* Header Hoạt động gần đây */}
+            <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-t-xl">
+                <h3 className="text-2xl font-bold text-gray-800">Hoạt động gần đây</h3>
+                <a href="#" className="text-indigo-600 hover:underline font-medium">Xem tất cả</a>
             </div>
-            <div className="bg-white px-2 py-2 sm:px-4 rounded-lg shadow-md">
-                <ul className="space-y-4">
+
+            {/* Danh sách hoạt động */}
+            <div className="bg-white shadow-md rounded-b-xl">
+                <ul className="divide-y divide-gray-200">
                     {recentActivities.map((activity, index) => {
-                        const { textColor, symbol } = getTypeStyles(activity.type);
+                        const { textColor, bgColor, symbol } = getTypeStyles(activity.type);
                         return (
-                            <li key={index} className="flex items-center border-b border-gray-200 p-1 last:border-b-0">
+                            <li key={index} className="flex items-center p-4 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                {/* Avatar */}
                                 <img
                                     src={activity.avatar}
                                     alt={`${activity.name} avatar`}
-                                    className="w-10 h-10 rounded-full object-cover mr-4"
+                                    className="w-12 h-12 rounded-full object-cover mr-4"
                                 />
+
+                                {/* Nội dung hoạt động */}
                                 <div className="flex-1">
-                                    <p className="text-gray-800 font-medium">{activity.name}</p>
-                                    <span className={`ml-1 ${textColor}`}>{activity.type}</span>
-                                    <p className="text-sm flex items-center">
-                                        <span className={`text-lg font-bold ${textColor}`}>{symbol}</span>
-                                        <span className={`ml-1 ${textColor}`}>{activity.amount}</span>
-                                        <span className="ml-2 text-gray-500">{activity.date}</span>
+                                    <p className="text-lg font-semibold text-gray-800">{activity.name}</p>
+                                    <p className="text-sm text-gray-500">{activity.date}</p>
+                                </div>
+
+                                {/* Số tiền và loại hoạt động */}
+                                <div className="text-right">
+                                    <span className={`text-2xl font-bold ${textColor}`}>{symbol}</span>
+                                    <span className={`ml-1 text-lg font-medium ${textColor}`}>{activity.amount}</span>
+                                    <p className={`ml-4 text-sm font-semibold ${textColor} ${bgColor} px-2 py-1 rounded-md inline-block`}>
+                                        {activity.type}
                                     </p>
                                 </div>
                             </li>
