@@ -3,6 +3,7 @@ import {ScrollRestoration, useNavigate, useParams} from 'react-router-dom';
 import {IoArrowBackSharp} from 'react-icons/io5';
 import {useEffect, useState} from 'react';
 import {wGet} from '../../util/request.util.js';
+import {formatCurrency} from '../../util/currency.util.js';
 
 // Các icon và màu sắc trạng thái
 const transactionIcons = {
@@ -20,7 +21,6 @@ const statusColor = {
   'Đang xử lý': 'text-yellow-500',
   'Thất bại': 'text-red-500',
   'Đã hủy': 'text-red-500',
-  // thêm các trạng thái khác nếu cần
 };
 
 const TransactionDetailPage = () => {
@@ -29,18 +29,9 @@ const TransactionDetailPage = () => {
   const {id} = useParams();
   useEffect(() => {
     wGet(`/v1/transaction/${id}`).then(res => {
-      setTransaction(res.data);
-      console.log(res.data);
-    }).catch((e) => {
-      navigate('/404');
+      setTransaction(res);
     });
-  }, []);
-
-  // Hàm định dạng số tiền
-  const formatCurrency = (amount) => {
-    if (typeof amount !== 'number') return '';
-    return amount.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
-  };
+  }, [id]);
 
   return (
       <div className="p-2 bg-gray-100 mb-10">

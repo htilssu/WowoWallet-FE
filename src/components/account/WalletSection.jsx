@@ -3,7 +3,6 @@ import {HiMiniCheckBadge} from 'react-icons/hi2';
 import {Link, useNavigate} from 'react-router-dom';
 import AvatarStatus from '../library component/AvatarStatus.jsx';
 import {ToastContainer} from 'react-toastify';
-import {useState} from 'react';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {Skeleton} from '@mantine/core';
 import {formatCurrency} from '../../util/currency.util.js';
@@ -17,6 +16,7 @@ function WalletSection() {
   } = useQuery({
     queryKey: 'wallet',
     queryFn: async () => await wGet('/v1/user/wallet'),
+    staleTime: 1000 * 30,
   });
 
   return (

@@ -3,8 +3,8 @@ import {removeCookie, setCookie} from './cookie.util.js';
 import {decodeJwt} from 'jose';
 
 export function getToken() {
-    const cookies = parse(document.cookie);
-    return cookies['Token'];
+  const cookies = parse(document.cookie);
+  return cookies['Token'];
 }
 
 export function setToken(token) {
@@ -17,7 +17,10 @@ export function removeToken() {
 
 export function getAuthByToken() {
   try {
-    return decodeJwt(getToken());
+    const account = decodeJwt(getToken());
+    if (account.role === 'user') account.id = account.userId;
+    if (account.role === 'partner') account.id = account.partnerId;
+    return account;
   }
   catch (e) {
     return null;

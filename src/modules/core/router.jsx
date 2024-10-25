@@ -1,38 +1,39 @@
-﻿import {createBrowserRouter} from 'react-router-dom';
+/* eslint-disable react-refresh/only-export-components */
+
+import {createBrowserRouter} from 'react-router-dom';
 import {lazy} from 'react';
 import {PageNotFound} from './system-component/PageNotFound.jsx';
 import ProtectedLayout from './layouts/ProtectedLayout.jsx';
 import {MainLayout} from './layouts/MainLayout.jsx';
 import AuthorizedView from './system-component/AuthorizedView.jsx';
 import {callBackUrl} from '../../pages/CallBackHandler.jsx';
-
 // Lazy loading components
-
-const TopUp = lazy(() => import('../../components/topup/TopUp.jsx'));
-const MyWallet = lazy(() => import('../../components/account/WalletSection.jsx'));
-const ServicePayment = lazy(() => import('../../components/payment/ServicePayment.jsx'));
-const AnalysisPage = lazy(() => import('../../components/bdsd/bdsd.jsx'));
-const QRPayment = lazy(() => import('../../components/payment/QRPayment.jsx'));
-const AdminDashboard = lazy(() => import('../../pages/admin/AdminDashboard.jsx'));
-const ResetPasswordPage = lazy(() => import('../../pages/ResetPasswordPage.jsx'));
-const CallBackHandler = lazy(() => import('../../pages/CallBackHandler.jsx'));
-const TransactionHistoryPage = lazy(() => import('../../pages/cores/TransactionHistoryPage.jsx'));
-const AtmPage = lazy(() => import('../../pages/cores/AtmPage.jsx'));
-const IntroPage = lazy(() => import('../../pages/cores/IntroPage.jsx'));
-const SignInPage = lazy(() => import('../../pages/cores/SignInPage.jsx'));
-const SignUpPage = lazy(() => import('../../pages/cores/SignUpPage.jsx'));
-const HomePage = lazy(() => import('../../pages/cores/HomePage.jsx'));
-const GroupFundPage = lazy(() => import('../../pages/GroupFundPage.jsx'));
-const NewFund = lazy(() => import('../../components/GroupFund/NewFund.jsx'));
-const FundDetailPage = lazy(() => import('../../components/GroupFund/FundDetailPage.jsx'));
-const Dashboard = lazy(() => import('../../components/admin/dashboard/Dashboard.jsx'));
-const CustomerManage = lazy(() => import('../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx'));
-const PartnerLayout = lazy(() => import('../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx'));
-const StatisticalLayout = lazy(() => import('../../pages/admin/layout-admin/statistics-manage/StatisticalLayout.jsx'));
-const EmployeeLayout = lazy(() => import('../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx'));
-const WithdrawPage = lazy(() => import('../../pages/cores/WithdrawPage.jsx'));
-const TransferMoney = lazy(() => import('../../components/payment/TransferMoney.jsx'));
-const AddInfoAtm = lazy(() => import('../../components/atm/AddInfoAtm.jsx'));
+const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
+    MyWallet = lazy(() => import('../../components/account/WalletSection.jsx')),
+    ServicePayment = lazy(() => import('../../components/payment/ServicePayment.jsx')),
+    AnalysisPage = lazy(() => import('../../components/bdsd/bdsd.jsx')),
+    QRPayment = lazy(() => import('../../components/payment/QRPayment.jsx')),
+    AdminDashboard = lazy(() => import('../../pages/admin/AdminDashboard.jsx')),
+    ResetPasswordPage = lazy(() => import('../../pages/ResetPasswordPage.jsx')),
+    CallBackHandler = lazy(() => import('../../pages/CallBackHandler.jsx')),
+    TransactionHistoryPage = lazy(() => import('../../pages/cores/TransactionHistoryPage.jsx')),
+    AtmPage = lazy(() => import('../../pages/cores/AtmPage.jsx')),
+    IntroPage = lazy(() => import('../../pages/cores/IntroPage.jsx')),
+    SignInPage = lazy(() => import('../../pages/cores/SignInPage.jsx')),
+    SignUpPage = lazy(() => import('../../pages/cores/SignUpPage.jsx')),
+    HomePage = lazy(() => import('../../pages/cores/HomePage.jsx')),
+    GroupFundPage = lazy(() => import('../../pages/GroupFundPage.jsx')),
+    NewFund = lazy(() => import('../../components/GroupFund/NewFund.jsx')),
+    FundDetailPage = lazy(() => import('../../components/GroupFund/FundDetailPage.jsx')),
+    Dashboard = lazy(() => import('../../components/admin/dashboard/Dashboard.jsx')),
+    CustomerManage = lazy(() => import('../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx')),
+    PartnerLayout = lazy(() => import('../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx')),
+    StatisticalLayout = lazy(() => import('../../pages/admin/layout-admin/statistics-manage/StatisticalLayout.jsx')),
+    EmployeeLayout = lazy(() => import('../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx')),
+    WithdrawPage = lazy(() => import('../../pages/cores/WithdrawPage.jsx')),
+    TransferMoney = lazy(() => import('../../components/payment/TransferMoney.jsx')),
+    AddInfoAtm = lazy(() => import('../../components/atm/AddInfoAtm.jsx')),
+    TransactionDetailPage = lazy(() => import('../../pages/cores/TransactionDetailPage.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -82,6 +83,9 @@ export const router = createBrowserRouter([
           }, {
             path: 'transfer',
             element: <TransferMoney/>,
+          }, {
+            path: 'transaction/:id',
+            element: <TransactionDetailPage/>,
           }, {
             path: 'me',
             element: <MyWallet/>,
