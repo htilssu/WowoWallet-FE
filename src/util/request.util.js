@@ -11,12 +11,7 @@ const request = axios.create({
 });
 
 const wPost = async (url, data) => {
-  try {
-    return (await request.post(url, data)).data;
-  }
-  catch (e) {
-    return Promise.reject(new Error(e.message));
-  }
+  return (await request.post(url, data)).data;
 };
 
 const wGet = async (url) => {

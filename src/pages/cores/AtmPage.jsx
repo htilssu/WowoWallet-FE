@@ -93,6 +93,7 @@ const AtmPage = () => {
                         <ATMCard
                             scale={1}
                             year={year}
+                            number={card.cardNumber}
                             month={month}
                             bankLogo={
                               <img className={'w-2/6'} src={bank.logo} alt={"bank logo"}/>

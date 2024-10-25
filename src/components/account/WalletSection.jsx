@@ -4,15 +4,19 @@ import {Link, useNavigate} from 'react-router-dom';
 import AvatarStatus from '../library component/AvatarStatus.jsx';
 import {ToastContainer} from 'react-toastify';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
-import {useQuery} from '@tanstack/react-query';
-import {getMyWallet} from '../../modules/wallet/wallet.js';
 import {Skeleton} from '@mantine/core';
 import {formatCurrency} from '../../util/currency.util.js';
+import {useQuery} from '@tanstack/react-query';
+import {wGet} from '../../util/request.util.js';
 
-function MyWallet() {
-  const {data: wallet} = useQuery({
-    queryKey: ['user-wallet', 'wallet'],
-    queryFn: getMyWallet,
+function WalletSection() {
+  const {
+    data: wallet,
+    isLoading,
+  } = useQuery({
+    queryKey: 'wallet',
+    queryFn: async () => await wGet('/v1/user/wallet'),
+    staleTime: 1000 * 30,
   });
 
   return (
@@ -20,21 +24,23 @@ function MyWallet() {
         <div>
           <div className="text-zinc-900 font-medium text-xl mb-2">VÍ CỦA TÔI</div>
           <div className="flex flex-wrap">
-            <div className={'p-2 me-5'}>
+            <div className={'p-2 me-5 flex flex-col justify-between'}>
               <p className="text-sm text-gray-600">Số dư tổng</p>
               <div className="text-lg text-rose-600 font-semibold">
-                {wallet ? formatCurrency(wallet.balance) : <Skeleton width={100}/>}
+                {wallet ? formatCurrency(wallet.balance) : <Skeleton height={20} width={100}/>}
               </div>
             </div>
-            <div className={'p-2 me-5 '}>
+            <div className={'p-2 me-5 flex flex-col justify-between'}>
               <p className="text-sm text-gray-600">Số dư khả dụng</p>
-              <p className="text-lg font-semibold text-rose-600">0 đ</p>
+              <div className="text-lg font-semibold text-rose-600">
+                {wallet ? formatCurrency(wallet.balance) :
+                 <Skeleton height={20} width={100}/>}</div>
             </div>
-            <div className={'p-2 me-5 '}>
+            <div className={'p-2 me-5 flex flex-col justify-between'}>
               <p className="text-sm text-gray-600">Số dư đóng băng</p>
               <p className="text-lg font-semibold text-rose-600">0 đ</p>
             </div>
-            <div className={'p-2 me-5 '}>
+            <div className={'p-2 me-5 flex flex-col justify-between'}>
               <p className="text-sm text-gray-600">Số dư chờ chuyển</p>
               <p className="text-lg font-semibold text-rose-600">0 đ</p>
             </div>
@@ -58,7 +64,7 @@ function TopUpBtn() {
   );
 }
 
-const InformationCard = () => {
+const MyWallet = () => {
   const {user} = useAuth();
   const navigate = useNavigate();
   const handleMPersonal = (e) => {
@@ -123,7 +129,7 @@ const InformationCard = () => {
               </div>
             </div>
           </div>
-          <MyWallet/>
+          <WalletSection/>
           <TopUpBtn/>
         </div>
         <ToastContainer stacked/>
@@ -131,5 +137,5 @@ const InformationCard = () => {
   );
 };
 
-export default InformationCard;
-export {MyWallet, TopUpBtn};
+export default MyWallet;
+export {WalletSection, TopUpBtn};

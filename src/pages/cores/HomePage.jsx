@@ -1,6 +1,6 @@
 import {BsFillMenuButtonWideFill} from 'react-icons/bs';
 import {Link, ScrollRestoration} from 'react-router-dom';
-import InformationCard from '../../components/account/InformationCard.jsx';
+import MyWallet from '../../components/account/WalletSection.jsx';
 import {FeatureItem} from '../../components/home/FeatureItem.jsx';
 import ScrollableCardList from '../../components/home/ScrollableCardList.jsx';
 import {Slider} from 'rsuite';
@@ -27,7 +27,7 @@ const HomePage = () => {
         <div className={'flex w-full justify-center items-center '}>
           <div className={'flex w-full flex-col xg:flex-row justify-center'}>
             <div className={'order-first xg:order-last md:ml-9'}>
-              <InformationCard/>
+              <MyWallet/>
             </div>
             <div className="min-h-screen flex flex-col max-w-3xl">
               <div className="flex items-center justify-between p-4 w-full bg-white">
