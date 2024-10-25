@@ -3,12 +3,8 @@ import {FaComputer} from 'react-icons/fa6';
 import {FaCreditCard, FaMobileAlt, FaMoneyBillWave} from 'react-icons/fa';
 import {MdOutlineAccountBalanceWallet, MdOutlineSyncLock, MdQrCodeScanner} from 'react-icons/md';
 import {GiBank} from 'react-icons/gi';
-import {useAuth} from '../../modules/hooks/useAuth.jsx';
-import {Navigate} from 'react-router-dom';
 
 const IntroPage = () => {
-  const {isAuthenticate} = useAuth();
-  if (isAuthenticate) return (<Navigate to={'/home'}/>);
 
   const services = [
     {

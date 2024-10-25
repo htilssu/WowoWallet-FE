@@ -1,6 +1,6 @@
 import 'rsuite/dist/rsuite.min.css';
 import {Button, MantineProvider} from '@mantine/core';
-import {setTitle} from '../../util/titleUtil.js';
+import {setTitle} from '../../util/title.util.js';
 import {callBackUrl} from '../CallBackHandler.jsx';
 import {sso} from '../../SSO.jsx';
 

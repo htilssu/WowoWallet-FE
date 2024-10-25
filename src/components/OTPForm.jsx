@@ -1,138 +1,45 @@
-﻿import {useEffect, useState} from 'react';
-import {toast, ToastContainer} from 'react-toastify';
-import {ScrollRestoration, useLocation, useNavigate} from 'react-router-dom';
+﻿import {useState} from 'react';
+import {ToastContainer} from 'react-toastify';
+import {ScrollRestoration} from 'react-router-dom';
 import {PinInput} from '@mantine/core';
-import {post} from '../util/requestUtil.js';
-import {useAuth} from '../modules/hooks/useAuth.jsx';
+import transferMoney from './payment/TransferMoney.jsx';
 
-const OTPForm = () => {
-      const {user} = useAuth();
+const OTPForm = ({
+      onCancel,
+      sendTo,
+      onSubmit,
+      onResendOtp,
+    }) => {
       const [otp, setOtp] = useState('');
-      const [resendTime, setResendTime] = useState(50);
-      const [error, setError] = useState(null);
-      const [loading, setLoading] = useState(false);
-      const navigate = useNavigate();
+      const [error, setError] = useState(undefined);
+      const [resendTime, setResendTime] = useState();
 
-      //nhận type từ các trang chuyển đến OTP...
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const type = urlParams.get('type');
+      function onPinInputChange(value) {
+        setError(null);
+        setOtp(value);
+      }
 
-      //nhận số tiền và email
-      const location = useLocation();
-      const {amount, recipientEmail} = location.state || {};
-
-      const handleSubmit = async (e) => {
+      async function onSubmitOtp(e) {
+        setError(null);
         e.preventDefault();
-
-        if (otp.length === 0 || otp.length < 6) {
-          setError('Vui lòng nhập đầy đủ OTP!');
+        if (otp.length < 6) {
+          setError('Mã OTP phải có 6 chữ số');
           return;
         }
-
         try {
-          post('/v1/otp/verify', {
-            otp: otp,
-          })
-              .then((res) => {
-                toast.success(res.data.message);
-                setError(null);
-                if (type === 'service') {
-                  handlePaymentRequest();
-                }
-                if (type === 'transfer') {
-                  handleSendMoney();
-                }
-              })
-              .catch((e) => {
-                setError(e.response.data.message);
-              });
-        } catch (error) {
-          toast.error('Đã xảy ra lỗi trong quá trình xác thực OTP!');
-          setError('Đã xảy ra lỗi trong quá trình xác thực OTP!');
+          await onSubmit(otp);
+          transferMoney();
         }
-      };
-
-      const handleChange = (value) => {
-        setOtp(value);
-        setError(null);
-      };
-
-      const handleResendOtp = async () => {
-        setOtp('');
-        setError(null);
-        setLoading(true); // Bắt đầu loading
-
-        post('/v1/otp', {
-          otpType: 'email',
-        })
-            .then((res) => {
-              toast.success(res.data.message);
-              setError(null);
-              setLoading(false);
-              setResendTime(50);
-            })
-            .catch((e) => {
-              toast.error('Đã xảy ra lỗi gửi lại OTP!');
-              setError('Đã xảy ra lỗi gửi lại OTP! Vui lòng thử lại.');
-              setLoading(false);
-            });
-
-      };
-
-      useEffect(() => {
-        if (resendTime > 0) {
-          const timer = setInterval(() => {
-            setResendTime((prevResendTime) => prevResendTime - 1);
-          }, 1000);
-          return () => clearInterval(timer);
+        catch (e) {
+          setError(e.response.data.message);
         }
-      }, [resendTime]);
-
-      const handlePaymentRequest = () => {
-        const {pid} = location.state || {};
-        post(`/v1/prequest/${pid}`, {}).then((res) => {
-          navigate(`/transactions/transaction/success/${res.data.id}`);
-        });
-      };
-
-      const handleSendMoney = () => {
-        try {
-          post('/v1/transfer', {
-            transactionTarget: 'wallet',
-            type: type,
-            sendTo: recipientEmail,
-            money: amount,
-          })
-              .then((res) => {
-                toast.success(res.data.message);
-                setError(null);
-                setLoading(false);
-                //chuyển thành công chuyển sang trang success kèm theo id Transaction
-                navigate(`/transactions/transaction/success/${res.data.id}`);
-              })
-              .catch((e) => {
-                toast.error('Đã xảy ra lỗi Chuyển tiền!');
-                setError('Đã xảy ra lỗi khi Chuyển tiền! Vui lòng thử lại.');
-                setLoading(false);
-              });
-        } catch (error) {
-          toast.error('Đã xảy ra lỗi trong quá trình Chuyển tiền!');
-          setError('Đã xảy ra lỗi trong quá trình Chuyển tiền!');
-          setLoading(false);
-        }
-      };
+      }
 
       return (
           <div className={''}>
-            <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
-              <div className="bg-white rounded-lg shadow-md w-full max-w-md mt-6 p-6">
+            <div className="flex flex-col items-center">
+              <div className="bg-white rounded-lg overflow-hidden shadow-md w-full max-w-md p-4 border-1">
                 <div className="flex flex-col items-center">
-                  <img
-                      src="otp_veri.png"
-                      alt="OTP Verification"
-                      className="w-24 mb-4"
-                  />
                   <h2 className="text-2xl font-semibold text-gray-800 mb-2">
                     Xác thực OTP
                   </h2>
@@ -140,26 +47,26 @@ const OTPForm = () => {
                     Nhập mã OTP được gửi đến Email:
                   </p>
                   <div className="font-medium text-md text-gray-800 mb-4">
-                    {user.email}
+                    {sendTo}
                   </div>
                 </div>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={onSubmitOtp} className="space-y-6">
                   <div className="flex flex-col justify-center items-center">
                     <PinInput
                         length={6}
                         type={/^[0-9]*$/}
-                        inPutType="tel"
-                        inPutMode="numeric"
+                        inputMode="numeric"
                         value={otp}
-                        onChange={handleChange}
+                        oneTimeCode
+                        onChange={onPinInputChange}
                     />
-                    {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
+                    {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
                   </div>
 
                   <div className="flex justify-between items-center gap-6">
                     <button
                         type="button"
-                        onClick={() => window.history.back()}
+                        onClick={onCancel}
                         className="w-1/2 px-4 py-2 text-gray-600 border rounded-lg hover:bg-gray-200 hover:text-red-600"
                     >
                       Hủy
@@ -180,18 +87,17 @@ const OTPForm = () => {
                       </p>
                   ) : (
                        <button
-                           onClick={handleResendOtp}
-                           disabled={loading}
+                           onClick={onResendOtp}
+                           disabled={false}
                            className="text-blue-500 hover:underline"
                        >
-                         {loading ? 'Đang gửi lại...' : 'Gửi lại OTP'}
+                         {false ? 'Đang gửi lại...' : 'Gửi lại OTP'}
                        </button>
                    )}
                 </div>
               </div>
             </div>
             <ScrollRestoration/>
-            <ToastContainer stacked/>
           </div>
       );
     }
