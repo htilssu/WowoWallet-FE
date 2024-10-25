@@ -1,32 +1,37 @@
-import { ScrollRestoration, useLocation } from 'react-router-dom';
+import { ScrollRestoration } from 'react-router-dom';
 import RecentActivities from "./recentActivitiesFund.jsx";
 import { useParams } from 'react-router-dom';
 import DonateForm from "./FundForm/DonateForm.jsx";
-import {useState} from "react";
-
-// Sample data for funds
-const sampleFunds = [
-    {
-        fundName: "Quỹ Du Lịch Đà Lạt",
-        purpose: "Đi du lịch Đà Lạt vào mùa hè tới.",
-        contributionAmount: "10,000,000 VNĐ",
-        contributionDeadline: "2024-12-31",
-        fundManager: "Nguyễn Anh Tuấn",
-        fundManagerMail: "tuanmeo980@gmail.com",
-        spendingRules: "Chi tiêu cho khách sạn và vé máy bay.",
-        fundImage: "/sanmay.png",
-        members: ["tuanmeo980@gmail.com","example1@gmail.com", "example2@gmail.com"]
-    }
-];
-const user = {
-    Gmail: "tuanmeo980@gmail.com",
-}
+import { useEffect, useState } from "react";
+import { wGet } from "../../util/request.util.js";
+import { useAuth } from "../../modules/hooks/useAuth.jsx";
 
 const FundDetailPage = () => {
     const { id } = useParams(); // Lấy ID của quỹ từ URL
-    const location = useLocation();
-    const fundData = location.state?.fundData || sampleFunds[0]; // Sử dụng dữ liệu mẫu nếu không có dữ liệu từ location.state
+    const [fundData, setFundData] = useState(null);
+    const [fundMembers, setFundMembers] = useState(null);
+    const [error, setError] = useState(null);
     const [isDonateFormOpen, setIsDonateFormOpen] = useState(false);
+
+    //fetch data Detail Fundroup
+    const fetchDetailGroup = async () => {
+        try {
+            const funds = await wGet(`/v1/group-fund/${id}`);
+
+            setFundData(funds);
+
+            const members = await wGet(`/v1/group-fund/${id}/members`);
+            setFundMembers(members);
+        } catch (error) {
+            console.log(error);
+            setError(error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchDetailGroup();
+    }, [id]);
+
     const handleDonateClick = () => {
         setIsDonateFormOpen(true); // Mở form
     };
@@ -34,11 +39,16 @@ const FundDetailPage = () => {
     const handleCloseDonateForm = () => {
         setIsDonateFormOpen(false); // Đóng form
     };
-    if (!fundData) {
-        return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Không tìm thấy dữ liệu quỹ.</div>;
-    }
 
-    const isFundManager = fundData.fundManagerMail === user.Gmail;
+    const { user } = useAuth();
+    const userId = user.id;
+    const isFundManager = !(fundData && fundData.owner && fundData.owner.id === userId);
+
+    const progressPercentage = Math.min((fundData?.balance / fundData?.target) * 100, 100);
+
+    if (!fundData) {
+        return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Không thể lấy thông tin quỹ</div>;
+    }
 
     return (
         <div className="flex justify-center min-h-screen bg-gray-100 p-4 sm:p-8">
@@ -46,33 +56,36 @@ const FundDetailPage = () => {
                 {/* Fund Image */}
                 <div className={"justify-between"}>
                     <img
-                        src={fundData.fundImage}
+                        src={fundData.image}
                         alt="Ảnh quỹ"
                         className="w-full h-32 sm:h-64 object-cover rounded-lg p-1"
                     />
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-8">
                     {/* Fund Title */}
-                    <h2 className="text-xl sm:text-3xl font-bold sm:mb-4 mb-2">{fundData.fundName}</h2>
+                    <h2 className="text-xl sm:text-3xl font-bold sm:mb-4 mb-2">{fundData.name}</h2>
 
                     {/* Fund Purpose */}
-                    <p className="sm:text-lg mb-4">{fundData.purpose}</p>
+                    <p className="sm:text-lg mb-4">{fundData.description}</p>
 
                     {/* Action Buttons */}
                     <div className="mb-2 sm:mb-6 flex justify-center sm:justify-start">
                         <button
                             className="px-2 py-2 ssm:px-4 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 mr-2"
-                            onClick={handleDonateClick}  >
+                            onClick={handleDonateClick}
+                        >
                             Góp Quỹ
                         </button>
-                        {isFundManager && ( // Only show buttons if user is fund manager
+                        {isFundManager && (
                             <>
                                 <button
-                                    className="px-2 py-2 ssm:px-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 mr-2">
+                                    className="px-2 py-2 ssm:px-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 mr-2"
+                                >
                                     Nhắc Đóng Quỹ
                                 </button>
                                 <button
-                                    className="px-2 py-2 ssm:px-4 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600">
+                                    className="px-2 py-2 ssm:px-4 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600"
+                                >
                                     Rút Quỹ
                                 </button>
                             </>
@@ -86,29 +99,28 @@ const FundDetailPage = () => {
                                 <span className="sm:text-lg font-semibold mr-2">Số Dư:</span>
                                 <div className={"flex flex-grow gap-1 sm:text-lg"}>
                                     <div className={"text-green-500"}>
-                                        1.000.000
+                                        {fundData.balance.toLocaleString('vi-VN')}
                                     </div>
                                     <div className={"text-gray-900"}>
-                                        / {fundData.contributionAmount}
+                                        / {fundData.target.toLocaleString('vi-VN')}
                                     </div>
                                 </div>
-                                <span className="font-medium"></span>
                             </div>
                             <div className="flex justify-end items-center gap-2">
                                 <span className="font-medium">Hạn đến:</span>
-                                <span className="font-light">{fundData.contributionDeadline}</span>
+                                <span className="font-light">{fundData.targetDate}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Progress Bar (Placeholder) */}
+                    {/* Progress Bar */}
                     <div className="border-1 border-amber-400 bg-gray-200 rounded-full h-4 mb-6">
-                        <div className="bg-green-500 h-full rounded-full" style={{width: '25%'}}></div>
+                        <div className="bg-green-500 h-full rounded-full" style={{ width: `${progressPercentage}%` }}></div>
                     </div>
 
                     {/* Recent Activities */}
                     <div>
-                        <RecentActivities/>
+                        <RecentActivities />
                     </div>
 
                     {/* Fund Manager */}
@@ -121,10 +133,10 @@ const FundDetailPage = () => {
                             />
                             <div>
                                 <div className="flex-1">
-                                    <p className="text-primary">{fundData.fundManager}</p>
+                                    <p className="text-primary">{fundData.owner.email}</p>
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-gray-500">{fundData.fundManagerMail}</p>
+                                    <p className="text-gray-500">Ngày tạo: {fundData.targetDate}</p>
                                 </div>
                             </div>
                         </div>
@@ -135,7 +147,8 @@ const FundDetailPage = () => {
                         <h3 className="text-xl font-semibold mb-2">Thành Viên</h3>
                         <div className="flex mb-4">
                             <button
-                                className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 mr-2">
+                                className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 mr-2"
+                            >
                                 Mời Bạn
                             </button>
                             <button className="px-4 py-2 bg-teal-500 text-white rounded-lg shadow-md hover:bg-teal-600">
@@ -143,8 +156,12 @@ const FundDetailPage = () => {
                             </button>
                         </div>
                         <ul className="list-disc pl-5">
-                            {fundData.members.length > 0 ? (
-                                fundData.members.map((member, index) => <li key={index}>{member}</li>)
+                            {fundMembers && fundMembers.length > 0 ? (
+                                fundMembers.map((member, index) => (
+                                    <li key={index}>
+                                        {member.email}
+                                    </li>
+                                ))
                             ) : (
                                 <li>Chưa có thành viên nào.</li>
                             )}
@@ -154,7 +171,8 @@ const FundDetailPage = () => {
                     {isFundManager && (
                         <div>
                             <button
-                                className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow-md hover:bg-indigo-600">
+                                className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow-md hover:bg-indigo-600"
+                            >
                                 Chỉnh Sửa Quỹ
                             </button>
                         </div>
@@ -168,7 +186,7 @@ const FundDetailPage = () => {
                     )}
                 </div>
             </div>
-            <ScrollRestoration/>
+            <ScrollRestoration />
             {isDonateFormOpen && <DonateForm onClose={handleCloseDonateForm} />}
         </div>
     );

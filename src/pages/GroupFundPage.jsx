@@ -1,47 +1,46 @@
-import { useNavigate } from 'react-router-dom';
+import {ScrollRestoration, useNavigate} from 'react-router-dom';
 import InviteFund from "../components/GroupFund/InviteFundGroup.jsx";
-
-const createdFunds = [
-    {
-        fundName: "Quỹ Du Lịch Đà Lạt",
-        balanceAmount: "10,000,000 VNĐ",
-        fundImage: "/sanmay.png",
-        id: 1, // ID của quỹ để điều hướng
-    },
-    {
-        fundName: "Quỹ Sinh Nhật Cô Ba",
-        balanceAmount: "5,000,000 VNĐ",
-        fundImage: "/sinhnhat.png",
-        id: 2,
-    }
-];
-
-const participatingFunds = [
-    {
-        fundName: "Quỹ Mua Gạo Từ Thiện",
-        balanceAmount: "3,000,000 VNĐ",
-        fundImage: "/tuthien.png",
-        id: 3,
-    },
-    {
-        fundName: "Quỹ Dã Ngoại Nhóm",
-        balanceAmount: "2,000,000 VNĐ",
-        fundImage: "/sanmay.png",
-        id: 4,
-    }
-];
+import {useEffect, useState} from "react";
+import {useAuth} from "../modules/hooks/useAuth.jsx";
+import {wGet} from "../util/request.util.js";
 
 const GroupFundPage = () => {
-    const navigate = useNavigate(); // Khởi tạo hook để điều hướng
+    const [createdFunds, setCreatedFunds] = useState([]);
+    const [joinedFunds, setJoinedFunds] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+    const {user} = useAuth();
+    const userId = user.id;
+
+    useEffect(() => {
+        const fetchGroupFunds = async () => {
+            try {
+                const response = await wGet(`/v1/group-fund/user`);
+                const {createdFunds, joinedFunds} = response;
+
+                if (createdFunds.length === 0 && joinedFunds.length === 0) {
+                    setErrorMessage('Bạn chưa tạo hoặc tham gia quỹ nào.');
+                } else {
+                    setCreatedFunds(createdFunds);
+                    setJoinedFunds(joinedFunds);
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy danh sách quỹ:', error);
+                setErrorMessage('Có lỗi xảy ra khi lấy danh sách quỹ.');
+            }
+        };
+
+        fetchGroupFunds();
+    }, [userId]);
+
+    const navigate = useNavigate();
 
     // Hàm điều hướng đến trang chi tiết quỹ
     const handleFundClick = (id) => {
-        navigate(`/fund/${id}`); // Điều hướng đến trang chi tiết quỹ với ID
+        navigate(`/fund/${id}`);
     };
 
-    // Hàm điều hướng đến trang tạo quỹ mới
     const handleCreateNewFund = () => {
-        navigate('/group-fund/new-group'); // Điều hướng đến trang tạo quỹ mới
+        navigate('/group-fund/new-group');
     };
 
     return (
@@ -56,59 +55,75 @@ const GroupFundPage = () => {
                         </p>
                     </div>
                     {/*lời mời tham gia quỹ*/}
-                    <div>
+                    <div className={"mb-6"}>
                         <InviteFund/>
                     </div>
+                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                     {/* Created Funds */}
-                    <div className="w-full mb-12">
-                        <h2 className="text-3xl font-semibold text-gray-700 mb-2">Quỹ Đã Tạo</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {createdFunds.map((fund) => (
-                                <div key={fund.id}
-                                     className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
-                                     onClick={() => handleFundClick(fund.id)} // Điều hướng khi nhấn vào quỹ
-                                >
-                                    <img src={fund.fundImage} alt={fund.fundName}
-                                         className="rounded-lg w-full h-48 object-cover mb-4"/>
-                                    <h3 className="text-2xl font-bold text-gray-800 mb-2">{fund.fundName}</h3>
-                                    <p className="text-gray-600">Số tiền đã góp:
-                                        <span className="font-semibold text-green-500"> {fund.balanceAmount}</span>
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="w-full mb-10">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Quỹ Đã Tạo</h2>
+                        {createdFunds.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {createdFunds.map((fund) => (
+                                    <div key={fund.id}
+                                         className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
+                                         onClick={() => handleFundClick(fund.id)}
+                                    >
+                                        <img src={fund.image} alt={fund.name}
+                                             className="rounded-lg w-full h-48 object-cover mb-4"/>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2">{fund.name}</h3>
+                                        <p className="text-gray-600">
+                                            Số tiền đã góp:
+                                            <span className="font-semibold text-green-500 ml-2">
+                                            {fund.balance.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                                            </span>
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>Bạn chưa tạo quỹ nào.</p>
+                        )}
                     </div>
 
                     {/* Participating Funds */}
                     <div className="w-full mb-12">
-                        <h2 className="text-3xl font-semibold text-gray-700 mb-2">Quỹ Đang Tham Gia</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {participatingFunds.map((fund) => (
-                                <div key={fund.id}
-                                     className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
-                                     onClick={() => handleFundClick(fund.id)} // Điều hướng khi nhấn vào quỹ
-                                >
-                                    <img src={fund.fundImage} alt={fund.fundName}
-                                         className="rounded-lg w-full h-48 object-cover mb-4"/>
-                                    <h3 className="text-2xl font-bold text-gray-800 mb-2">{fund.fundName}</h3>
-                                    <p className="text-gray-600">Số tiền đã góp:
-                                        <span className="font-semibold text-green-500"> {fund.balanceAmount}</span>
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Quỹ Đang Tham Gia</h2>
+                        {joinedFunds.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {joinedFunds.map((fund) => (
+                                    <div key={fund.id}
+                                         className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
+                                         onClick={() => handleFundClick(fund.id)} // Điều hướng khi nhấn vào quỹ
+                                    >
+                                        <img src={fund.image} alt={fund.name}
+                                             className="rounded-lg w-full h-48 object-cover mb-4"/>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2">{fund.name}</h3>
+                                        <p className="text-gray-600">Số tiền đã góp:
+                                            <span className="font-semibold text-green-500 ml-2">
+                                            {fund.balance.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                                            </span>
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p>Bạn chưa tham gia quỹ nào.</p>
+                        )}
                     </div>
 
-                    {/* Create New Fund Button */}
+                    {/* Nút Tạo Quỹ Mới */}
                     <div className="fixed bottom-8 right-16">
                         <button
-                            onClick={handleCreateNewFund} // Điều hướng khi nhấn vào nút tạo quỹ mới
-                            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-full shadow-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2">
-                            Tạo Quỹ Mới +
+                            onClick={handleCreateNewFund}
+                            className="relative inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white transition-transform transform bg-gradient-to-r from-blue-500 to-green-400 rounded-full shadow-lg hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:ring-offset-2 overflow-hidden"
+                        >
+                            <span className="relative z-10">Tạo Quỹ Mới +</span>
                         </button>
                     </div>
                 </div>
             </div>
+            <ScrollRestoration/>
         </div>
     );
 };
