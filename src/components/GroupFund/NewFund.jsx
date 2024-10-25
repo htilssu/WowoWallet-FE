@@ -1,8 +1,8 @@
 import {useState} from "react";
 import {Checkbox, Anchor} from "@mantine/core";
 import {ScrollRestoration, useNavigate} from "react-router-dom";
-import axios from "axios";
 import {TextField} from "@mui/material";
+import {wPost} from "../../util/request.util.js";
 
 // Hàm định dạng số tiền theo VND
 const formatCurrency = (value) => {
@@ -68,19 +68,16 @@ const NewFund = () => {
         e.preventDefault();
         if (validateForm()) {
             try {
-                const response = await axios.post('http://localhost:8080/v1/group-fund', {
+                const response = await wPost('http://localhost:8080/v1/group-fund', {
                     name: fundData.fundName,
                     image: "/sanmay.png",
                     type: fundData.fundType,
                     description: fundData.purpose,
                     target: fundData.contributionAmount.replace(/[^\d]/g, ''),
                     targetDate: fundData.contributionDeadline,
-                    owner: {
-                        "id": 1
-                    },
                 });
                 console.log('Quỹ được tạo thành công:', response.data);
-                navigate(`/fund/${response.data.id}`);
+                navigate(`/group-fund`);
             } catch (error) {
                 console.error('Có lỗi xảy ra khi tạo quỹ:', error);
             }

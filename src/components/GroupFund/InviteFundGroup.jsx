@@ -1,4 +1,6 @@
 import {useEffect, useState} from 'react';
+import {useAuth} from "../../modules/hooks/useAuth.jsx";
+import {wGet} from "../../util/request.util.js";
 
 // Component hiển thị thông tin lời mời
 const InviteCard = ({ inviter, avatar, groupName, groupDescription, onJoin, onDecline }) => {
@@ -64,11 +66,12 @@ const InviteFund = () => {
     const [invitations, setInvitations] = useState([]);
     const [error, setError] = useState(null);
 
-    const recipientId = 1;
+    const {user} = useAuth();
+    const userId = user.id;
 
     const fetchInvitations = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/v1/invitations/received/${recipientId}`);
+            const response = await wGet(`/v1/invitations/received`);
             if (!response.ok) {
                 throw new Error(`Mã lỗi: ${response.status}`);
             }
@@ -82,7 +85,7 @@ const InviteFund = () => {
 
     useEffect(() => {
         fetchInvitations();
-    }, [recipientId]);
+    });
 
     // Hàm xử lý tham gia
     const handleJoin = (groupName) => {

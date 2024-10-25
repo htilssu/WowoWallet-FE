@@ -1,18 +1,21 @@
 import {ScrollRestoration, useNavigate} from 'react-router-dom';
 import InviteFund from "../components/GroupFund/InviteFundGroup.jsx";
 import {useEffect, useState} from "react";
-import axios from "axios";
+import {useAuth} from "../modules/hooks/useAuth.jsx";
+import {wGet} from "../util/request.util.js";
 
-const GroupFundPage = ({userId}) => {
+const GroupFundPage = () => {
     const [createdFunds, setCreatedFunds] = useState([]);
     const [joinedFunds, setJoinedFunds] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const {user} = useAuth();
+    const userId = user.id;
 
     useEffect(() => {
         const fetchGroupFunds = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/v1/group-fund/user/${1}`);
-                const {createdFunds, joinedFunds} = response.data;
+                const response = await wGet(`/v1/group-fund/user`);
+                const {createdFunds, joinedFunds} = response;
 
                 if (createdFunds.length === 0 && joinedFunds.length === 0) {
                     setErrorMessage('Bạn chưa tạo hoặc tham gia quỹ nào.');
@@ -33,7 +36,7 @@ const GroupFundPage = ({userId}) => {
 
     // Hàm điều hướng đến trang chi tiết quỹ
     const handleFundClick = (id) => {
-        navigate(`/group-fund/${id}`);
+        navigate(`/fund/${id}`);
     };
 
     const handleCreateNewFund = () => {
@@ -57,8 +60,8 @@ const GroupFundPage = ({userId}) => {
                     </div>
                     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                     {/* Created Funds */}
-                    <div className="w-full mb-8">
-                        <h2 className="text-2xl font-semibold text-gray-700 mb-2">Quỹ Đã Tạo</h2>
+                    <div className="w-full mb-10">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Quỹ Đã Tạo</h2>
                         {createdFunds.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {createdFunds.map((fund) => (
@@ -85,7 +88,7 @@ const GroupFundPage = ({userId}) => {
 
                     {/* Participating Funds */}
                     <div className="w-full mb-12">
-                        <h2 className="text-2xl font-semibold text-gray-700 mb-2">Quỹ Đang Tham Gia</h2>
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Quỹ Đang Tham Gia</h2>
                         {joinedFunds.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {joinedFunds.map((fund) => (
