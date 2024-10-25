@@ -21,7 +21,6 @@ const statusColor = {
   'Đang xử lý': 'text-yellow-500',
   'Thất bại': 'text-red-500',
   'Đã hủy': 'text-red-500',
-  // thêm các trạng thái khác nếu cần
 };
 
 const TransactionDetailPage = () => {
