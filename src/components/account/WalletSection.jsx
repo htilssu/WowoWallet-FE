@@ -16,6 +16,7 @@ function WalletSection() {
   } = useQuery({
     queryKey: 'wallet',
     queryFn: async () => await wGet('/v1/user/wallet'),
+    staleTime: 1000 * 30,
   });
 
   return (

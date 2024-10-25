@@ -4,7 +4,7 @@ const LoadingPageSkeleton = () => {
 
   return (
       <div
-          className={'absolute right-0 top-0 h-screen w-screen flex justify-center items-center'}
+            className={'h-screen w-full flex justify-center items-center max-h-screen'}
       >
         <ClipLoader
             color={'blue'}
