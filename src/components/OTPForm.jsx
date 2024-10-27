@@ -1,15 +1,13 @@
 ﻿import {useState} from 'react';
-import {ToastContainer} from 'react-toastify';
 import {ScrollRestoration} from 'react-router-dom';
 import {PinInput} from '@mantine/core';
-import transferMoney from './payment/TransferMoney.jsx';
 
 const OTPForm = ({
-      onCancel,
-      sendTo,
-      onSubmit,
-      onResendOtp,
-    }) => {
+                   onCancel,
+                   sendTo,
+                   onSubmit,
+                   onResendOtp,
+                 }) => {
       const [otp, setOtp] = useState('');
       const [error, setError] = useState(undefined);
       const [resendTime, setResendTime] = useState();
@@ -28,9 +26,9 @@ const OTPForm = ({
         }
         try {
           await onSubmit(otp);
-          transferMoney();
         }
         catch (e) {
+          console.log(e);
           setError(e.response.data.message);
         }
       }

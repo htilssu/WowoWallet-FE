@@ -24,8 +24,9 @@
     "@material-tailwind/react": "^2.1.10",
     "@mui/material": "^6.1.4",
     "@splinetool/react-spline": "^4.0.0",
-    "@tanstack/react-query": "^5.53.3",
+    "@tanstack/react-query": "^5.56.2",
     "@tanstack/react-query-devtools": "^5.54.0",
+    "@tanstack/react-table": "^8.20.5",
     "atm-card-react": "^1.4.1",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
@@ -47,6 +48,7 @@
     "react-switch": "^7.0.0",
     "react-toastify": "^10.0.5",
     "rsuite": "^5.65.1",
+    "styled-components": "^6.1.13",
     "swiper": "^11.1.5"
   },
   "devDependencies": {

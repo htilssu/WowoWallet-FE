@@ -5,11 +5,12 @@ import {FeatureItem} from '../../components/home/FeatureItem.jsx';
 import ScrollableCardList from '../../components/home/ScrollableCardList.jsx';
 import {Slider} from 'rsuite';
 import Statistical from '../../components/home/Statistical.jsx';
+import {Divider} from '@mantine/core';
 
 const Card = ({icon, title, onClick}) => {
   return (
       <div
-          className="w-full h-32 sm:h-36 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+          className="w-full h-32 sm:h-36 bg-white rounded-lg border border-gray-200 shadow transform hover:scale-105 transition-all duration-300 cursor-pointer"
           onClick={onClick}
       >
         <div className="p-8 flex flex-col items-center justify-center">
@@ -29,7 +30,7 @@ const HomePage = () => {
             <div className={'order-first xg:order-last md:ml-9'}>
               <MyWallet/>
             </div>
-            <div className="min-h-screen flex flex-col max-w-3xl">
+            <div className="min-h-screen flex bg-white rounded-lg overflow-hidden flex-col max-w-3xl">
               <div className="flex items-center justify-between p-4 w-full bg-white">
                 <div className="flex items-center">
                   <BsFillMenuButtonWideFill size={25} className="text-gray-800"/>
@@ -69,7 +70,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <div className={'md:px-10 border-t-2'}>
+        <div className={'px-20 mt-10'}>
           <div className={'rs-text-medium text-lg md:ml-6'}>
             Thống kê giao dịch
           </div>
