@@ -43,7 +43,7 @@ const FundDetailPage = () => {
     };
 
     useEffect(() => {
-        fetchDetailGroup();
+        fetchDetailGroup().then();
     }, [id]);
 
     const handleDonateClick = () => {
@@ -97,7 +97,7 @@ const FundDetailPage = () => {
     const confirmCancel = () => {
         setConfirmLeave(true);
         setIsModalOpen(false);
-        handleLeaveGroup();
+        handleLeaveGroup().then(r => {});
     };
 
     const closeModal = () => {
@@ -154,10 +154,10 @@ const FundDetailPage = () => {
                                     <span className="sm:text-lg font-semibold mr-2">Số Dư:</span>
                                     <div className={"flex flex-grow gap-1 sm:text-lg"}>
                                         <div className={"text-green-500"}>
-                                            {fundData.balance.toLocaleString('vi-VN')}
+                                            {fundData?.balance?.toLocaleString('vi-VN')}
                                         </div>
                                         <div className={"text-gray-900"}>
-                                            / {fundData.target.toLocaleString('vi-VN')}
+                                            / {fundData?.target?.toLocaleString('vi-VN')}
                                         </div>
                                     </div>
                                 </div>
