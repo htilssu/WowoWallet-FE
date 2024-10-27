@@ -1,5 +1,5 @@
 import 'rsuite/dist/rsuite.min.css';
-import {Button, MantineProvider} from '@mantine/core';
+import {Button} from '@mantine/core';
 import {setTitle} from '../../util/title.util.js';
 import {callBackUrl} from '../CallBackHandler.jsx';
 import {sso} from '../../SSO.jsx';
@@ -12,7 +12,6 @@ const SignInPage = () => {
   };
 
   return (
-      <MantineProvider>
         <div className="min-h-screen w-full p-4 overflow-hidden bg-gray-100 text-gray-900 flex justify-center">
           <div
               className="w-full m-0 bg-white rounded-lg overflow-hidden shadow sm:rounded-lg flex justify-center flex-1">
@@ -46,7 +45,6 @@ const SignInPage = () => {
             </div>
           </div>
         </div>
-      </MantineProvider>
   );
 };
 
