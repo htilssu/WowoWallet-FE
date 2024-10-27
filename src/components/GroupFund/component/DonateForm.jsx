@@ -1,60 +1,67 @@
-import React, { useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import { GiShakingHands } from "react-icons/gi";
 
-const DonateForm = ({ onClose }) => {
+const DonateForm = ({ onClose, fundId, balance }) => {
     const [amount, setAmount] = useState("");
     const [note, setNote] = useState("");
-    const [fundBalance, setFundBalance] = useState(1000000);
+    const [fundBalance, setFundBalance] = useState(balance);
     const [isAmountFocused, setIsAmountFocused] = useState(false);
     const [error, setError] = useState("");
 
-    const suggestionAmounts = [20000, 50000, 100000]; // Danh sách số tiền gợi ý
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
-
-        if (!amount) {
-            setError("Vui lòng nhập số tiền.");
-        } else if (numericAmount < 20000) {
-            setError("Số tiền góp phải lớn hơn hoặc bằng 20.000 VNĐ.");
-        } else {
-            const updatedBalance = fundBalance + numericAmount;
-            setFundBalance(updatedBalance);
-            setError("");
-
-            console.log({
-                amount: numericAmount,
-                note,
-                updatedBalance,
-            });
-
-            setAmount("");
-            setNote("");
-            onClose(); // Đóng modal sau khi gửi
-        }
-    };
+    const suggestionAmounts = [20000, 50000, 100000];
+    const formRef = useRef(null)
 
     const handleSuggestionClick = (suggestedAmount) => {
         setAmount(suggestedAmount.toLocaleString("en-US", { style: 'decimal', minimumFractionDigits: 0 }).replace(/,/g, '.')); // Định dạng số tiền gợi ý với dấu chấm
         setError(""); // Reset error when a suggestion is clicked
     };
 
+    //sự kiện đóng form
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (formRef.current && !formRef.current.contains(event.target)) {
+                onClose(); // Call the onClose function if clicked outside
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [onClose]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
+        if (!amount) {
+            setError("Vui lòng nhập số tiền.");
+        } else if (numericAmount < 20000) {
+            setError("Số tiền góp phải lớn hơn hoặc bằng 20.000 VNĐ.");
+        } else {
+
+            //Goi API chuyen tien
+
+            onClose();
+        }
+    };
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-            <div className="w-[500px] sm:max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md mb-4">
+            <div ref={formRef} className="w-[500px] sm:max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md mb-4">
                 <div className="flex justify-center text-green-500">
                     <div className="text-6xl">
-                        <GiShakingHands />
+                        <GiShakingHands/>
                     </div>
                 </div>
                 <div className="mb-6 flex justify-between items-center">
                     <p className="text-lg font-medium text-gray-700">
                         Số dư quỹ hiện tại:
                     </p>
-                    <span className="font-semibold">
-                        {fundBalance.toLocaleString("en-US", { style: 'decimal', minimumFractionDigits: 0 }).replace(/,/g, '.')} VNĐ
+                    <span className="font-semibold text-lg text-green-500">
+                        {fundBalance.toLocaleString("en-US", {
+                            style: 'decimal',
+                            minimumFractionDigits: 0
+                        }).replace(/,/g, '.')} VNĐ
                     </span>
                 </div>
 
@@ -108,7 +115,10 @@ const DonateForm = ({ onClose }) => {
                                 className="h-10 bg-gradient-to-r from-green-500 to-green-500 text-white py-2 px-1
                                     rounded-lg hover:from-green-600 hover:to-green-600 hover:bg-gradient-to-r focus:outline-none focus:shadow-outline transition duration-300"
                             >
-                                {val.toLocaleString("en-US", { style: 'decimal', minimumFractionDigits: 0 }).replace(/,/g, '.')} VNĐ {/* Hiển thị số tiền với định dạng VNĐ */}
+                                {val.toLocaleString("en-US", {
+                                    style: 'decimal',
+                                    minimumFractionDigits: 0
+                                }).replace(/,/g, '.')} VNĐ {/* Hiển thị số tiền với định dạng VNĐ */}
                             </button>
                         ))}
                     </div>
@@ -138,12 +148,14 @@ const DonateForm = ({ onClose }) => {
                     </button>
                 </form>
 
-                <button
-                    onClick={onClose}
-                    className="mt-4 text-red-500 hover:underline"
-                >
-                    Đóng
-                </button>
+                <div className={"flex justify-center"}>
+                    <button
+                        onClick={onClose}
+                        className="mt-4 text-gray-700 hover:text-red-600"
+                    >
+                        Đóng
+                    </button>
+                </div>
             </div>
         </div>
     );
