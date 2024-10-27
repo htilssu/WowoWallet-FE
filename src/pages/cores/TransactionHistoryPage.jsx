@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {Pagination, Select, TextInput} from '@mantine/core';
@@ -7,6 +6,8 @@ import {DatePickerInput} from '@mantine/dates';
 import '@mantine/dates/styles.css';
 import TransactionTable from '../../components/history/TransactionTable.jsx';
 import {useForm} from '@mantine/form';
+import {useNavigate, useSearchParams} from 'react-router-dom';
+import {useEffect} from 'react';
 
 const options = [
   {
@@ -52,7 +53,7 @@ const TransactionHistory = () => {
 
   return (
       <div className={'mb-4 flex'}>
-        <div>
+        <div className={'w-full mt-10'}>
           <HistorySection/>
         </div>
       </div>
@@ -60,7 +61,9 @@ const TransactionHistory = () => {
 };
 
 function HistorySection() {
-  const [page, setPage] = useState(0);
+  let [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page') || 0;
+  const navigate = useNavigate();
   const filterForm = useForm({
     initialValues: {
       'filter': 'TẤT CẢ',
@@ -69,11 +72,20 @@ function HistorySection() {
     },
   });
 
-  const {data: transactions} = useQuery({
+  useEffect(() => {
+    if (page < 0) {
+      setSearchParams({page: 0});
+    }
+  }, [page, setSearchParams]);
+
+  const {data} = useQuery({
     queryKey: [`transactions-history-${page}`],
-    queryFn: async () => await wGet(`/v1/transaction/history?offset=5&page=${page}`),
-    staleTime: 1000 * 30,
+    queryFn: async () => await wGet(`/v1/transaction/history?offset=10&page=${page < 0 ? 0 : page}`),
+    staleTime: 1000 * 60 * 5,
   });
+
+  const transactions = data?.data || [];
+  const totalPage = Math.max(1, Math.ceil(data?.total / 10));
 
   return (
       <div className="flex flex-col items-center min-h-screen">
@@ -82,7 +94,7 @@ function HistorySection() {
             Lịch Sử Giao Dịch
           </h2>
         </div>
-        <div className="bg-white p-6 rounded-lg w-full max-w-6xl">
+        <div className="bg-white mt-2 p-6 rounded-lg w-full max-w-6xl">
           <div className="mb-4 flex items-center justify-between">
             <TextInput
                 {...filterForm.getInputProps('search')}
@@ -157,10 +169,12 @@ function HistorySection() {
             <div className={'flex justify-center items-center mt-2'}>
               <Pagination
                   page={page}
-                  onChange={(page) => setPage(page - 1)}
-                  total={10}
+                  total={totalPage}
+                  className={'mt-2'}
+                  onChange={(page) => {
+                    setSearchParams({page: page});
+                  }}
                   color={'rgb(26,180,74)'}
-                  style={{marginTop: '20px'}}
               />
             </div>
           </>

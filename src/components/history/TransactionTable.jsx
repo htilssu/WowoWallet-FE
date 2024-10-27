@@ -48,42 +48,44 @@ function TransactionTable({list}) {
   }
 
   return (
-      <table className="min-w-full bg-white border rounded-lg overflow-hidden">
-        <thead className="bg-orange-50 text-black text-center">
-        {tableInstance.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                  <th
-                      key={header.id}
-                      className="py-4 cursor-pointer"
-                      onClick={header.column.getToggleSortingHandler()}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {{
-                      asc: ' 🔼',
-                      desc: ' 🔽',
-                    }[header.column.getIsSorted()] ?? null}
-                  </th>
-              ))}
-            </tr>
-        ))}
-        </thead>
-        <tbody>
-        {tableInstance.getRowModel().rows.map((row) => (
-            <tr
-                key={row.id}
-                onClick={() => redirectToTransactionDetail(row.original.id)}
-                className="hover:bg-gray-100 text-center"
-            >
-              {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="py-3 cursor-pointer">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-              ))}
-            </tr>
-        ))}
-        </tbody>
-      </table>
+      <div className={'w-full rounded-lg overflow-hidden border border-gray-500'}>
+        <table className="w-full table-fixed bg-white">
+          <thead className="bg-orange-50 text-black text-center border-b border-gray-400">
+          {tableInstance.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                    <th
+                        key={header.id}
+                        className="py-4 cursor-pointer"
+                        onClick={header.column.getToggleSortingHandler()}
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {{
+                        asc: ' 🔼',
+                        desc: ' 🔽',
+                      }[header.column.getIsSorted()] ?? null}
+                    </th>
+                ))}
+              </tr>
+          ))}
+          </thead>
+          <tbody>
+          {tableInstance.getRowModel().rows.map((row) => (
+              <tr
+                  key={row.id}
+                  onClick={() => redirectToTransactionDetail(row.original.id)}
+                  className="hover:bg-gray-100 text-center"
+              >
+                {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="py-3 cursor-pointer">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                ))}
+              </tr>
+          ))}
+          </tbody>
+        </table>
+      </div>
   );
 }
 
