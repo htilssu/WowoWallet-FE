@@ -4,7 +4,6 @@ import {useQuery} from '@tanstack/react-query';
 import {Pagination, Select, TextInput} from '@mantine/core';
 import {MdOutlineSearch} from 'react-icons/md';
 import {DatePickerInput} from '@mantine/dates';
-import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import TransactionTable from '../../components/history/TransactionTable.jsx';
 import {useForm} from '@mantine/form';

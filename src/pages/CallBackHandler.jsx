@@ -21,9 +21,6 @@ const CallBackHandler = () => {
         navigate('/sign-in');
       }
     }
-    else {
-      navigate('/sign-in');
-    }
   }, [navigate, token]);
   return (
       <div/>
