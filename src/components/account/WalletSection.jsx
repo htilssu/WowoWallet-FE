@@ -4,7 +4,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import AvatarStatus from '../library component/AvatarStatus.jsx';
 import {ToastContainer} from 'react-toastify';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
-import {Skeleton} from '@mantine/core';
+import {Divider, Skeleton} from '@mantine/core';
 import {formatCurrency} from '../../util/currency.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {wGet} from '../../util/request.util.js';
@@ -14,13 +14,13 @@ function WalletSection() {
     data: wallet,
     isLoading,
   } = useQuery({
-    queryKey: 'wallet',
+    queryKey: ['wallet'],
     queryFn: async () => await wGet('/v1/user/wallet'),
     staleTime: 1000 * 30,
   });
 
   return (
-      <div className="p-4 border-2 border-gray-200 rounded-2xl bg-white">
+      <div className="p-4 rounded-2xl bg-white">
         <div>
           <div className="text-zinc-900 font-medium text-xl mb-2">VÍ CỦA TÔI</div>
           <div className="flex flex-wrap">
@@ -74,7 +74,7 @@ const MyWallet = () => {
 
   return (
       <div>
-        <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg overflow-hidden mb-9">
+        <div className="max-w-lg mx-auto bg-white rounded-lg overflow-hidden mb-9">
           <div>
             <div className="bg-[url('/backgroundLogin.png')] bg-cover">
               <div className="max-w-lg mx-auto shadow-md backdrop-blur-sm rounded-lg overflow-hidden">
@@ -114,7 +114,7 @@ const MyWallet = () => {
                 </div>
               </div>
             </div>
-            <div className="max-w-lg mx-auto bg-white shadow-md rounded-lg overflow-hidden mt-1 p-6">
+            <div className="max-w-lg mx-auto bg-white overflow-hidden mt-1 p-6">
               <div className="mb-2">
                 <label className="block text-gray-700 text-base font-extralight mb-0.5">
                   Loại tài khoản
@@ -129,6 +129,7 @@ const MyWallet = () => {
               </div>
             </div>
           </div>
+          <Divider/>
           <WalletSection/>
           <TopUpBtn/>
         </div>
