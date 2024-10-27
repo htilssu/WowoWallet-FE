@@ -31,11 +31,11 @@ const options = [
 ];
 //Tạo Thành Phần Button:
 const FilterButton = ({
-  label,
-  filterValue,
-  currentFilter,
-  onClick,
-}) => {
+                        label,
+                        filterValue,
+                        currentFilter,
+                        onClick,
+                      }) => {
   const isActive = currentFilter === filterValue;
   const buttonClass = `px-4 py-2 rounded border-1 hover:bg-green-300 ${isActive
                                                                        ? 'bg-green-500 text-white'
