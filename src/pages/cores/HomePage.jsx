@@ -5,7 +5,6 @@ import {FeatureItem} from '../../components/home/FeatureItem.jsx';
 import ScrollableCardList from '../../components/home/ScrollableCardList.jsx';
 import {Slider} from 'rsuite';
 import Statistical from '../../components/home/Statistical.jsx';
-import {Divider} from '@mantine/core';
 
 const Card = ({icon, title, onClick}) => {
   return (
