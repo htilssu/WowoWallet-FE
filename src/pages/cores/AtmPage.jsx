@@ -6,7 +6,7 @@ import ATMCard from '../../components/ATMCard.jsx';
 import {Modal} from '@mantine/core';
 import AddAtmForm from '../../components/atm/AddAtmForm.jsx';
 import {useQuery} from '@tanstack/react-query';
-import {revalidateCache} from '../../modules/core/cache.js';
+import {revalidateCache} from '../../modules/cache.js';
 import {toast} from 'react-toastify';
 import {getRevealFormat} from '../../util/number.util.js';
 
