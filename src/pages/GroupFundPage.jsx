@@ -1,5 +1,5 @@
 import {ScrollRestoration, useNavigate} from 'react-router-dom';
-import InviteFund from "../components/GroupFund/InviteFundGroup.jsx";
+import InviteFund from "../components/GroupFund/component/ListInviteFund.jsx";
 import {useEffect, useState} from "react";
 import {useAuth} from "../modules/hooks/useAuth.jsx";
 import {wGet} from "../util/request.util.js";
@@ -55,7 +55,7 @@ const GroupFundPage = () => {
                         </p>
                     </div>
                     {/*lời mời tham gia quỹ*/}
-                    <div className={"mb-6"}>
+                    <div>
                         <InviteFund/>
                     </div>
                     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
