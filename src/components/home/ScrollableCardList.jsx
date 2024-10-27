@@ -33,8 +33,8 @@ const ScrollableCardList = () => {
             <div className="rs-text-medium text-sm sm:text-lg sm:mb-1 mb-2">
                 Các dịch vụ đề xuất
             </div>
-            <div className="border-2 px-2">
-                <div className="relative overflow-hidden bg-gray-100">
+            <div className="px-2">
+                <div className="relative overflow-hidden">
                     <Swiper
                         spaceBetween={10}
                         slidesPerView={5}
@@ -49,9 +49,9 @@ const ScrollableCardList = () => {
                         }}
                         modules={[Navigation, Pagination, Autoplay]}
                     >
-                        {items.map((item, index) => (
-                            <SwiperSlide key={index}>
-                                <Link to={item.link} className="flex-none p-2" style={{ textDecoration: 'none' }}>
+                        {items.map((item) => (
+                            <SwiperSlide key={item.title}>
+                                <Link to={item.link} className="flex p-2">
                                     <div className="w-full h-32 sm:w-32 sm:h-40 bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center">
                                         <div className="h-16 w-full flex items-center justify-center">
                                             {item.icon}

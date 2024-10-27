@@ -33,7 +33,7 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     EmployeeLayout = lazy(() => import('../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx')),
     WithdrawPage = lazy(() => import('../../pages/cores/WithdrawPage.jsx')),
     TransferMoney = lazy(() => import('../../components/payment/TransferMoney.jsx')),
-    AddInfoAtm = lazy(() => import('../../components/atm/AddInfoAtm.jsx')),
+    AddAtmPage = lazy(() => import('../../components/atm/AddAtmForm.jsx')),
     TransactionDetailPage = lazy(() => import('../../pages/cores/TransactionDetailPage.jsx')),
     TicketPage = lazy(() => import('../../components/support-ticket/TicketPage.jsx')),
     CreateTicketRequest = lazy(() => import('../../components/support-ticket/CreateTicketRequest.jsx'))
@@ -103,7 +103,7 @@ export const router = createBrowserRouter([
             element: <AtmPage/>,
           }, {
             path: 'bank/add',
-            element: <AddInfoAtm/>,
+            element: <AddAtmPage/>,
           }, {
             path: 'analysis',
             element: <AnalysisPage/>,
