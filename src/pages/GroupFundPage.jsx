@@ -75,7 +75,7 @@ const GroupFundPage = () => {
                                         <p className="text-gray-600">
                                             Số tiền đã góp:
                                             <span className="font-semibold text-green-500 ml-2">
-                                            {fund.balance.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                                            {fund?.balance?.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
                                             </span>
                                         </p>
                                     </div>
