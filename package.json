@@ -36,6 +36,7 @@
     "jsonwebtoken": "^9.0.2",
     "otp-input-react": "^0.3.0",
     "prop-types": "^15.8.1",
+    "pusher-js": "8.4.0-rc2",
     "qrcode.react": "^4.0.1",
     "react": "^18.2.0",
     "react-admin": "^5.3.1",
