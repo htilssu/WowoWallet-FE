@@ -8,6 +8,7 @@ import {FaCreditCard, FaMobileAlt, FaCode, FaLink, FaChartLine} from 'react-icon
 import { MdOutlineLtePlusMobiledata, MdTravelExplore } from "react-icons/md";
 import { TbCreditCardPay } from "react-icons/tb";
 import { BiSolidMoviePlay } from "react-icons/bi";
+import { BiSupport } from "react-icons/bi";
 import { FaAnchorLock, FaGroupArrowsRotate } from "react-icons/fa6";
 import {Link} from 'react-router-dom'; // Import các icon từ thư viện React Icons
 
@@ -23,6 +24,7 @@ const items = [
     { link: "/", icon: <BiSolidMoviePlay size={30} className="text-indigo-500" />, title: "Mua vé xem phim" },
     { link: "/", icon: <FaCode size={30} className="text-green-500" />, title: "Ví trả sau" },
     { link: "/outcome", icon: <FaAnchorLock size={30} className="text-fuchsia-600" />, title: "Quản lý chi tiêu" },
+    { link: "/support-ticket", icon: <BiSupport size={30} className="text-blue-500" />, title: "Hỗ trợ giao dịch" },
 ];
 
 const ScrollableCardList = () => {
