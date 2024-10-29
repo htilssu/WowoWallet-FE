@@ -1,26 +1,36 @@
 import {useEffect, useRef, useState} from "react";
-import { GiShakingHands } from "react-icons/gi";
+import {GiShakingHands} from "react-icons/gi";
+import {wPost} from "../../../util/request.util.js";
+import {useQueryClient} from "@tanstack/react-query";
+import {Modal} from "@mantine/core";
+import OTPForm from "../../OTPForm.jsx";
+import {sendTransferMoneyOtp, verifyTransferMoneyOtp} from "../../../modules/otp.js";
+import {toast} from "react-toastify";
 
-const DonateForm = ({ onClose, fundId, balance }) => {
+const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
     const [amount, setAmount] = useState("");
     const [note, setNote] = useState("");
     const [fundBalance, setFundBalance] = useState(balance);
     const [isAmountFocused, setIsAmountFocused] = useState(false);
+    const [isShowOtpForm, setIsShowOtpForm] = useState(false);
     const [error, setError] = useState("");
+    const queryClient = useQueryClient();
 
     const suggestionAmounts = [20000, 50000, 100000];
     const formRef = useRef(null)
 
     const handleSuggestionClick = (suggestedAmount) => {
-        setAmount(suggestedAmount.toLocaleString("en-US", { style: 'decimal', minimumFractionDigits: 0 }).replace(/,/g, '.')); // Định dạng số tiền gợi ý với dấu chấm
-        setError(""); // Reset error when a suggestion is clicked
+        setAmount(suggestedAmount.toLocaleString("en-US", {
+            style: 'decimal',
+            minimumFractionDigits: 0
+        }).replace(/,/g, '.'));
+        setError("");
     };
 
-    //sự kiện đóng form
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (formRef.current && !formRef.current.contains(event.target)) {
-                onClose(); // Call the onClose function if clicked outside
+            if (formRef.current && !formRef.current.contains(event.target) && !isShowOtpForm) {
+                onClose();
             }
         };
 
@@ -28,25 +38,81 @@ const DonateForm = ({ onClose, fundId, balance }) => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [onClose]);
+    }, [onClose, isShowOtpForm]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    // Hàm kiểm tra dữ liệu
+    const validateAmount = (amount) => {
         const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
         if (!amount) {
-            setError("Vui lòng nhập số tiền.");
-        } else if (numericAmount < 20000) {
-            setError("Số tiền góp phải lớn hơn hoặc bằng 20.000 VNĐ.");
-        } else {
+            return "Vui lòng nhập số tiền.";
+        } else if (numericAmount < 10000) {
+            return "Số tiền góp phải lớn hơn hoặc bằng 10.000 VNĐ.";
+        }
+        return null;
+    };
 
-            //Goi API chuyen tien
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-            onClose();
+        const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
+        try {
+            const transferData = {
+                senderId: senderId,
+                sourceId: null,
+                receiverId: fundId,
+                money: numericAmount,
+            };
+
+            const response = await wPost('/v1/group-fund/top-up', transferData);
+
+            queryClient.invalidateQueries({ queryKey: ['groupFund', fundId] });
+            queryClient.invalidateQueries({ queryKey: ['groupFunds'] });
+
+
+            // Xử lý phản hồi từ API
+            if (response.errorCode === 200) {
+                setFundBalance(prevBalance => prevBalance + numericAmount);
+                setAmount("");
+                setError("Thành công");
+            } else {
+                const errorData = await response.errorMessage;
+                setError(errorData.message);
+            }
+        } catch (error) {
+            console.error("Lỗi:", error);
         }
     };
 
+    async function onVerifyOtp(otp) {
+        await verifyTransferMoneyOtp(otp);
+        toast.success('Xác thực OTP thành công!');
+        setIsShowOtpForm(false);
+        await handleSubmit();
+    }
+    async function sendOtp() {
+        await sendTransferMoneyOtp();
+    }
+    function onSubmitTransferMoney() {
+        const error = validateAmount(amount);
+        if (error) {
+            setError(error);
+            return;
+        }
+
+        sendOtp().then();
+        setIsShowOtpForm(true);
+    }
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
+            {isShowOtpForm &&
+                <Modal title={'Xác thực OTP chuyển tiền'} onClose={() => {
+                    setIsShowOtpForm(false);
+                }} opened centered>
+                    <OTPForm sendTo={userEmail} onSubmit={onVerifyOtp} onCancel={() => {
+                        setIsShowOtpForm(false);
+                    }} onResendOtp={sendOtp}/>
+                </Modal>}
             <div ref={formRef} className="w-[500px] sm:max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md mb-4">
                 <div className="flex justify-center text-green-500">
                     <div className="text-6xl">
@@ -58,20 +124,20 @@ const DonateForm = ({ onClose, fundId, balance }) => {
                         Số dư quỹ hiện tại:
                     </p>
                     <span className="font-semibold text-lg text-green-500">
-                        {fundBalance.toLocaleString("en-US", {
+                        {fundBalance?.toLocaleString("en-US", {
                             style: 'decimal',
                             minimumFractionDigits: 0
                         }).replace(/,/g, '.')} VNĐ
                     </span>
                 </div>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={onSubmitTransferMoney}>
                     <div className="relative mb-4">
                         <label
-                            className={`absolute left-3 transition-all ${
+                            className={`absolute transition-all ${
                                 isAmountFocused || amount
-                                    ? "-top-5 text-xs text-blue-500"
-                                    : "top-2 text-gray-700"
+                                    ? "-top-5 text-xs text-green-500"
+                                    : "top-2 left-3 text-gray-700"
                             }`}
                             htmlFor="amount"
                         >
@@ -90,9 +156,9 @@ const DonateForm = ({ onClose, fundId, balance }) => {
                                 }
                             }}
                             onChange={(e) => {
-                                let value = e.target.value.replace(/\./g, ''); // Xóa dấu chấm
+                                let value = e.target.value.replace(/\./g, '');
                                 if (/^\d*$/.test(value) || value === "") {
-                                    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Thay đổi từ dấu phẩy sang dấu chấm
+                                    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
                                     setAmount(value);
                                 }
                             }}
@@ -105,7 +171,6 @@ const DonateForm = ({ onClose, fundId, balance }) => {
                         {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
                     </div>
 
-                    {/* Nút gợi ý số tiền */}
                     <div className="grid grid-cols-2 gap-2 md:gap-4 justify-center md:grid-cols-3 mb-4">
                         {suggestionAmounts.map((val) => (
                             <button
@@ -118,7 +183,7 @@ const DonateForm = ({ onClose, fundId, balance }) => {
                                 {val.toLocaleString("en-US", {
                                     style: 'decimal',
                                     minimumFractionDigits: 0
-                                }).replace(/,/g, '.')} VNĐ {/* Hiển thị số tiền với định dạng VNĐ */}
+                                }).replace(/,/g, '.')} VNĐ
                             </button>
                         ))}
                     </div>

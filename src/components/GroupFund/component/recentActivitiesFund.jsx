@@ -1,100 +1,55 @@
 import { useState } from "react";
+import { wGet } from "../../../util/request.util.js";
+import { useQuery } from "@tanstack/react-query";
+import ActivityItem from "./ActivityItem.jsx";
 
-// Dữ liệu hoạt động gần đây
-const recentActivities = [
-    {
-        name: "Nguyễn Anh Tuấn",
-        amount: "1,000,000 VNĐ",
-        date: "15/09/2024",
-        avatar: "/avatarH.png",
-        type: "Góp quỹ"
-    },
-    {
-        name: "Trần Thị B N",
-        amount: "500,000 VNĐ",
-        date: "16/09/2024",
-        avatar: "/ava.png",
-        type: "Rút quỹ"
-    },
-    {
-        name: "Vũ Ngọc Lâm",
-        amount: "1,000 VNĐ",
-        date: "15/09/2024",
-        avatar: "/avatarT.jpeg",
-        type: "Góp quỹ"
-    },
-    {
-        name: "Lê Minh",
-        amount: "2,000 VNĐ",
-        date: "17/09/2024",
-        avatar: "/avatarT.jpeg",
-        type: "Góp quỹ"
-    }
-];
-
-const RecentActivities = () => {
+const RecentActivities = ({ id }) => {
     const [showAll, setShowAll] = useState(false);
 
-    // Lọc hoạt động để hiển thị
-    const activitiesToShow = showAll ? recentActivities : recentActivities.slice(0, 3);
+    // Fetch transactions using useQuery
+    const { data: transactions = [], isLoading, isError } = useQuery({
+        queryKey: ['transactions', id],
+        queryFn: () => wGet(`/v1/group-fund/transactions/${id}`),
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 30 * 60 * 1000,
+    });
 
-    const getTypeStyles = (type) => {
-        switch (type) {
-            case "Góp quỹ":
-                return { textColor: "text-green-600", bgColor: "bg-green-100", symbol: "+" };
-            case "Rút quỹ":
-                return { textColor: "text-red-600", bgColor: "bg-red-100", symbol: "-" };
-            default:
-                return { textColor: "text-gray-600", bgColor: "bg-gray-100", symbol: "?" };
-        }
-    };
+    // Sắp xếp giao dịch theo ngày tháng giảm dần
+    const sortedTransactions = transactions.sort((a, b) => new Date(b.transaction.created) - new Date(a.transaction.created));
+    const activitiesToShow = showAll ? sortedTransactions : sortedTransactions.slice(0, 3);
+
+    // Handle loading and error states
+    if (isLoading) return <div className="text-center text-gray-500">Loading activities...</div>;
+    if (isError) return <div className="text-center text-red-600">Error fetching activities.</div>;
 
     return (
-        <div className="mb-8">
-            {/* Header Hoạt động gần đây */}
-            <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-t-xl">
+        <div
+            className="mb-3 bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform duration-300">
+            {/* Header */}
+            <div
+                className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-t-lg">
                 <h3 className="text-2xl font-bold text-gray-800">Hoạt động gần đây</h3>
-                <div
+                <button
                     onClick={() => setShowAll(!showAll)}
-                    className="text-indigo-600 hover:underline cursor-pointer font-medium"
+                    className="text-indigo-600 hover:underline font-medium transition duration-150 ease-in-out"
                 >
                     {showAll ? "Thu gọn" : "Xem tất cả"}
+                </button>
+            </div>
+
+            {/* Activities List */}
+            <ul className="divide-y divide-gray-200">
+                {activitiesToShow.map((activity, index) => (
+                    <ActivityItem key={index} activity={activity}/>
+                ))}
+            </ul>
+
+            {/* Optional Empty State Message */}
+            {activitiesToShow.length === 0 && (
+                <div className="p-4 text-center text-gray-500">
+                    Không có hoạt động nào để hiển thị.
                 </div>
-            </div>
-
-            {/* Danh sách hoạt động */}
-            <div className="bg-white shadow-md rounded-b-xl">
-                <ul className="divide-y divide-gray-200">
-                    {activitiesToShow.map((activity, index) => {
-                        const { textColor, bgColor, symbol } = getTypeStyles(activity.type);
-                        return (
-                            <li key={index} className="flex items-center p-4 hover:bg-gray-50 transition duration-150 ease-in-out">
-                                {/* Avatar */}
-                                <img
-                                    src={activity.avatar || "/avatarH.png"}
-                                    alt={`${activity.name} avatar`}
-                                    className="w-12 h-12 rounded-full object-cover mr-4"
-                                />
-
-                                {/* Nội dung hoạt động */}
-                                <div className="flex-1">
-                                    <p className="text-lg font-semibold text-gray-800">{activity.name}</p>
-                                    <p className="text-sm text-gray-500">{activity.date}</p>
-                                </div>
-
-                                {/* Số tiền và loại hoạt động */}
-                                <div className="text-right">
-                                    <span className={`text-2xl font-bold ${textColor}`}>{symbol}</span>
-                                    <span className={`ml-1 text-lg font-medium ${textColor}`}>{activity.amount}</span>
-                                    <p className={`ml-4 text-sm font-semibold ${textColor} ${bgColor} px-2 py-1 rounded-md inline-block`}>
-                                        {activity.type}
-                                    </p>
-                                </div>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
+            )}
         </div>
     );
 };
