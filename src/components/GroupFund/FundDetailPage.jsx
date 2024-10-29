@@ -11,11 +11,10 @@ import FundManager from "./component/FundManager.jsx";
 import {Confirm} from "react-admin";
 import WithdrawForm from "./component/WithdrawForm.jsx";
 import EditGroupFund from "./component/EditGroupFund.jsx";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 
 const FundDetailPage = () => {
     const {id} = useParams(); // Lấy ID của quỹ từ URL
-    const [fundData, setFundData] = useState(null);
-    const [fundMembers, setFundMembers] = useState(null);
     const [error, setError] = useState(null);
     const [isDonateFormOpen, setIsDonateFormOpen] = useState(false);
     const [isWithdrawFormOpen, setWithdrawFormOpen] = useState(false);
@@ -24,27 +23,24 @@ const FundDetailPage = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditFundOpen, setIsEditFundOpen] = useState(false);
-    const [confirmLeave, setConfirmLeave] = useState(false);
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-    //fetch data Detail Fundroup
-    const fetchDetailGroup = async () => {
-        try {
-            const funds = await wGet(`/v1/group-fund/${id}`);
+    // Fetch dữ liệu quỹ
+    const { data: fundData, isLoading: isLoadingFund, isError: isErrorFund } = useQuery({
+        queryKey: ['groupFund', id],
+        queryFn: () => wGet(`/v1/group-fund/${id}`),
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 30 * 60 * 1000,
+    });
 
-            setFundData(funds);
-
-            const members = await wGet(`/v1/group-fund/${id}/members`);
-            setFundMembers(members);
-        } catch (error) {
-            console.log(error);
-            setError(error.message);
-        }
-    };
-
-    useEffect(() => {
-        fetchDetailGroup().then();
-    }, [id]);
+    // Fetch dữ liệu thành viên quỹ
+    const { data: fundMembers, isLoading: isLoadingMembers, isError: isErrorMembers } = useQuery({
+        queryKey: ['groupFundMembers', id],
+        queryFn: () => wGet(`/v1/group-fund/${id}/members`),
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 30 * 60 * 1000,
+    });
 
     const handleDonateClick = () => {
         setIsDonateFormOpen(true); // Mở form
@@ -68,10 +64,11 @@ const FundDetailPage = () => {
     };
 
     const {user} = useAuth();
+    const userEmail = user.getEmail;
     const userId = user.id;
     const isFundManager = (fundData && fundData.owner && fundData.owner.id === userId);
 
-    const progressPercentage = Math.min((fundData?.balance / fundData?.target) * 100, 100);
+    const progressPercentage = Math.min((fundData?.wallet.balance / fundData?.target) * 100, 100);
 
     if (!fundData) {
         return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Không thể lấy thông tin
@@ -86,8 +83,9 @@ const FundDetailPage = () => {
         try {
             const response = await wPost(`/v1/group-fund/members/leave`, body);
             setMessage(response.message);
+            queryClient.invalidateQueries({ queryKey: ['groupFunds'] });
+            queryClient.invalidateQueries({ queryKey: ['groupFundMembers', id], });
             navigate(-1);
-
         } catch (error) {
             setErrorMessage("Có lỗi xảy ra khi rời quỹ.");
             setMessage(null);
@@ -95,7 +93,6 @@ const FundDetailPage = () => {
     };
 
     const confirmCancel = () => {
-        setConfirmLeave(true);
         setIsModalOpen(false);
         handleLeaveGroup().then(r => {});
     };
@@ -103,6 +100,15 @@ const FundDetailPage = () => {
     const closeModal = () => {
         setIsModalOpen(false);
     };
+
+    if (isLoadingFund || isLoadingMembers) {
+        return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Loading...</div>;
+    }
+
+    if (isErrorFund || isErrorMembers) {
+        return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Không thể lấy thông tin quỹ</div>;
+    }
+
     return (
         <Fragment>
             <div className="flex justify-center min-h-screen bg-gray-100 p-4 sm:p-8">
@@ -115,9 +121,9 @@ const FundDetailPage = () => {
                             className="w-full h-32 sm:h-64 object-cover rounded-lg p-1"
                         />
                     </div>
-                    <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-8">
+                    <div className="bg-white rounded-lg shadow-lg py-4 px-6 sm:px-10 mb-8">
                         {/* Fund Title */}
-                        <h2 className="text-xl sm:text-3xl font-bold sm:mb-4 mb-2">{fundData.name}</h2>
+                        <h2 className="text-xl sm:text-3xl font-bold sm:mb-2 mb-1">{fundData.name}</h2>
 
                         {/* Fund Purpose */}
                         <p className="sm:text-lg mb-4">{fundData.description}</p>
@@ -154,7 +160,7 @@ const FundDetailPage = () => {
                                     <span className="sm:text-lg font-semibold mr-2">Số Dư:</span>
                                     <div className={"flex flex-grow gap-1 sm:text-lg"}>
                                         <div className={"text-green-500"}>
-                                            {fundData?.balance?.toLocaleString('vi-VN')}
+                                            {fundData?.wallet.balance?.toLocaleString('vi-VN')}
                                         </div>
                                         <div className={"text-gray-900"}>
                                             / {fundData?.target?.toLocaleString('vi-VN')}
@@ -176,7 +182,7 @@ const FundDetailPage = () => {
 
                         {/* Recent Activities */}
                         <div>
-                            <RecentActivities/>
+                            <RecentActivities id={id}/>
                         </div>
 
                         {/* Fund Manager */}
@@ -239,9 +245,9 @@ const FundDetailPage = () => {
                 </div>
                 <ScrollRestoration/>
                 {isDonateFormOpen &&
-                    <DonateForm onClose={handleCloseDonateForm} fundId={id} balance={fundData.balance}/>}
+                    <DonateForm onClose={handleCloseDonateForm} fundId={id} balance={fundData.wallet.balance} senderId={userId} userEmail={userEmail}/>}
                 {isWithdrawFormOpen &&
-                    <WithdrawForm onClose={handleWithdrawForm} fundId={id} balance={fundData.balance}/>}
+                    <WithdrawForm onClose={handleWithdrawForm} fundId={id} balance={fundData.wallet.balance} senderId={userId}/>}
                 {isEditFundOpen && (
                     <EditGroupFund fundData={fundData} onClose={() => setIsEditFundOpen(false)} fundId={id}/>)}
             </div>
