@@ -6,6 +6,7 @@ import ATMCard from '../ATMCard.jsx';
 import {Button, Divider, Select, TextInput} from '@mantine/core';
 import {useMemo} from 'react';
 import {addCard} from '../../modules/card.js';
+import {validateExpiredTime} from '../../modules/wallet/wallet.js';
 
 const AddAtmForm = ({onSubmit}) => {
   const {data: bankList} = useQuery({
@@ -21,6 +22,9 @@ const AddAtmForm = ({onSubmit}) => {
       holderName: '',
       expired: '',
     },
+    validate: {
+      expired: validateExpiredTime,
+    },
   });
 
   const bank = useMemo(() => {
@@ -28,8 +32,24 @@ const AddAtmForm = ({onSubmit}) => {
   }, [form.values.bankId, bankList]);
 
   function handleSubmit() {
+    const validationResult = form.validate();
+    if (validationResult.hasErrors) return;
     addCard({...form.values, atmId: bank.id}).then(onSubmit);
   }
+
+  const handleExpiredChange = (e) => {
+    let value = e.target.value;
+    if (value <= 0) value = Math.abs(value);
+    if (value.length > 1) value = value.toString().replace(/\D/g, '');
+    const length = value.length;
+    if (length > 2) {
+      value = value.slice(0, 2) + '/' + value.slice(2);
+      value = value.replace(/\/\//g, '/');
+    }
+    if (length > 5) return;
+
+    form.setFieldValue('expired', value);
+  };
 
   return (<div className="flex items-center justify-center">
     <div
@@ -83,8 +103,10 @@ const AddAtmForm = ({onSubmit}) => {
                   className="w-full"
                   size={'md'}
                   type="text"
+                  value={form.values.expired}
                   placeholder="mm/YY"
-                  {...form.getInputProps('expired')}
+                  error={form.errors.expired}
+                  onChange={handleExpiredChange}
               /></div>
 
 
