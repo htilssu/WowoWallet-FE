@@ -31,6 +31,7 @@
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
     "cookie": "^1.0.1",
+    "date-fns": "^4.1.0",
     "dayjs": "^1.11.11",
     "jose": "^5.9.4",
     "jsonwebtoken": "^9.0.2",
