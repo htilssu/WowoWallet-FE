@@ -38,16 +38,11 @@ const AddAtmForm = ({onSubmit}) => {
   }
 
   const handleExpiredChange = (e) => {
-    let value = e.target.value;
-    if (value <= 0) value = Math.abs(value);
-    if (value.length > 1) value = value.toString().replace(/\D/g, '');
-    const length = value.length;
-    if (length > 2) {
-      value = value.slice(0, 2) + '/' + value.slice(2);
-      value = value.replace(/\/\//g, '/');
+    let { value } = e.target;
+    value = value.replace(/\D/g, ''); // Remove non-digit characters
+    if (value.length > 2) {
+      value = value.slice(0, 2) + '/' + value.slice(2, 4);
     }
-    if (length > 5) return;
-
     form.setFieldValue('expired', value);
   };
 

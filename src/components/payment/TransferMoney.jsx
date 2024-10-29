@@ -28,14 +28,12 @@ const TransferMoney = () => {
       money: 0,
       receiverId: '',
       description: '',
-      sourceId: wallet?.id,
     },
     validate: {
       money: (value) => {
         if (value < 10000) {
           return 'Số tiền phải lớn hơn 10.000 VND';
         }
-        console.log(wallet);
         if (value > wallet?.balance) {
           return 'Số tiền chuyển không được lớn hơn số dư trong ví';
         }
@@ -61,7 +59,7 @@ const TransferMoney = () => {
   }
 
   async function submit() {
-    transfer_v2({...form.values}).then((data) => {
+    transfer_v2({...form.values, sourceId: wallet?.id}).then((data) => {
       navigate(`/transaction/${data.id}`);
     }).catch((e) => {
       toast.error(e.response.data.message);

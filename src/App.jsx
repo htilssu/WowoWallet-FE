@@ -10,13 +10,13 @@ import {Suspense, useEffect} from 'react';
 import LoadingPageSkeleton from './components/LoadingPageSkeleton.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 import pusher from './services/pusher.js';
-
+import PusherLayout from './components/PusherLayout.jsx';
 
 function App() {
   const mode = import.meta.env.MODE;
 
   useEffect(() => {
-    pusher.subscribe('')
+    pusher.subscribe('');
   }, []);
 
   return (
@@ -24,10 +24,12 @@ function App() {
         <Suspense fallback={<LoadingPageSkeleton/>}>
           <MantineProvider>
             <AuthProvider>
-              <QueryClientProvider client={queryClient}>
-                {mode === 'development' && <ReactQueryDevtools initialIsOpen={false}/>}
-                <RouterProvider router={router}/>
-              </QueryClientProvider>
+              <PusherLayout>
+                <QueryClientProvider client={queryClient}>
+                  {mode === 'development' && <ReactQueryDevtools initialIsOpen={false}/>}
+                  <RouterProvider router={router}/>
+                </QueryClientProvider>
+              </PusherLayout>
             </AuthProvider>
           </MantineProvider>
         </Suspense>
