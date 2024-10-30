@@ -7,15 +7,15 @@ const PusherLayout = ({children}) => {
   const {user} = useAuth();
 
   useEffect(() => {
-    const channel = pusher.subscribe(user.id);
+    const channel = pusher.subscribe(user?.id ?? 'public');
     channel.bind('notification', (data) => {
       toast.success(data.message);
     });
 
     return () => {
-      pusher.unsubscribe(user.id);
+      pusher.unsubscribe(user?.id ?? 'public');
     };
-  }, [user.id]);
+  }, [user?.id]);
 
   return (
       <div>
