@@ -24,7 +24,7 @@ const GroupFundPage = () => {
     const { createdFunds, joinedFunds } = data || { createdFunds: [], joinedFunds: [] };
 
     // Hiển thị thông báo nếu không có quỹ nào
-    const errorMessage = createdFunds.length === 0 && joinedFunds.length === 0
+    const errorMessage = createdFunds?.length === 0 && joinedFunds?.length === 0
         ? 'Bạn chưa tạo hoặc tham gia quỹ nào.'
         : '';
 
@@ -56,7 +56,7 @@ const GroupFundPage = () => {
                     <div className="w-full mb-10">
                         {errorMessage && <p className="text-gray-500">{errorMessage}</p>}
                         <h2 className="text-2xl font-semibold text-gray-800 mb-2">Quỹ Đã Tạo</h2>
-                        {createdFunds.length > 0 ? (
+                        {createdFunds?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {createdFunds.map((fund) => (
                                     <div key={fund.id}
@@ -83,7 +83,7 @@ const GroupFundPage = () => {
                     {/* Participating Funds */}
                     <div className="w-full mb-12">
                         <h2 className="text-2xl font-semibold text-gray-800 mb-2">Quỹ Đang Tham Gia</h2>
-                        {joinedFunds.length > 0 ? (
+                        {joinedFunds?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {joinedFunds.map((fund) => (
                                     <div key={fund.id}

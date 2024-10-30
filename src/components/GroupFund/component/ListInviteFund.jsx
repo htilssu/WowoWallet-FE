@@ -40,7 +40,6 @@ const InviteFund = () => {
     const visibleInvitations = showAll ? invitations : invitations.slice(0, 4);
 
     if (isLoading) return <p>Loading invitations...</p>;
-    if (isError) return <p>Không thể tải lời mời. Vui lòng thử lại sau!</p>;
 
     return (
         <div className="bg-gray-50 py-6">
