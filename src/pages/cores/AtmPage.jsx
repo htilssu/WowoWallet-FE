@@ -1,16 +1,19 @@
-import {useNavigate} from 'react-router-dom';
 import {GrTransaction} from 'react-icons/gr';
-import {IoIosAddCircle} from 'react-icons/io';
 import {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
 import {wDelete, wGet} from '../../util/request.util.js';
-import CardAtmComponents from '../../components/atm/CardAtmComponents.jsx';
-import {ATMCard} from 'atm-card-react';
+import AddCardHolder from '../../components/atm/AddCardHolder.jsx';
+import ATMCard from '../../components/ATMCard.jsx';
+import {Modal} from '@mantine/core';
+import AddAtmForm from '../../components/atm/AddAtmForm.jsx';
+import {useQuery} from '@tanstack/react-query';
+import {revalidateCache} from '../../modules/cache.js';
+import {toast} from 'react-toastify';
+import {getRevealFormat} from '../../util/number.util.js';
 
 const AtmPage = () => {
   const [bankList, setBankList] = useState([]);
-  const [atmCardList, setAtmCardList] = useState([]);
-  const navigate = useNavigate();
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  console.log(getRevealFormat("342738273465"));
 
   useEffect(() => {
     wGet('/v1/banks').then((res) => {
@@ -18,24 +21,21 @@ const AtmPage = () => {
     });
   }, []);
 
-  useEffect(() => {
-    wGet('/v1/card')
-        .then((res) => {
-          if (res && Array.isArray(res)) {
-            setAtmCardList(res);
-          }
-        });
-  }, []);
+  const {data: cardList} =
+      useQuery({
+        queryKey: ['card-list'],
+        queryFn: async () => await wGet('/v1/card'),
+        staleTime: 1000 * 60 * 10,
+      });
 
-  const handleShowNganHang = (event) => {
+  const openModal = (event) => {
     event.preventDefault();
-    navigate('/bank/add');
+    setIsOpenModal(true);
   };
 
   const handleDelete = (cardNumber) => {
     wDelete(`/v1/card/${cardNumber}`).then(() => {
-      setAtmCardList(prev => prev.filter(card => card.cardNumber !== cardNumber));
-      toast.success('Thẻ đã được xóa thành công!');
+      revalidateCache('card-list').then();
     });
   };
 
@@ -46,10 +46,21 @@ const AtmPage = () => {
 
   return (
       <div className="md:p-6 flex items-center justify-center">
+        <Modal size={'75%'}
+               centered opened={isOpenModal} onClose={() => {
+          setIsOpenModal(false);
+        }}>
+          <div className={'text-center text-3xl'}><h3>Thêm thẻ liên kết</h3></div>
+          <AddAtmForm onSubmit={() => {
+            revalidateCache('card-list').then(() => {
+              toast.success('Thêm thẻ liên kết thành công')
+              setIsOpenModal(false);
+            })
+          }}/>
+        </Modal>
         <div
-            className="form-box w-full max-w-[900px] my-auto mx-0 p-5 bg-white border-0 md:border-[1px] border-solid border-green-500 rounded-3xl">
+            className="w-full max-w-[900px] my-auto mx-0 p-5 bg-white border border-dashed border-green-500 rounded-lg">
           <form>
-            {/* Form Header */}
             <div className="head-form flex items-center mb-5">
               <div className="icons mr-2 text-green-500">
                 <GrTransaction/>
@@ -58,92 +69,35 @@ const AtmPage = () => {
                 <p>Thẻ/Tài khoản ngân hàng</p>
               </div>
             </div>
-
-            {/* Form Body */}
             <div className="body-title mb-2 font-semibold text-green-500 flex items-start border-b-[1px] border-black">
               <p>Thẻ/tài khoản nội địa(rút)</p>
             </div>
             <div className="body-section">
-              {/* Body Section Header */}
-              <div className="body-section-head flex justify-between items-center pb-2 mb-2">
-                <div className="body-section-head-left flex items-center relative text-green-500">
-                  <p>THẺ ATM</p>
-                </div>
-                <div className="body-section-head-right flex items-center relative">
-                  <div className="icon-body-head text-green-500 text-sm" onClick={handleShowNganHang}>
-                    <IoIosAddCircle/>
-                  </div>
-                  <div className="body-section-head-right-p ml-1 flex items-center text-green-500"
-                       onClick={handleShowNganHang}>
-                    <p>Thẻ ATM</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Cards Container */}
               <div
-                  className="atm-container grid min-w-[781px]:grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 ">
-                {atmCardList && atmCardList.map((card) => {
+                  className="atm-container mt-5 grid min-w-[781px]:grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 ">
+                {cardList?.map((card) => {
                   const bank = findBankById(card.atmId); // Tìm ngân hàng dựa vào id
-                  const splitDate = card.expired.split('/');
-                  const month = splitDate[0];
-                  const year = splitDate[1];
                   return (
-                      <div key={card.id} className={'w-full relative'}>
+                      <div key={card.id} className={'w-full h-[230px]'}>
                         <ATMCard
-                            scale={1}
-                            year={year}
-                            number={card.cardNumber}
-                            month={month}
-                            bankLogo={
-                              <img className={'w-2/6'} src={bank.logo} alt={"bank logo"}/>
-                            }
+                            cardNumber={card.cardNumber}
+                            cardHolder={card.holderName}
+                            expiryDate="12/26"
+                            bankName={bank.shortName}
+                            backgroundColor="bg-blue-500"
+                            chipIcon={bank.logo}
+                            logo={bank.logo}
                         />
-
-                        <div className={'absolute right-10 top-2'}>
-                          <button
-                              className={'text-red-500'}
-                              onClick={() => handleDelete(card.id)}
-                          >
-                            Xóa
-                          </button>
-                        </div>
                       </div>
                   );
                 })}
-                <CardAtmComponents
+                <AddCardHolder
                     title="Thêm thẻ ATM"
                     text="Bạn có thể thêm thẻ ATM vào đây"
                     link="#"
-                    onClick={handleShowNganHang}
+                    onClick={openModal}
                 />
 
-              </div>
-              <div className={'border-1'}></div>
-              <div className="body-section-bottom flex justify-between items-center pb-2 mt-5">
-                <div className="body-section-bottom-left text-green-500 flex items-center relative ">
-                  <p>TÀI KHOẢN NGÂN HÀNG</p>
-                </div>
-                <div className="body-section-bottom-right flex items-center relative">
-                  <div className="icon-body-bottom relative text-green-500 text-sm"
-                       onClick={handleShowNganHang}>
-                    <IoIosAddCircle/>
-                  </div>
-                  <div className="body-section-bottom-right-p flex items-center text-green-500"
-                       onClick={handleShowNganHang}>
-                    <p>Thẻ tài khoản</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Second Card */}
-              <div className="nganhang w-full md:w-1/2 mt-2">
-                <CardAtmComponents
-                    title="Thêm tài khoản ngân hàng"
-                    text="Bạn có thể thêm tài khoản ngân hàng vào đây"
-                    link="#"
-                    onClick={handleShowNganHang}
-                />
               </div>
             </div>
           </form>

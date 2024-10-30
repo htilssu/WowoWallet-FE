@@ -7,6 +7,7 @@ import ProtectedLayout from './layouts/ProtectedLayout.jsx';
 import {MainLayout} from './layouts/MainLayout.jsx';
 import AuthorizedView from './system-component/AuthorizedView.jsx';
 import {callBackUrl} from '../../pages/CallBackHandler.jsx';
+
 // Lazy loading components
 const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     MyWallet = lazy(() => import('../../components/account/WalletSection.jsx')),
@@ -32,8 +33,10 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     EmployeeLayout = lazy(() => import('../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx')),
     WithdrawPage = lazy(() => import('../../pages/cores/WithdrawPage.jsx')),
     TransferMoney = lazy(() => import('../../components/payment/TransferMoney.jsx')),
-    AddInfoAtm = lazy(() => import('../../components/atm/AddInfoAtm.jsx')),
-    TransactionDetailPage = lazy(() => import('../../pages/cores/TransactionDetailPage.jsx'));
+    AddAtmPage = lazy(() => import('../../components/atm/AddAtmForm.jsx')),
+    TransactionDetailPage = lazy(() => import('../../pages/cores/TransactionDetailPage.jsx')),
+    TicketPage = lazy(() => import('../../components/support-ticket/TicketPage.jsx')),
+    CreateTicketRequest = lazy(() => import('../../components/support-ticket/CreateTicketRequest.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -69,9 +72,6 @@ export const router = createBrowserRouter([
         element: <MainLayout/>,
         children: [
           {
-            index: true,
-            element: <IntroPage/>,
-          }, {
             path: 'home',
             element: <HomePage/>,
           }, {
@@ -100,7 +100,7 @@ export const router = createBrowserRouter([
             element: <AtmPage/>,
           }, {
             path: 'bank/add',
-            element: <AddInfoAtm/>,
+            element: <AddAtmPage/>,
           }, {
             path: 'analysis',
             element: <AnalysisPage/>,
@@ -116,6 +116,12 @@ export const router = createBrowserRouter([
           }, {
             path: 'fund/:id?',
             element: <FundDetailPage/>,
+          }, {
+            path: 'support-ticket',
+            element: <TicketPage/>,
+          }, {
+            path: 'create-ticket/:id',
+            element: <CreateTicketRequest/>,
           },
         ],
       },
@@ -123,6 +129,18 @@ export const router = createBrowserRouter([
     errorElement: <PageNotFound/>,
   }, {
     children: [
+      {
+        path: '/',
+        element: <MainLayout/>,
+        children:
+            [
+              {
+                path: '/',
+                index: true,
+                element: <IntroPage/>,
+              }
+            ],
+      },
       {
         path: '/sign-in',
         element: <SignInPage/>,

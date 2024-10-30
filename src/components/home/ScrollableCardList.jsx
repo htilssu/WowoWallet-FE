@@ -8,6 +8,7 @@ import {FaCreditCard, FaMobileAlt, FaCode, FaLink, FaChartLine} from 'react-icon
 import { MdOutlineLtePlusMobiledata, MdTravelExplore } from "react-icons/md";
 import { TbCreditCardPay } from "react-icons/tb";
 import { BiSolidMoviePlay } from "react-icons/bi";
+import { BiSupport } from "react-icons/bi";
 import { FaAnchorLock, FaGroupArrowsRotate } from "react-icons/fa6";
 import {Link} from 'react-router-dom'; // Import các icon từ thư viện React Icons
 
@@ -23,6 +24,7 @@ const items = [
     { link: "/", icon: <BiSolidMoviePlay size={30} className="text-indigo-500" />, title: "Mua vé xem phim" },
     { link: "/", icon: <FaCode size={30} className="text-green-500" />, title: "Ví trả sau" },
     { link: "/outcome", icon: <FaAnchorLock size={30} className="text-fuchsia-600" />, title: "Quản lý chi tiêu" },
+    { link: "/support-ticket", icon: <BiSupport size={30} className="text-blue-500" />, title: "Hỗ trợ giao dịch" },
 ];
 
 const ScrollableCardList = () => {
@@ -31,8 +33,8 @@ const ScrollableCardList = () => {
             <div className="rs-text-medium text-sm sm:text-lg sm:mb-1 mb-2">
                 Các dịch vụ đề xuất
             </div>
-            <div className="border-2 px-2">
-                <div className="relative overflow-hidden bg-gray-100">
+            <div className="px-2">
+                <div className="relative overflow-hidden">
                     <Swiper
                         spaceBetween={10}
                         slidesPerView={5}
@@ -47,9 +49,9 @@ const ScrollableCardList = () => {
                         }}
                         modules={[Navigation, Pagination, Autoplay]}
                     >
-                        {items.map((item, index) => (
-                            <SwiperSlide key={index}>
-                                <Link to={item.link} className="flex-none p-2" style={{ textDecoration: 'none' }}>
+                        {items.map((item) => (
+                            <SwiperSlide key={item.title}>
+                                <Link to={item.link} className="flex p-2">
                                     <div className="w-full h-32 sm:w-32 sm:h-40 bg-white shadow-md rounded-lg overflow-hidden flex flex-col items-center">
                                         <div className="h-16 w-full flex items-center justify-center">
                                             {item.icon}
