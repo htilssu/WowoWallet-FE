@@ -9,7 +9,7 @@ const RecentActivities = ({ id }) => {
     // Fetch transactions using useQuery
     const { data: transactions = [], isLoading, isError } = useQuery({
         queryKey: ['transactions', id],
-        queryFn: () => wGet(`/v1/group-fund/transactions/${id}`),
+        queryFn: () => wGet(`/v1/group-fund/${id}/transactions?offset=10&page=0`),
         staleTime: 5 * 60 * 1000,
         cacheTime: 30 * 60 * 1000,
     });
@@ -20,7 +20,6 @@ const RecentActivities = ({ id }) => {
 
     // Handle loading and error states
     if (isLoading) return <div className="text-center text-gray-500">Loading activities...</div>;
-    if (isError) return <div className="text-center text-red-600">Error fetching activities.</div>;
 
     return (
         <div

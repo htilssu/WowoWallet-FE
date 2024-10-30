@@ -67,6 +67,7 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
 
             queryClient.invalidateQueries({ queryKey: ['groupFund', fundId] });
             queryClient.invalidateQueries({ queryKey: ['groupFunds'] });
+            queryClient.invalidateQueries({ queryKey: ['transactions', fundId] });
 
 
             // Xử lý phản hồi từ API
@@ -131,7 +132,7 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
                     </span>
                 </div>
 
-                <form onSubmit={onSubmitTransferMoney}>
+                <form onSubmit={handleSubmit}>
                     <div className="relative mb-4">
                         <label
                             className={`absolute transition-all ${
