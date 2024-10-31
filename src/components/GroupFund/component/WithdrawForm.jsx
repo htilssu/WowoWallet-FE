@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import {GiMoneyStack} from "react-icons/gi";
 import {wPost} from "../../../util/request.util.js";
 import {useQueryClient} from "@tanstack/react-query";
+import {toast} from "react-toastify";
 
 const WithdrawForm = ({onClose, fundId, balance}) => {
     const [amount, setAmount] = useState("");
@@ -46,32 +47,31 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
             setError("Số tiền rút phải lớn hơn hoặc bằng 10.000 VNĐ.");
         } else if (numericAmount > fundBalance) {
             setError("Số tiền rút không được lớn hơn số dư quỹ.");
-        }
-        else if (note.length < 1) {
+        } else if (note.length < 1) {
             setError1("Vui lòng nhập lý do.");
-        }else {
+        } else {
             try {
                 const transferData = {
                     groupId: fundId,
                     amount: numericAmount,
+                    description: note
                 };
 
                 const response = await wPost('/v1/group-fund/withdraw', transferData);
+                toast.success('Rút quỹ thành công');
 
-                queryClient.invalidateQueries({ queryKey: ['groupFund', fundId] });
-                queryClient.invalidateQueries({ queryKey: ['groupFunds'] });
+                queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
+                queryClient.invalidateQueries({queryKey: ['groupFunds']});
+                queryClient.invalidateQueries({queryKey: ['transactions', fundId]});
 
-                // Xử lý phản hồi từ API
-                if (response.errorCode === 200) {
-                    setFundBalance(prevBalance => prevBalance - numericAmount);
-                    setAmount("");
-                    setError("Thành công");
-                } else {
-                    const errorData = await response.data;
-                    setError(errorData.message);
-                }
+                setFundBalance(prevBalance => prevBalance - numericAmount);
+                setAmount("");
+                setError("");
+                onClose();
+
             } catch (error) {
                 console.error("Lỗi:", error);
+                setError(error.response.data.message);
             }
         }
     };
@@ -165,7 +165,7 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
                             placeholder="Nhập lý do để các thành viên cùng biết"
                         />
                         <p className="text-right text-gray-500 text-sm">{note.length}/200 ký tự</p>
-                        {note.length<1 && <p className="text-red-500 text-sm mt-1">{error1}</p>}
+                        {note.length < 1 && <p className="text-red-500 text-sm mt-1">{error1}</p>}
                     </div>
 
                     <button

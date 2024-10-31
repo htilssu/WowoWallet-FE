@@ -37,7 +37,7 @@ const RecentActivities = ({ id }) => {
             </div>
 
             {/* Activities List */}
-            <ul className="divide-y divide-gray-200">
+            <ul className="divide-y divide-gray-200 p-4">
                 {activitiesToShow.map((activity, index) => (
                     <ActivityItem key={index} activity={activity}/>
                 ))}
