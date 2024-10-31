@@ -3,6 +3,7 @@ import {GiMoneyStack} from "react-icons/gi";
 import {wPost} from "../../../util/request.util.js";
 import {useQueryClient} from "@tanstack/react-query";
 import {toast} from "react-toastify";
+import {SyncLoader} from "react-spinners";
 
 const WithdrawForm = ({onClose, fundId, balance}) => {
     const [amount, setAmount] = useState("");
@@ -12,6 +13,7 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
     const [error, setError] = useState("");
     const [error1, setError1] = useState("");
     const queryClient = useQueryClient();
+    const [loading, setLoading] = useState(false);
 
     const suggestionAmounts = [20000, 50000, 100000];
     const formRef = useRef(null); // Ref for the form modal
@@ -44,12 +46,16 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
         if (!amount) {
             setError("Vui lòng nhập số tiền.");
         } else if (numericAmount < 10000) {
-            setError("Số tiền rút phải lớn hơn hoặc bằng 10.000 VNĐ.");
+            setError("Số tiền rút ít nhất 10.000 VNĐ.");
         } else if (numericAmount > fundBalance) {
             setError("Số tiền rút không được lớn hơn số dư quỹ.");
-        } else if (note.length < 1) {
+        }
+        else if (numericAmount > 99999999) {
+            setError("Hạn mức rút nhỏ hơn 100.000.000 VND");
+        }else if (note.length < 1) {
             setError1("Vui lòng nhập lý do.");
         } else {
+            setLoading(true);
             try {
                 const transferData = {
                     groupId: fundId,
@@ -58,16 +64,22 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
                 };
 
                 const response = await wPost('/v1/group-fund/withdraw', transferData);
-                toast.success('Rút quỹ thành công');
 
-                queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
-                queryClient.invalidateQueries({queryKey: ['groupFunds']});
-                queryClient.invalidateQueries({queryKey: ['transactions', fundId]});
+                setTimeout(() => {
+                    queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
+                    queryClient.invalidateQueries({queryKey: ['groupFunds']});
+                    queryClient.invalidateQueries({queryKey: ['transactions', fundId]});
 
-                setFundBalance(prevBalance => prevBalance - numericAmount);
-                setAmount("");
-                setError("");
-                onClose();
+                    setFundBalance(prevBalance => prevBalance - numericAmount);
+                    setAmount("");
+                    setError("");
+
+                    setLoading(false);
+                    toast.success('Rút quỹ thành công');
+                    onClose();
+                }, 2000);
+
+
 
             } catch (error) {
                 console.error("Lỗi:", error);
@@ -168,12 +180,22 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
                         {note.length < 1 && <p className="text-red-500 text-sm mt-1">{error1}</p>}
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    >
-                        Rút Quỹ
-                    </button>
+                    {loading ?
+                        <div className={"flex justify-center items-center"}>
+                            <SyncLoader
+                                color="#00ff16"
+                                margin={5}
+                                size={15}
+                            />
+                        </div>
+                        :
+                        <button
+                            type="submit"
+                            className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                            Rút Quỹ
+                        </button>
+                    }
                 </form>
                 <div className={"flex justify-center"}>
                     <button

@@ -15,7 +15,6 @@ import {useQuery, useQueryClient} from "@tanstack/react-query";
 
 const FundDetailPage = () => {
     const {id} = useParams(); // Lấy ID của quỹ từ URL
-    const [error, setError] = useState(null);
     const [isDonateFormOpen, setIsDonateFormOpen] = useState(false);
     const [isWithdrawFormOpen, setWithdrawFormOpen] = useState(false);
     const [isInviteOpen, setIsInviteOpen] = useState(false);
