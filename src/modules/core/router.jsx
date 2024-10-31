@@ -36,7 +36,8 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     AddInfoAtm = lazy(() => import('../../components/atm/AddInfoAtm.jsx')),
     TransactionDetailPage = lazy(() => import('../../pages/cores/TransactionDetailPage.jsx')),
     TicketPage = lazy(() => import('../../components/support-ticket/TicketPage.jsx')),
-    CreateTicketRequest = lazy(() => import('../../components/support-ticket/CreateTicketRequest.jsx'))
+    CreateTicketRequest = lazy(() => import('../../components/support-ticket/CreateTicketRequest.jsx')),
+    TicketRequestSuccess = lazy(() => import('../../components/support-ticket/TicketRequestSuccess.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -125,6 +126,9 @@ export const router = createBrowserRouter([
           }, {
             path: 'create-ticket/:id',
             element: <CreateTicketRequest/>
+          } , {
+            path: 'ticket-success',
+            element: <TicketRequestSuccess/>
           }
         ],
       },
