@@ -3,12 +3,7 @@ import {Checkbox, Anchor} from "@mantine/core";
 import {ScrollRestoration, useNavigate} from "react-router-dom";
 import {TextField} from "@mui/material";
 import {wPost} from "../../util/request.util.js";
-
-// Hàm định dạng số tiền theo VND
-const formatCurrency = (value) => {
-    const number = parseFloat(value.replace(/[^\d]/g, "")) || 0;
-    return number.toLocaleString("vi-VN", {style: "currency", currency: "VND"});
-};
+import {useQueryClient} from "@tanstack/react-query";
 
 // Các loại quỹ
 const fundTypes = ["Du lịch", "Tiết kiệm", "Sinh nhật", "Khác"];
@@ -24,8 +19,8 @@ const NewFund = () => {
         fundType: "",
     });
     const [errors, setErrors] = useState({});
-
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const handleTypeSelect = (type) => {
         setFundData({...fundData, fundType: type});
@@ -34,7 +29,9 @@ const NewFund = () => {
     const handleInputChange = (e) => {
         const {name, value} = e.target;
         if (name === "contributionAmount") {
-            setFundData({...fundData, [name]: formatCurrency(value)});
+            const value = e.target.value.replace(/\D/g, ""); // chỉ lấy số, loại bỏ ký tự khác
+            const formattedValue = new Intl.NumberFormat("vi-VN").format(value);
+            setFundData({ ...fundData, contributionAmount: formattedValue });
         } else {
             setFundData({...fundData, [name]: value});
         }
@@ -77,6 +74,7 @@ const NewFund = () => {
                     targetDate: fundData.contributionDeadline,
                 });
                 console.log('Quỹ được tạo thành công:', response.data);
+                queryClient.invalidateQueries({ queryKey: ['groupFunds'] });
                 navigate(`/group-fund`);
             } catch (error) {
                 console.error('Có lỗi xảy ra khi tạo quỹ:', error);
