@@ -1,11 +1,11 @@
 import {useEffect, useRef, useState} from "react";
 import {GiShakingHands} from "react-icons/gi";
 import {wPost} from "../../../util/request.util.js";
-import {useQueryClient} from "@tanstack/react-query";
 import {Modal} from "@mantine/core";
 import OTPForm from "../../OTPForm.jsx";
 import {sendTransferMoneyOtp, verifyTransferMoneyOtp} from "../../../modules/otp.js";
 import {toast} from "react-toastify";
+import {useQueryClient} from "@tanstack/react-query";
 
 const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
     const [amount, setAmount] = useState("");
@@ -15,9 +15,9 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
     const [isShowOtpForm, setIsShowOtpForm] = useState(false);
     const [error, setError] = useState("");
     const queryClient = useQueryClient();
+    const formRef = useRef(null)
 
     const suggestionAmounts = [20000, 50000, 100000];
-    const formRef = useRef(null)
 
     const handleSuggestionClick = (suggestedAmount) => {
         setAmount(suggestedAmount.toLocaleString("en-US", {
@@ -51,9 +51,8 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
         return null;
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
 
+    const handleSubmit = async (e) => {
         const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
         try {
             const transferData = {
@@ -61,26 +60,25 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
                 sourceId: null,
                 receiverId: fundId,
                 money: numericAmount,
+                description: note,
             };
 
             const response = await wPost('/v1/group-fund/top-up', transferData);
+            toast.success('Góp quỹ thành công!');
 
-            queryClient.invalidateQueries({ queryKey: ['groupFund', fundId] });
-            queryClient.invalidateQueries({ queryKey: ['groupFunds'] });
-            queryClient.invalidateQueries({ queryKey: ['transactions', fundId] });
+            // revalidateCache(['groupFund', fundId], ['groupFunds'], ['transactions', fundId]);
+            queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
+            queryClient.invalidateQueries({queryKey: ['groupFunds']});
+            queryClient.invalidateQueries({queryKey: ['transactions', fundId]});
 
+            setFundBalance(prevBalance => prevBalance + numericAmount);
+            setAmount("");
+            setError("");
+            onClose();
 
-            // Xử lý phản hồi từ API
-            if (response.errorCode === 200) {
-                setFundBalance(prevBalance => prevBalance + numericAmount);
-                setAmount("");
-                setError("Thành công");
-            } else {
-                const errorData = await response.errorMessage;
-                setError(errorData.message);
-            }
         } catch (error) {
             console.error("Lỗi:", error);
+            setError(error.response.data.message);
         }
     };
 
@@ -90,10 +88,13 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
         setIsShowOtpForm(false);
         await handleSubmit();
     }
+
     async function sendOtp() {
         await sendTransferMoneyOtp();
     }
-    function onSubmitTransferMoney() {
+
+    function onSubmitTransferMoney(e) {
+        e.preventDefault();
         const error = validateAmount(amount);
         if (error) {
             setError(error);
@@ -132,7 +133,7 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
                     </span>
                 </div>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={onSubmitTransferMoney}>
                     <div className="relative mb-4">
                         <label
                             className={`absolute transition-all ${

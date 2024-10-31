@@ -77,7 +77,7 @@ const InviteMember = ({ fundId, userId, onCancel }) => {
 
     return (
         <div
-            className="px-8 py-4 border border-gray-300 rounded-2xl shadow-lg transition-transform duration-300 transform bg-gray-200">
+            className="px-8 py-4 border border-cyan-500 rounded-2xl shadow-lg transition-transform duration-300 transform bg-gray-100">
             <h2 className="text-xl font-extrabold text-gray-700 mb-6">Mời Thành Viên</h2>
 
             <TextField
@@ -90,12 +90,12 @@ const InviteMember = ({ fundId, userId, onCancel }) => {
             />
 
             {member && (
-                <div className="flex items-center justify-between mt-2 bg-white p-4 rounded-xl shadow-inner">
+                <div className="flex items-center justify-between mt-2 bg-white p-4 rounded-xl shadow-inner border-2 border-cyan-200">
                     <div className="flex items-center">
                         <img
                             src={member.avatar || "/avatarH.png"}
                             alt="Avatar"
-                            className="w-14 h-14 rounded-full border-2 border-indigo-400 mr-4"
+                            className="w-14 h-14 rounded-full border-2 border-green-400 mr-4"
                         />
                         <div>
                             <p className="text-lg font-semibold text-gray-800">{member.username}</p>
