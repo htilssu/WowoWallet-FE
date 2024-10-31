@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import {GiMoneyStack} from "react-icons/gi";
 import {wPost} from "../../../util/request.util.js";
 import {useQueryClient} from "@tanstack/react-query";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 
 const WithdrawForm = ({onClose, fundId, balance}) => {
     const [amount, setAmount] = useState("");
@@ -54,9 +54,11 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
                 const transferData = {
                     groupId: fundId,
                     amount: numericAmount,
+                    description: note
                 };
 
                 const response = await wPost('/v1/group-fund/withdraw', transferData);
+                toast.success('Rút quỹ thành công');
 
                 queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
                 queryClient.invalidateQueries({queryKey: ['groupFunds']});
@@ -65,7 +67,7 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
                 setFundBalance(prevBalance => prevBalance - numericAmount);
                 setAmount("");
                 setError("");
-                toast.success('Rút quỹ thành công');
+                onClose();
 
             } catch (error) {
                 console.error("Lỗi:", error);
@@ -182,7 +184,6 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
                     </button>
                 </div>
             </div>
-            <ToastContainer stacked />
         </div>
     );
 };
