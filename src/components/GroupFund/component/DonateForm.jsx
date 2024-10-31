@@ -6,6 +6,7 @@ import OTPForm from "../../OTPForm.jsx";
 import {sendTransferMoneyOtp, verifyTransferMoneyOtp} from "../../../modules/otp.js";
 import {toast} from "react-toastify";
 import {useQueryClient} from "@tanstack/react-query";
+import {SyncLoader} from "react-spinners";
 
 const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
     const [amount, setAmount] = useState("");
@@ -16,6 +17,7 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
     const [error, setError] = useState("");
     const queryClient = useQueryClient();
     const formRef = useRef(null)
+    const [loading, setLoading] = useState(false);
 
     const suggestionAmounts = [20000, 50000, 100000];
 
@@ -46,7 +48,7 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
         if (!amount) {
             return "Vui lòng nhập số tiền.";
         } else if (numericAmount < 10000) {
-            return "Số tiền góp phải lớn hơn hoặc bằng 10.000 VNĐ.";
+            return "Số tiền góp ít nhất 10.000 VNĐ.";
         }
         return null;
     };
@@ -54,27 +56,32 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
 
     const handleSubmit = async (e) => {
         const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
+        setLoading(true);
+
         try {
             const transferData = {
                 senderId: senderId,
                 sourceId: null,
                 receiverId: fundId,
                 money: numericAmount,
-                description: note,
+                message: note,
             };
 
             const response = await wPost('/v1/group-fund/top-up', transferData);
-            toast.success('Góp quỹ thành công!');
 
-            // revalidateCache(['groupFund', fundId], ['groupFunds'], ['transactions', fundId]);
-            queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
-            queryClient.invalidateQueries({queryKey: ['groupFunds']});
-            queryClient.invalidateQueries({queryKey: ['transactions', fundId]});
+            setTimeout(() => {
+                queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
+                queryClient.invalidateQueries({queryKey: ['groupFunds']});
+                queryClient.invalidateQueries({queryKey: ['transactions', fundId]});
 
-            setFundBalance(prevBalance => prevBalance + numericAmount);
-            setAmount("");
-            setError("");
-            onClose();
+                setFundBalance(prevBalance => prevBalance + numericAmount);
+                setAmount("");
+                setError("");
+
+                setLoading(false);
+                toast.success('Góp quỹ thành công');
+                onClose();
+            }, 3000);
 
         } catch (error) {
             console.error("Lỗi:", error);
@@ -207,12 +214,24 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
                         </p>
                     </div>
 
-                    <button
-                        type="submit"
-                        className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    >
-                        Góp Quỹ
-                    </button>
+                    {loading ?
+                        <div className={"flex justify-center items-center"}>
+                            <SyncLoader
+                                color="#00ff16"
+                                margin={5}
+                                size={15}
+                            />
+                        </div>
+                        :
+                        <div>
+                            <button
+                                type="submit"
+                                className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            >
+                                Góp Quỹ
+                            </button>
+                        </div>
+                    }
                 </form>
 
                 <div className={"flex justify-center"}>
@@ -220,7 +239,7 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
                         onClick={onClose}
                         className="mt-4 text-gray-700 hover:text-red-600"
                     >
-                        Đóng
+                    Đóng
                     </button>
                 </div>
             </div>

@@ -2,8 +2,17 @@
 import { useEffect, useState } from 'react';
 import { wPost } from "../../../util/request.util.js";
 import {Confirm} from "react-admin";
+import {useQueryClient} from "@tanstack/react-query";
+import {TextField} from "@mui/material";
+import {SyncLoader} from "react-spinners";
+import {toast} from "react-toastify";
 
 const EditGroupFund = ({ fundData, onClose, fundId }) => {
+    const queryClient = useQueryClient();
+    const [errors, setErrors] = useState({});
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const [formData, setFormData] = useState({
         name: '',
         image: '',
@@ -12,8 +21,6 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
         target: 0,
         targetDate: ''
     });
-
-    const [isModalOpen, setIsModalOpen] = useState(false); // Trạng thái modal xác nhận
 
     useEffect(() => {
         if (fundData) {
@@ -31,9 +38,11 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
+        // Reset lỗi của trường hiện tại khi người dùng nhập lại
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+
         // Chỉ định dạng lại khi mục tiêu được cập nhật
         if (name === 'target') {
-            // Chuyển đổi giá trị thành số và định dạng
             const numberValue = parseFloat(value.replace(/\./g, '').replace(',', '.'));
             setFormData((prev) => ({
                 ...prev,
@@ -47,22 +56,57 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
         }
     };
 
-    // Hàm định dạng số
+// Hàm định dạng số
     const formatNumber = (num) => {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setIsModalOpen(true); // Mở modal xác nhận
+// Hàm kiểm tra tính hợp lệ
+    const validateFormData = () => {
+        const { name, target, targetDate } = formData;
+        const newErrors = {};
+
+        // Kiểm tra không bỏ trống tên quỹ
+        if (!name.trim()) {
+            newErrors.name = "Tên quỹ không được bỏ trống.";
+        }
+
+        // Kiểm tra không nhập số âm cho số tiền mục tiêu
+        if (target < 0) {
+            newErrors.target = "Số tiền không hợp lệ.";
+        }
+
+        // Kiểm tra ngày hạn không được là ngày quá khứ
+        const currentDate = new Date().setHours(0, 0, 0, 0); // Ngày hiện tại, không có thời gian
+        const selectedDate = new Date(targetDate).setHours(0, 0, 0, 0);
+
+        if (targetDate && selectedDate < currentDate) {
+            newErrors.targetDate = "Ngày hạn không được là ngày quá khứ.";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
-    const confirmUpdate = async () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (validateFormData()) {
+            setIsModalOpen(true);
+        }
+    };
+
+    const confirmUpdate = async (e) => {
+        e.preventDefault();
+        setIsModalOpen(false);
+        setLoading(true);
         try {
             const response = await wPost(`/v1/group-fund/${fundId}`, formData);
-            alert(response.message);
-            onClose();
-            location.reload();
+            setTimeout(() => {
+                queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
+                setLoading(false);
+                toast.success(response.message);
+                onClose();
+            }, 3000);
         } catch (error) {
             console.error("Error updating group fund:", error);
             alert("Có lỗi xảy ra khi cập nhật quỹ.");
@@ -76,91 +120,125 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50 z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
-                <h2 className="text-2xl font-bold text-center mb-4">Chỉnh Sửa Quỹ</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 backdrop-blur-md">
+            <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-xl transform transition-all duration-300 ease-in-out">
+                <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
+                    ✨ Chỉnh Sửa Quỹ ✨
+                </h2>
+                <form onSubmit={handleSubmit} className="space-y-3">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Tên Quỹ:</label>
-                        <input
+                        <label className="block text-sm font-semibold text-gray-600">
+                            Tên Quỹ:
+                        </label>
+                        <TextField
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-400"
+                            className="mt-2 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                         />
+                        {errors.name && (
+                            <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                        )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Loại:</label>
+                        <label className="block text-sm font-semibold text-gray-600">
+                            Loại:
+                        </label>
                         <input
                             type="text"
                             name="type"
                             value={formData.type}
                             onChange={handleChange}
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-400"
+                            className="mt-2 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Mô Tả:</label>
+                        <label className="block text-sm font-semibold text-gray-600">
+                            Mô Tả:
+                        </label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-400"
+                            className="mt-2 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                             rows="2"
                         ></textarea>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Mục Tiêu:</label>
+                        <label className="block text-sm font-semibold text-gray-600">
+                            Mục Tiêu:
+                        </label>
                         <input
-                            type="text" // Thay đổi từ type="number" thành type="text" để cho phép định dạng
+                            type="text"
                             name="target"
-                            value={formatNumber(formData.target)} // Hiển thị số đã định dạng
+                            value={formatNumber(formData.target)}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-400"
+                            className="mt-2 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                         />
+                        {errors.target && (
+                            <p className="text-red-500 text-sm mt-1">{errors.target}</p>
+                        )}
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Ngày Hạn:</label>
+                        <label className="block text-sm font-semibold text-gray-600">
+                            Ngày Hạn:
+                        </label>
                         <input
                             type="date"
                             name="targetDate"
                             value={formData.targetDate}
                             onChange={handleChange}
                             required
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:outline-none focus:ring focus:ring-blue-400"
+                            className="mt-2 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                         />
+                        {errors.targetDate && (
+                            <p className="text-red-500 text-sm mt-1">{errors.targetDate}</p>
+                        )}
                     </div>
-                    <div className="flex justify-between mt-6">
-                        <button
-                            type="submit"
-                            className="w-full bg-blue-500 text-white rounded-md px-4 py-2 shadow hover:bg-blue-600 transition duration-200"
-                        >
-                            Cập Nhật
-                        </button>
-                        <button
-                            type="button"
-                            className="ml-2 w-full bg-gray-300 text-black rounded-md px-4 py-2 shadow hover:bg-gray-400 transition duration-200"
-                            onClick={onClose}
-                        >
-                            Đóng
-                        </button>
+                    <div className="flex justify-center mt-8 space-x-4">
+                        {loading ? (
+                            <div>
+                                <SyncLoader
+                                    color="#00ff16"
+                                    margin={5}
+                                    size={15}
+                                />
+                            </div>
+                        ) : (
+                            <>
+                                <button
+                                    type="submit"
+                                    className="w-1/2 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-xl py-3 shadow-lg hover:shadow-xl hover:from-blue-500 hover:to-blue-400 transition-all duration-300 transform hover:-translate-y-0.5"
+                                >
+                                    Cập Nhật
+                                </button>
+                                <button
+                                    type="button"
+                                    className="w-1/2 bg-gray-200 text-gray-700 font-semibold rounded-xl py-3 shadow-lg hover:shadow-xl hover:bg-gray-300 transition-all duration-300 transform hover:-translate-y-0.5"
+                                    onClick={onClose}
+                                >
+                                    Đóng
+                                </button>
+                            </>
+                        )}
                     </div>
                 </form>
-            </div>
-            <Confirm
-                isOpen={isModalOpen}
-                title={`Nhóm Quỹ: ${formData.name}`}
-                content="Bạn có chắc chắn muốn cập nhật không?"
-                cancel="Quay lại"
-                confirm="Xác nhận"
-                onConfirm={confirmUpdate}
-                onClose={closeModal}
-            />
-        </div>
-    );
+    <Confirm
+        isOpen={isModalOpen}
+        title={`Nhóm Quỹ: ${formData.name}`}
+        content="Bạn có chắc chắn muốn cập nhật không?"
+        cancel="Quay lại"
+        confirm="Xác nhận"
+        onConfirm={confirmUpdate}
+        onClose={closeModal}
+    />
+</div>
+</div>
+)
+    ;
 };
 
 export default EditGroupFund;
