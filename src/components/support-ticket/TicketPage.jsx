@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button, Container, Typography } from '@mui/material';
-import TicketList from './TiketList';
+import { Button, Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import TicketList from './TicketList';
 
 const TicketPage = () => {
     const [activeSection, setActiveSection] = useState('createRequest');
@@ -16,6 +16,12 @@ const TicketPage = () => {
     const handleSearchHistory = () => {
         setActiveSection('searchHistory');
     };
+
+    const searchHistoryData = [
+        { date: '2024-10-25', searchId: '123456', status: 'Hoàn thành' },
+        { date: '2024-10-20', searchId: '654321', status: 'Đang xử lý' },
+        { date: '2024-10-18', searchId: '789012', status: 'Thất bại' }
+    ];
 
     return (
         <>
@@ -115,10 +121,32 @@ const TicketPage = () => {
                 </div>
             )}
             {activeSection === 'searchHistory' && (
-                <div>
-                    123
-                </div>
-            )}
+                    <div style={{ marginTop: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', color: 'black' }}>
+                        <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
+                            Lịch sử tra soát
+                        </Typography>
+                        <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Ngày</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Mã tra cứu</TableCell>
+                                        <TableCell style={{ fontWeight: 'bold' }}>Trạng thái</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {searchHistoryData.map((history, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{history.date}</TableCell>
+                                            <TableCell>{history.searchId}</TableCell>
+                                            <TableCell>{history.status}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
+                )}
         </Container>
         
         <TicketList /></>
