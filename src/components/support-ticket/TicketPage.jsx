@@ -1,155 +1,211 @@
-import { useState } from 'react';
-import { Button, Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import TicketList from './TicketList';
+import { useState, useMemo, useEffect } from 'react';
+import { Button, Container, FormControlLabel, Checkbox, TextField, MenuItem, Typography } from '@mui/material';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import TicketHistory from './TicketHistory';
 
 const TicketPage = () => {
     const [activeSection, setActiveSection] = useState('createRequest');
+    const [requestType, setRequestType] = useState('');
+    const [reasonList, setReasonList] = useState([]);
+    const [selectedReason, setSelectedReason] = useState('');
+    const [errorToastId, setErrorToastId] = useState(null);
+    const [agreeTerms, setAgreeTerms] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
 
-    const handleCreateRequest = () => {
-        setActiveSection('createRequest');
-    };
-
-    const handleSearchRequest = () => {
-        setActiveSection('searchRequest');
-    };
-
-    const handleSearchHistory = () => {
-        setActiveSection('searchHistory');
-    };
+    const reasons = useMemo(() => ({
+        "Hỗ trợ hoàn trả giao dịch chuyển tiền": ["Giao dịch bị lỗi", "Người hưởng chưa nhận được tiền", "Sai thông tin người nhận"],
+        "Hỗ trợ chỉnh thông tin giao dịch chuyển tiền": ["Chỉnh sửa số tài khoản", "Chỉnh sửa tên người nhận"],
+        "Kiểm tra trạng thái giao dịch": ["Người hưởng chưa nhận được tiền", "Giao dịch đang xử lý lâu"]
+    }), []);
 
     const searchHistoryData = [
         { date: '2024-10-25', searchId: '123456', status: 'Hoàn thành' },
         { date: '2024-10-20', searchId: '654321', status: 'Đang xử lý' },
-        { date: '2024-10-18', searchId: '789012', status: 'Thất bại' }
+        { date: '2024-10-18', searchId: '789012', status: 'Thất bại' },
+        { date: '2024-10-17', searchId: '345678', status: 'Hoàn thành' },
+        { date: '2024-10-15', searchId: '901234', status: 'Thất bại' },
+        { date: '2024-10-10', searchId: '567890', status: 'Đang xử lý' },
+        { date: '2024-10-05', searchId: '123789', status: 'Hoàn thành' },
+        { date: '2024-10-01', searchId: '456123', status: 'Thất bại' }
     ];
 
+    const totalPages = Math.ceil(searchHistoryData.length / itemsPerPage);
+    const displayedHistoryData = searchHistoryData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    const handleCreateRequest = () => setActiveSection('createRequest');
+    const handleSearchHistory = () => setActiveSection('searchHistory');
+
+    const handleRequestTypeChange = (event) => {
+        setRequestType(event.target.value);
+    };
+
+    const handleReasonChange = (event) => {
+        setSelectedReason(event.target.value);
+    };
+
+    const handleCheckboxChange = (event) => {
+        setAgreeTerms(event.target.checked);
+    };
+
+    const showToast = (message) => {
+        if (!toast.isActive(errorToastId)) {
+            const id = toast.error(message);
+            setErrorToastId(id);
+        }
+    };
+
+    useEffect(() => {
+        if (requestType) {
+            setReasonList(reasons[requestType] || []);
+            setSelectedReason('');
+        } else {
+            setReasonList([]);
+            setSelectedReason('');
+        }
+    }, [reasons, requestType]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (!requestType) {
+            showToast("Vui lòng chọn loại yêu cầu.");
+            return;
+        }
+        if (!selectedReason) {
+            showToast("Vui lòng chọn lý do tra soát.");
+            return;
+        }
+        if (!agreeTerms) {
+            showToast("Bạn cần đồng ý với các điều khoản dịch vụ.");
+            return;
+        }
+
+        console.log({ requestType, selectedReason });
+    };
+
+    const handlePageChange = (direction) => {
+        if (direction === 'next' && currentPage < totalPages) {
+            setCurrentPage(prevPage => prevPage + 1);
+        } else if (direction === 'prev' && currentPage > 1) {
+            setCurrentPage(prevPage => prevPage - 1);
+        }
+    };
+
     return (
-        <>
-            <Container style={{ textAlign: 'center', padding: '20px', background: 'linear-gradient(to right, #06b6d4, #3b82f6)', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', color: 'white' }}>
-                <Typography variant="h4" gutterBottom style={{ fontWeight: 'bold', color: 'white' }}>
-                    HỖ TRỢ GIAO DỊCH
-                </Typography>
-                <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}>
-                    <Button
-                        variant="contained"
-                        style={{ flex: '0 0 31%', padding: '10px 20px', fontSize: '16px', borderRadius: '10px', background: 'linear-gradient(to right, #06b6d4, #3b82f6)', color: 'white' }}
-                        onClick={handleCreateRequest}
-                    >
-                        Lập yêu cầu
-                    </Button>
-                    <Button
-                        variant="contained"
-                        style={{ flex: '0 0 31%', padding: '10px 20px', fontSize: '16px', borderRadius: '10px', background: 'linear-gradient(to right, #06b6d4, #3b82f6)', color: 'white' }}
-                        onClick={handleSearchRequest}
-                    >
-                        Tra cứu yêu cầu
-                    </Button>
-                    <Button
-                        variant="contained"
-                        style={{ flex: '0 0 31%', padding: '10px 20px', fontSize: '16px', borderRadius: '10px', background: 'linear-gradient(to right, #06b6d4, #3b82f6)', color: 'white' }}
-                        onClick={handleSearchHistory}
-                    >
-                        Lịch sử tra cứu
-                    </Button>
-                </div>
-                {activeSection === 'createRequest' && (
-                    <div style={{ marginTop: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', color: 'black' }}>
-                        <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
-                            Hình thức giao dịch
-                        </Typography>
-                        <select style={{ padding: '10px', borderRadius: '5px', width: '100%', marginBottom: '20px', border: '1px solid #ccc' }}>
-                            <option value="bank">Giao dịch ngân hàng</option>
-                            <option value="wallet">Giao dịch ví</option>
-                        </select>
-                        <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5', marginTop: '20px' }}>
-                            Số tài khoản ngân hàng
-                        </Typography>
-                        <input type="text" defaultValue="Tài khoản đang dùng" style={{ padding: '10px', borderRadius: '5px', width: '100%', border: '1px solid #ccc' }} />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                        <div style={{ flex: '0 0 48%' }}>
-                            <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
-                                Từ ngày
-                            </Typography>
-                            <input type="date" style={{ padding: '10px', borderRadius: '5px', width: '100%', border: '1px solid #ccc' }} />
-                        </div>
-                        <div style={{ flex: '0 0 48%' }}>
-                            <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
-                                Đến ngày
-                            </Typography>
-                            <input type="date" style={{ padding: '10px', borderRadius: '5px', width: '100%', border: '1px solid #ccc' }} />
-                        </div>
-                    </div>
-                    <Button
-                        variant="contained"
-                        style={{ margin: '20px 0', padding: '10px 20px', fontSize: '16px', borderRadius: '10px', background: 'linear-gradient(to right, #06b6d4, #3b82f6)', color: 'white' }}
-                        onClick={handleSearchRequest}
-                    >
-                        Tra cứu
-                    </Button>
-                </div>
-            )}
-            {activeSection === 'searchRequest' && (
+        <Container
+            maxWidth="sm" 
+            sx={{
+                textAlign: 'center',
+                padding: '20px',
+                background: 'linear-gradient(to right, #06b6d4, #3b82f6)',
+                borderRadius: '10px',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                color: 'white',
+                marginBottom: '20px'
+            }}
+        >
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', color: 'white' }}>
+                HỖ TRỢ YÊU CẦU
+            </Typography>
+            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}>
+                <Button
+                    variant="contained"
+                    sx={{
+                        flex: '0 0 48%',
+                        padding: '10px 20px',
+                        fontSize: '16px',
+                        borderRadius: '10px',
+                        background: 'linear-gradient(to right, #06b6d4, #3b82f6)',
+                        color: 'white',
+                    }}
+                    onClick={handleCreateRequest}
+                >
+                    Lập yêu cầu
+                </Button>
+                <Button
+                    variant="contained"
+                    sx={{
+                        flex: '0 0 48%',
+                        padding: '10px 20px',
+                        fontSize: '16px',
+                        borderRadius: '10px',
+                        background: 'linear-gradient(to right, #06b6d4, #3b82f6)',
+                        color: 'white',
+                    }}
+                    onClick={handleSearchHistory}
+                >
+                    Lịch sử yêu cầu
+                </Button>
+            </div>
+
+            {activeSection === 'createRequest' && (
                 <div style={{ marginTop: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', color: 'black' }}>
-                    <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
-                        Tra cứu yêu cầu
-                    </Typography>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                        <div style={{ flex: '0 0 48%' }}>
-                            <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
-                                Từ ngày
+                    <TextField
+                        label="Loại yêu cầu"
+                        select
+                        value={requestType}
+                        onChange={handleRequestTypeChange}
+                        fullWidth
+                        sx={{ mt: 2 }}
+                    >
+                        <MenuItem value="" disabled>Chọn loại yêu cầu</MenuItem>
+                        {Object.keys(reasons).map((type) => (
+                            <MenuItem key={type} value={type}>{type}</MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                        label="Lý do"
+                        select
+                        value={selectedReason}
+                        onChange={handleReasonChange}
+                        disabled={!requestType}
+                        fullWidth
+                        sx={{ mt: 2 }}
+                    >
+                        <MenuItem value="" disabled>Chọn lý do tra soát</MenuItem>
+                        {reasonList.map((reason, index) => (
+                            <MenuItem key={index} value={reason}>{reason}</MenuItem>
+                        ))}
+                    </TextField>
+
+                    <FormControlLabel 
+                        style={{ marginTop: '20px' }}
+                        control={
+                            <Checkbox checked={agreeTerms} onChange={handleCheckboxChange} />
+                        }
+                        label={
+                            <Typography variant="body2">
+                                Bạn đồng ý với các <u className='text-green-500'>điều khoản và dịch vụ</u> của trang thanh toán của chúng tôi.
                             </Typography>
-                            <input type="date" style={{ padding: '10px', borderRadius: '5px', width: '100%', border: '1px solid #ccc' }} />
-                        </div>
-                        <div style={{ flex: '0 0 48%' }}>
-                            <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
-                                Đến ngày
-                            </Typography>
-                            <input type="date" style={{ padding: '10px', borderRadius: '5px', width: '100%', border: '1px solid #ccc' }} />
-                        </div>
-                    </div>
-                    <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
-                        Mã tra cứu
-                    </Typography>
-                    <input type="text" style={{ padding: '10px', borderRadius: '5px', width: '100%', border: '1px solid #ccc', marginBottom: '20px' }} />
+                        }
+                    />
+                    
                     <Button
                         variant="contained"
-                        style={{ padding: '10px 20px', fontSize: '16px', borderRadius: '10px', background: 'linear-gradient(to right, #06b6d4, #3b82f6)', color: 'white' }}
-                        onClick={handleSearchRequest}
+                        fullWidth 
+                        sx={{
+                            margin: '20px 0',
+                            padding: '10px 20px',
+                            fontSize: '16px',
+                            borderRadius: '10px',
+                            background: 'linear-gradient(to right, #06b6d4, #3b82f6)',
+                            color: 'white',
+                        }}
+                        onClick={handleSubmit}
                     >
-                        Tra cứu
+                        Gửi yêu cầu
                     </Button>
                 </div>
             )}
+
             {activeSection === 'searchHistory' && (
-                    <div style={{ marginTop: '20px', backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', color: 'black' }}>
-                        <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', color: '#3f51b5' }}>
-                            Lịch sử tra soát
-                        </Typography>
-                        <TableContainer component={Paper} style={{ marginTop: '20px' }}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell style={{ fontWeight: 'bold' }}>Ngày</TableCell>
-                                        <TableCell style={{ fontWeight: 'bold' }}>Mã tra cứu</TableCell>
-                                        <TableCell style={{ fontWeight: 'bold' }}>Trạng thái</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {searchHistoryData.map((history, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{history.date}</TableCell>
-                                            <TableCell>{history.searchId}</TableCell>
-                                            <TableCell>{history.status}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </div>
-                )}
+                <TicketHistory displayedHistoryData={displayedHistoryData} currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
+            )}
+            <ToastContainer />
         </Container>
-        
-        <TicketList /></>
     );
 };
 
