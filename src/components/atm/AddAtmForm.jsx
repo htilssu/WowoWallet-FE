@@ -1,12 +1,12 @@
 import 'react-toastify/dist/ReactToastify.css';
 import {wGet} from '../../util/request.util.js';
-import {useForm} from '@mantine/form';
+import {isNotEmpty, useForm} from '@mantine/form';
 import {useQuery} from '@tanstack/react-query';
 import ATMCard from '../ATMCard.jsx';
-import {Button, Divider, NumberInput, Select, TextInput} from '@mantine/core';
-import {useMemo} from 'react';
+import {Button, Divider, Select, TextInput} from '@mantine/core';
+import {useMemo, useState} from 'react';
 import {addCard} from '../../modules/card.js';
-import {validateExpiredTime} from '../../modules/wallet/wallet.js';
+import {cardNumberValidator, holderNameValidator, monthValidator, yearValidator} from '../../util/credit-card.util.js';
 
 const AddAtmForm = ({onSubmit}) => {
   const {data: bankList} = useQuery({
@@ -14,6 +14,7 @@ const AddAtmForm = ({onSubmit}) => {
     queryFn: async () => await wGet('/v1/banks'),
     staleTime: 1000 * 60 * 60,
   });
+  const [error, setError] = useState(null);
 
   const form = useForm({
     initialValues: {
@@ -24,23 +25,55 @@ const AddAtmForm = ({onSubmit}) => {
       year: '',
     },
     validate: {
-      expired: validateExpiredTime,
+      cardNumber: cardNumberValidator,
+      month: monthValidator,
+      year: yearValidator,
+      holderName: holderNameValidator,
+      bankId: isNotEmpty('Chưa chọn ngân hàng'),
     },
+    validateInputOnBlur: true,
   });
 
   const bank = useMemo(() => {
-    return bankList?.find(bank => bank.shortName === form.values.bankId);
+    if (Array.isArray(bankList)) {
+      return bankList?.find(bank => bank.shortName === form.values.bankId);
+    }
   }, [form.values.bankId, bankList]);
 
   function handleSubmit() {
     const validationResult = form.validate();
     if (validationResult.hasErrors) return;
-    addCard({...form.values, atmId: bank.id}).then(onSubmit);
+    addCard({...form.values, atmId: bank.id}).then(onSubmit).catch(e => {
+      setError(e.response.data.message);
+    });
   }
 
-  function handleMonthChange() {
+  const handleMonthChange = (e) => {
+    let value = e.target.value;
+    value = value.toString().replace(/\D/g, '');
+    if (value.toString().length >= 2) {
+      if (value > 12) value = 12;
+      if (value < 1) value = 1;
+    }
+    form.setFieldValue('month', value);
+  };
 
-  }
+  const handleYearChange = (e) => {
+    let value = e.target.value;
+    value = value.toString().replace(/\D/g, '');
+
+    const currentYear = new Date().getFullYear() % 100;
+
+    let parsedYear = parseInt(value, 10);
+
+    if (parsedYear.toString().length === 2) {
+      if (parsedYear < currentYear) {
+        value = currentYear.toString();
+      }
+    }
+
+    form.setFieldValue('year', value);
+  };
 
   return (<div className="flex items-center justify-center">
     <div
@@ -92,14 +125,26 @@ const AddAtmForm = ({onSubmit}) => {
               </div>
               <div
                   className={'flex justify-between items-center border-1 py-2 px-1 rounded w-1/6 overflow-hidden ml-4'}>
-                <div className={'w-full flex items-center'}>
-                  <NumberInput max={12} min={1} className={'border-0 outline-0 text-center w-full'}
-                               maxLength={2} hideControls/>
-                  <div className={'border-t-1  border-gray-500 w-1/2 -rotate-[70deg]'}></div>
-                  <NumberInput min className={'border-0 outline-0 text-center w-full'} hideControls maxLength={2}/>
-                </div>
+                <input
+                    max={12}
+                    className={'border-0 outline-0 text-center w-full'}
+                    maxLength={2}
+                    value={form.values.month}
+                    onChange={handleMonthChange}
+                />
+                <div className={'border-t-1 border-gray-500 w-1/2 -rotate-[70deg]'}></div>
+                <input
+                    min={1}
+                    className={'border-0 outline-0 text-center w-full'}
+                    maxLength={2}
+                    value={form.values.year}
+                    onChange={handleYearChange}
+                />
               </div>
+              {form.errors.month && <div className="text-red-500 ml-2">{form.errors.month}</div>}
+              {form.errors.year && <div className="text-red-500 ml-2">{form.errors.year}</div>}
             </div>
+            {error && <div className="text-red-500">{error}</div>}
 
 
           </div>
