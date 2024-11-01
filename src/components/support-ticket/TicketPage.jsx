@@ -3,8 +3,12 @@ import { Button, Container, FormControlLabel, Checkbox, TextField, MenuItem, Typ
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TicketHistory from './TicketHistory';
+import { wPost } from '../../util/request.util';
+import { useAuth } from '../../modules/hooks/useAuth';
 
 const TicketPage = () => {
+
+    const { user } = useAuth()
     const [activeSection, setActiveSection] = useState('createRequest');
     const [requestType, setRequestType] = useState('');
     const [reasonList, setReasonList] = useState([]);
@@ -13,6 +17,13 @@ const TicketPage = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
+
+    useEffect(() => {
+        if (user) {
+            const userId = user.id;
+            console.log("User ID:", userId);  
+        }
+    }, [user]);
 
     const reasons = useMemo(() => ({
         "Hỗ trợ hoàn trả giao dịch chuyển tiền": ["Giao dịch bị lỗi", "Người hưởng chưa nhận được tiền", "Sai thông tin người nhận"],
@@ -38,7 +49,12 @@ const TicketPage = () => {
     const handleSearchHistory = () => setActiveSection('searchHistory');
 
     const handleRequestTypeChange = (event) => {
-        setRequestType(event.target.value);
+        const type = event.target.value;
+        if (reasons[type]) {
+            setRequestType(type);
+        } else {
+            showToast("Loại yêu cầu không hợp lệ.");
+        }
     };
 
     const handleReasonChange = (event) => {
@@ -48,6 +64,7 @@ const TicketPage = () => {
     const handleCheckboxChange = (event) => {
         setAgreeTerms(event.target.checked);
     };
+
 
     const showToast = (message) => {
         if (!toast.isActive(errorToastId)) {
@@ -66,7 +83,7 @@ const TicketPage = () => {
         }
     }, [reasons, requestType]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!requestType) {
@@ -82,7 +99,39 @@ const TicketPage = () => {
             return;
         }
 
-        console.log({ requestType, selectedReason });
+        try {
+            const response = await createTicket(requestType, selectedReason);
+    
+            if (response.success) {
+                toast.success("Yêu cầu của bạn đã được gửi thành công!");
+                setRequestType('');
+                setSelectedReason('');
+                setAgreeTerms(false);
+            } else {
+                showToast(response.message || "Đã xảy ra lỗi khi gửi yêu cầu.");
+            }
+        } catch (error) {
+            showToast(error.message);
+        }
+    };
+
+    const createTicket = async (requestType, selectedReason) => {
+        const userId = user?.id;
+        const body = {
+            title: requestType,
+            content: selectedReason,
+            status: "OPEN",
+            userId: userId 
+        };
+        try {
+            const response = await wPost(`http://localhost:8080/v1/ticket/create`, body); 
+            if (!response || !response.success) {
+                throw new Error("Phản hồi không hợp lệ từ API.");
+            }
+            return response;
+        } catch (error) {
+            throw new Error("Lỗi mạng khi gửi yêu cầu.");
+        }
     };
 
     const handlePageChange = (direction) => {
