@@ -33,10 +33,11 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     EmployeeLayout = lazy(() => import('../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx')),
     WithdrawPage = lazy(() => import('../../pages/cores/WithdrawPage.jsx')),
     TransferMoney = lazy(() => import('../../components/payment/TransferMoney.jsx')),
-    AddInfoAtm = lazy(() => import('../../components/atm/AddInfoAtm.jsx')),
+    AddAtmPage = lazy(() => import('../../components/atm/AddAtmForm.jsx')),
     TransactionDetailPage = lazy(() => import('../../pages/cores/TransactionDetailPage.jsx')),
     TicketPage = lazy(() => import('../../components/support-ticket/TicketPage.jsx')),
-    CreateTicketRequest = lazy(() => import('../../components/support-ticket/CreateTicketRequest.jsx'))
+    CreateTicketRequest = lazy(() => import('../../components/support-ticket/CreateTicketRequest.jsx')),
+    TicketRequestSuccess = lazy(() => import('../../components/support-ticket/TicketRequestSuccess.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -72,9 +73,6 @@ export const router = createBrowserRouter([
         element: <MainLayout/>,
         children: [
           {
-            index: true,
-            element: <IntroPage/>,
-          }, {
             path: 'home',
             element: <HomePage/>,
           }, {
@@ -103,7 +101,7 @@ export const router = createBrowserRouter([
             element: <AtmPage/>,
           }, {
             path: 'bank/add',
-            element: <AddInfoAtm/>,
+            element: <AddAtmPage/>,
           }, {
             path: 'analysis',
             element: <AnalysisPage/>,
@@ -121,17 +119,32 @@ export const router = createBrowserRouter([
             element: <FundDetailPage/>,
           }, {
             path: 'support-ticket',
-            element: <TicketPage/>
+            element: <TicketPage/>,
           }, {
             path: 'create-ticket/:id',
-            element: <CreateTicketRequest/>
-          }
+            element: <CreateTicketRequest/>,
+          },  {
+            path: 'ticket-success',
+            element: <TicketRequestSuccess/>,
+          },
         ],
       },
     ],
     errorElement: <PageNotFound/>,
   }, {
     children: [
+      {
+        path: '/',
+        element: <MainLayout/>,
+        children:
+            [
+              {
+                path: '/',
+                index: true,
+                element: <IntroPage/>,
+              }
+            ],
+      },
       {
         path: '/sign-in',
         element: <SignInPage/>,

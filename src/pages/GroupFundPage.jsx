@@ -1,38 +1,32 @@
-import {ScrollRestoration, useNavigate} from 'react-router-dom';
-import InviteFund from "../components/GroupFund/InviteFundGroup.jsx";
-import {useEffect, useState} from "react";
-import {useAuth} from "../modules/hooks/useAuth.jsx";
-import {wGet} from "../util/request.util.js";
+import { ScrollRestoration, useNavigate } from 'react-router-dom';
+import InviteFund from "../components/GroupFund/component/ListInviteFund.jsx";
+import { useAuth } from "../modules/hooks/useAuth.jsx";
+import { useQuery } from '@tanstack/react-query';
+import { wGet } from "../util/request.util.js";
 
 const GroupFundPage = () => {
-    const [createdFunds, setCreatedFunds] = useState([]);
-    const [joinedFunds, setJoinedFunds] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
-    const {user} = useAuth();
+    const { user } = useAuth();
     const userId = user.id;
-
-    useEffect(() => {
-        const fetchGroupFunds = async () => {
-            try {
-                const response = await wGet(`/v1/group-fund/user`);
-                const {createdFunds, joinedFunds} = response;
-
-                if (createdFunds.length === 0 && joinedFunds.length === 0) {
-                    setErrorMessage('Bạn chưa tạo hoặc tham gia quỹ nào.');
-                } else {
-                    setCreatedFunds(createdFunds);
-                    setJoinedFunds(joinedFunds);
-                }
-            } catch (error) {
-                console.error('Lỗi khi lấy danh sách quỹ:', error);
-                setErrorMessage('Có lỗi xảy ra khi lấy danh sách quỹ.');
-            }
-        };
-
-        fetchGroupFunds();
-    }, [userId]);
-
     const navigate = useNavigate();
+
+    // Sử dụng useQuery để fetch dữ liệu group funds với object syntax
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ['groupFunds', userId], // Query key cho caching
+        queryFn: () => wGet(`/v1/group-fund/user`),
+        staleTime: 5 * 60 * 1000, // 5 phút
+        cacheTime: 30 * 60 * 1000, // 30 phút
+    });
+
+    // Xử lý khi có lỗi hoặc đang loading
+    if (isLoading) return <p>Loading...</p>;
+    if (isError) return <p>Lỗi khi lấy danh sách quỹ</p>;
+
+    const { createdFunds, joinedFunds } = data || { createdFunds: [], joinedFunds: [] };
+
+    // Hiển thị thông báo nếu không có quỹ nào
+    const errorMessage = createdFunds?.length === 0 && joinedFunds?.length === 0
+        ? 'Bạn chưa tạo hoặc tham gia quỹ nào.'
+        : '';
 
     // Hàm điều hướng đến trang chi tiết quỹ
     const handleFundClick = (id) => {
@@ -54,15 +48,15 @@ const GroupFundPage = () => {
                             Quản lý tất cả các quỹ mà bạn đã tạo hoặc đang tham gia.
                         </p>
                     </div>
-                    {/*lời mời tham gia quỹ*/}
-                    <div className={"mb-6"}>
-                        <InviteFund/>
+                    {/* Lời mời tham gia quỹ */}
+                    <div>
+                        <InviteFund />
                     </div>
-                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                     {/* Created Funds */}
                     <div className="w-full mb-10">
+                        {errorMessage && <p className="text-gray-500">{errorMessage}</p>}
                         <h2 className="text-2xl font-semibold text-gray-800 mb-2">Quỹ Đã Tạo</h2>
-                        {createdFunds.length > 0 ? (
+                        {createdFunds?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {createdFunds.map((fund) => (
                                     <div key={fund.id}
@@ -75,7 +69,7 @@ const GroupFundPage = () => {
                                         <p className="text-gray-600">
                                             Số tiền đã góp:
                                             <span className="font-semibold text-green-500 ml-2">
-                                            {fund.balance.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                                                {fund?.wallet.balance?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
                                             </span>
                                         </p>
                                     </div>
@@ -89,19 +83,19 @@ const GroupFundPage = () => {
                     {/* Participating Funds */}
                     <div className="w-full mb-12">
                         <h2 className="text-2xl font-semibold text-gray-800 mb-2">Quỹ Đang Tham Gia</h2>
-                        {joinedFunds.length > 0 ? (
+                        {joinedFunds?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {joinedFunds.map((fund) => (
                                     <div key={fund.id}
                                          className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 cursor-pointer"
-                                         onClick={() => handleFundClick(fund.id)} // Điều hướng khi nhấn vào quỹ
+                                         onClick={() => handleFundClick(fund.id)}
                                     >
                                         <img src={fund.image} alt={fund.name}
                                              className="rounded-lg w-full h-48 object-cover mb-4"/>
                                         <h3 className="text-xl font-bold text-gray-800 mb-2">{fund.name}</h3>
                                         <p className="text-gray-600">Số tiền đã góp:
                                             <span className="font-semibold text-green-500 ml-2">
-                                            {fund.balance.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                                                {fund?.wallet.balance?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
                                             </span>
                                         </p>
                                     </div>
@@ -123,7 +117,7 @@ const GroupFundPage = () => {
                     </div>
                 </div>
             </div>
-            <ScrollRestoration/>
+            <ScrollRestoration />
         </div>
     );
 };

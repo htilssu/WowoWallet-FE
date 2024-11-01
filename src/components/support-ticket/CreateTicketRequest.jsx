@@ -70,7 +70,6 @@ const CreateTicketRequest = () => {
                 Lập hỗ trợ giao dịch
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {/* Thông tin giao dịch hiện tại */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1, borderBottom: '1px solid #e0e0e0' }}>
                     <Typography variant="subtitle1" color="textSecondary">Loại giao dịch</Typography>
                     <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'right' }}>Purchase</Typography>
@@ -104,7 +103,6 @@ const CreateTicketRequest = () => {
                     <Typography variant="body1" sx={{ fontWeight: 'bold', textAlign: 'right' }}>1000</Typography>
                 </Box>
                 
-                {/* Dropdown for Request Type */}
                 <TextField
                     label="Loại yêu cầu"
                     select
