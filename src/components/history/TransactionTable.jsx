@@ -25,7 +25,7 @@ function TransactionTable({list}) {
     }),
     columnHelper.accessor('created', {
       header: 'Thời gian tạo',
-      cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+      cell: (info) => new Date(info.getValue()).toLocaleDateString('vi-VN'),
     }),
     columnHelper.accessor('status', {
       header: 'Trạng thái',
