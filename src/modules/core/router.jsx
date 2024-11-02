@@ -38,8 +38,11 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     TicketPage = lazy(() => import('../../components/support-ticket/TicketPage.jsx')),
     TicketRequestSuccess = lazy(() => import('../../components/support-ticket/TicketRequestSuccess.jsx')),
     TicketDetail = lazy(() => import('../../components/support-ticket/TicketDetail.jsx')),
-    LayoutTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/LayoutTransaction.jsx'));
-
+    LayoutTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/LayoutTransaction.jsx')),
+    CurrentTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/CurrentTransaction.jsx')), 
+    WalletTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/WalletTransaction.jsx')), 
+    BankTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/BankTransaction.jsx')),
+    ServiceTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/ServiceTransaction.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +55,24 @@ export const router = createBrowserRouter([
       }, {
         path: 'transaction-manage',
         element: <LayoutTransaction/>,
+        children: [
+          {
+            path: 'current-transaction',
+            element: <CurrentTransaction />, 
+          },
+          {
+            path: 'wallet-transaction',
+            element: <WalletTransaction />, 
+          },
+          {
+            path: 'bank-transaction',
+            element: <BankTransaction />, 
+          },
+          {
+            path: 'service-transaction',
+            element: <ServiceTransaction />,
+          },
+        ]
       },{
         path: 'customer-manage',
         element: <CustomerManage/>,
