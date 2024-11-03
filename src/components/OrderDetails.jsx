@@ -1,6 +1,7 @@
 import {Badge, Button, Container, Group, Skeleton, Text, Title} from '@mantine/core';
 import {statusColors} from '../util/color.util.js';
 import {statusStrings} from '../util/status.util.js';
+import {getToken} from '../util/token.util.js';
 
 const OrderDetails = ({order, isLoading}) => {
 
@@ -75,6 +76,9 @@ const OrderDetails = ({order, isLoading}) => {
         </Button>
       </Group>)}
       {isLoading ? (<Skeleton height={40} width="30%"/>) : (<Button component="a" color="blue">
+        Thanh toán
+      </Button>)}
+      {isLoading ? (<Skeleton height={40} width="30%"/>) : (<Button component="a" href={`https://voucher4u-fe.vercel.app/?Token=${getToken()}}&OrderID=${order.id}`} color="blue">
         Thanh toán
       </Button>)}
     </Group>
