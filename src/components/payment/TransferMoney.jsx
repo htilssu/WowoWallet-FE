@@ -27,7 +27,7 @@ const TransferMoney = () => {
     initialValues: {
       money: 0,
       receiverId: '',
-      description: '',
+      message: '',
     },
     validate: {
       money: (value) => {
@@ -149,6 +149,11 @@ const TransferMoney = () => {
                 size={'md'}
                 {...form.getInputProps('receiverId')}
                 onBlur={() => {
+                  if (user?.email === form.values.receiverId) {
+                    form.setFieldError('receiverId', 'Không thể chuyển tiền cho chính mình');
+                    return;
+                  }
+
                   checkUser(form.values.receiverId).then((res) => {
                     setReceiver(res);
                   }).catch(e => {
@@ -181,7 +186,7 @@ const TransferMoney = () => {
           <Textarea
               id="content"
               placeholder="Nhập nội dung chuyển tiền"
-              {...form.getInputProps('description')}
+              {...form.getInputProps('message')}
               height={100}
               maxRows={4}
               size={'md'}

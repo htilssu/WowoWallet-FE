@@ -5,14 +5,15 @@ import {SiVisa} from 'react-icons/si';
 import ('../../public/css/ATMCard.jsx.css');
 
 function ATMCard({
-  cardNumber,
-  cardHolder,
-  expiryDate,
-  bankName,
-  backgroundColor,
-  logo,
-  cvv,
-}) {
+                   cardNumber,
+                   cardHolder,
+                   year, month,
+                   bankName,
+                   backgroundColor,
+                   logo,
+                   cvv,
+                 })
+{
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleCardFlip = () => {
@@ -28,20 +29,21 @@ function ATMCard({
     transformStyle: 'preserve-3d',
     backgroundPosition: 'center',
   }} className={`relative transform-gpu rounded-lg p-4 min-h-[220px] h-full text-white ${!backgroundColor
-                                                                                      ? 'bg-blue-300'
-                                                                                      : backgroundColor} transition-transform ease-linear ${isFlipped &&
+                                                                                         ? 'bg-blue-300'
+                                                                                         : backgroundColor} transition-transform ease-linear ${isFlipped &&
   'rotate-y-180 perspective'}`} onClick={handleCardFlip}>
-    <div className={`${isFlipped && 'hidden'}  backface-visibility-hidden flex flex-col justify-between items-start h-full`}>
+    <div className={`${isFlipped &&
+    'hidden'}  backface-visibility-hidden flex flex-col justify-between items-start h-full`}>
       <img src={logo} alt="Bank Logo" className={'w-12 h-auto'}/>
       <div className={'w-full'}>{bankName}</div>
       <img src={'/card-chip.png'} alt="Chip Icon" className={'w-12'}/>
       <div className={'text-xl text-center'} style={{
         letterSpacing: '0.5rem',
-      }}>{creditCardFormat(cardNumber)}</div>
+      }}>{creditCardFormat(cardNumber.slice(0, 16))}</div>
       <div className={'flex justify-between w-full'}>
         <div>
-          <div>{cardHolder.toUpperCase()}</div>
-          <div>Expiry: {expiryDate}</div>
+          <div className={'line-clamp-1 overflow-ellipsis overflow-hidden whitespace-nowrap max-w-80'}>{cardHolder.toUpperCase()}</div>
+          <div>Expiry: {month}/{year}</div>
         </div>
         <div className={'flex justify-center items-end'}>
           <SiVisa className={'text-4xl'}/></div>
