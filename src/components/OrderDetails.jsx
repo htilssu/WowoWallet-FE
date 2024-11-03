@@ -79,7 +79,7 @@ const OrderDetails = ({order, isLoading}) => {
         Thanh toán
       </Button>)}
       {isLoading ? (<Skeleton height={40} width="30%"/>) : (<Button component="a" href={`https://voucher4u-fe.vercel.app/?Token=${getToken()}}&OrderID=${order.id}`} color="blue">
-        Thanh toán
+        Sử dụng voucher
       </Button>)}
     </Group>
   </Container>);
