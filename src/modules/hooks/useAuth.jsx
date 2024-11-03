@@ -17,6 +17,8 @@ export const AuthProvider = (props) => {
         user: user,
       });
       setLoading(false);
+    }).catch(() => {
+      setLoading(false);
     });
   }, []);
 
@@ -40,7 +42,7 @@ export const AuthProvider = (props) => {
             user: auth.user,
             login: handleSetUser,
             logout: handleLogout,
-            loading
+            loading,
           }}
       >
         {props.children}
