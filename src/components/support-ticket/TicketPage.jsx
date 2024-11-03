@@ -3,8 +3,11 @@ import { Button, Container, FormControlLabel, Checkbox, TextField, MenuItem, Typ
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TicketHistory from './TicketHistory';
-import { wPost } from '../../util/request.util';
+import { wGet, wPost } from '../../util/request.util';
 import { useAuth } from '../../modules/hooks/useAuth';
+import TicketRequestSuccess from './TicketRequestSuccess';
+import { useQuery } from '@tanstack/react-query';
+import LoadingPageSkeleton from '../LoadingPageSkeleton';
 
 const TicketPage = () => {
 
@@ -13,37 +16,45 @@ const TicketPage = () => {
     const [requestType, setRequestType] = useState('');
     const [reasonList, setReasonList] = useState([]);
     const [selectedReason, setSelectedReason] = useState('');
-    const [errorToastId, setErrorToastId] = useState(null);
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    useEffect(() => {
-        if (user) {
-            const userId = user.id;
-            console.log("User ID:", userId);  
-        }
-    }, [user]);
 
     const reasons = useMemo(() => ({
         "Hỗ trợ hoàn trả giao dịch chuyển tiền": ["Giao dịch bị lỗi", "Người hưởng chưa nhận được tiền", "Sai thông tin người nhận"],
         "Hỗ trợ chỉnh thông tin giao dịch chuyển tiền": ["Chỉnh sửa số tài khoản", "Chỉnh sửa tên người nhận"],
         "Kiểm tra trạng thái giao dịch": ["Người hưởng chưa nhận được tiền", "Giao dịch đang xử lý lâu"]
     }), []);
-
-    const searchHistoryData = [
-        { date: '2024-10-25', searchId: '123456', status: 'Hoàn thành' },
-        { date: '2024-10-20', searchId: '654321', status: 'Đang xử lý' },
-        { date: '2024-10-18', searchId: '789012', status: 'Thất bại' },
-        { date: '2024-10-17', searchId: '345678', status: 'Hoàn thành' },
-        { date: '2024-10-15', searchId: '901234', status: 'Thất bại' },
-        { date: '2024-10-10', searchId: '567890', status: 'Đang xử lý' },
-        { date: '2024-10-05', searchId: '123789', status: 'Hoàn thành' },
-        { date: '2024-10-01', searchId: '456123', status: 'Thất bại' }
-    ];
-
-    const totalPages = Math.ceil(searchHistoryData.length / itemsPerPage);
-    const displayedHistoryData = searchHistoryData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    
+    const fetchHistoryList = async () => {
+        const userId = user?.id; 
+        if (!userId) throw new Error("Không tìm thấy người dùng.");
+        
+        try {
+            const response = await wGet(`http://localhost:8080/v1/ticket/user/${userId}`);
+            if (response.length > 0) { 
+                handleRefetchHistory();
+                return response; 
+            } else {
+                throw new Error("Không có dữ liệu trong lịch sử.");
+            }
+        } catch (error) {
+            throw new Error("Lỗi khi tải dữ liệu lịch sử.");
+        }
+    };
+    
+    const { data: historyList, isLoading: isLoadingHistory, error: historyError, refetch } = useQuery({
+        queryKey: ['ticketHistory', user?.id],
+        queryFn: fetchHistoryList,
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 30 * 60 * 1000,
+        enabled: activeSection === 'searchHistory' && !! user?.id,
+    });
+    
+    const totalPages = Math.ceil(historyList?.length / itemsPerPage);
+    const displayedHistoryData = historyList?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) || [];
 
     const handleCreateRequest = () => setActiveSection('createRequest');
     const handleSearchHistory = () => setActiveSection('searchHistory');
@@ -65,13 +76,11 @@ const TicketPage = () => {
         setAgreeTerms(event.target.checked);
     };
 
-
     const showToast = (message) => {
-        if (!toast.isActive(errorToastId)) {
-            const id = toast.error(message);
-            setErrorToastId(id);
-        }
+        toast.dismiss(); 
+        toast.error(message);
     };
+
 
     useEffect(() => {
         if (requestType) {
@@ -88,22 +97,19 @@ const TicketPage = () => {
 
         if (!requestType) {
             showToast("Vui lòng chọn loại yêu cầu.");
-            return;
         }
         if (!selectedReason) {
             showToast("Vui lòng chọn lý do tra soát.");
-            return;
         }
         if (!agreeTerms) {
             showToast("Bạn cần đồng ý với các điều khoản dịch vụ.");
-            return;
         }
 
         try {
             const response = await createTicket(requestType, selectedReason);
-    
             if (response.success) {
-                toast.success("Yêu cầu của bạn đã được gửi thành công!");
+                handleRefetchHistory();
+                setShowSuccessModal(true);
                 setRequestType('');
                 setSelectedReason('');
                 setAgreeTerms(false);
@@ -115,22 +121,40 @@ const TicketPage = () => {
         }
     };
 
+    const handleRefetchHistory = () => {
+        refetch(); 
+    };
+
     const createTicket = async (requestType, selectedReason) => {
         const userId = user?.id;
         const body = {
+            customer: {
+                id: userId
+            },
             title: requestType,
             content: selectedReason,
-            status: "OPEN",
-            userId: userId 
+            status: "OPEN"
         };
         try {
-            const response = await wPost(`http://localhost:8080/v1/ticket/create`, body); 
-            if (!response || !response.success) {
+            const response = await wPost(`http://localhost:8080/v1/ticket/create`, body);           
+            if (typeof response === 'string') {
+                return { success: true, message: response };  
+            }
+            if (response.data && response.data.success) {
+                return response.data;
+            } else {
                 throw new Error("Phản hồi không hợp lệ từ API.");
             }
-            return response;
         } catch (error) {
-            throw new Error("Lỗi mạng khi gửi yêu cầu.");
+
+            if (error.response) {
+                const errorMessage = error.response.data || "Đã xảy ra lỗi từ phía server."; 
+                throw new Error(errorMessage);
+            } else if (error.request) {
+                throw new Error("Không thể kết nối đến server. Vui lòng kiểm tra mạng.");
+            } else {
+                throw new Error(`Unexpected Error: ${error.message}`);
+            }
         }
     };
 
@@ -249,11 +273,23 @@ const TicketPage = () => {
                     </Button>
                 </div>
             )}
-
             {activeSection === 'searchHistory' && (
-                <TicketHistory displayedHistoryData={displayedHistoryData} currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
+                <>
+                    {isLoadingHistory ? (
+                        <LoadingPageSkeleton /> 
+                    ) : historyError ? (
+                        <Typography color="error">
+                            {historyError.message} 
+                        </Typography>
+                    ) : (
+                        <TicketHistory displayedHistoryData={displayedHistoryData} currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange}/>
+                    )}
+                </>
             )}
             <ToastContainer />
+            {showSuccessModal && (
+                <TicketRequestSuccess onClose={() => setShowSuccessModal(false)} />
+            )}
         </Container>
     );
 };

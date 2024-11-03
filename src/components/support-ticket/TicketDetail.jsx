@@ -1,44 +1,40 @@
 import { Typography, Paper, Button, Box, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { useParams } from 'react-router-dom';
 import { MdFindReplace, MdContactSupport, MdOutlineErrorOutline } from "react-icons/md";
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useState } from 'react';
 import { FaCheck } from "react-icons/fa";
 import { TbClockEdit } from "react-icons/tb";
+import { wPost } from '../../util/request.util';
+import TicketRequestSuccess from './TicketRequestSuccess';
+import { useAuth } from '../../modules/hooks/useAuth';
+import 'react-toastify/dist/ReactToastify.css';
 
-const TicketDetail = () => {
-  const { searchId } = useParams();
+const TicketDetail = ({ request }) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const { user } = useAuth();
 
-  const request = {
-    date: '2023-10-31',
-    searchId: searchId,
-    title: 'Hỗ trợ hoàn trả giao dịch chuyển tiền',
-    content: 'Chuyển tiền nhưng chưa nhận được tiền',
-    status: 'Hoàn thành',
-  };
+  if (!request) {
+    return <Typography variant="body1">Không có thông tin chi tiết yêu cầu.</Typography>;
+  }
 
   let statusColor, backgroundColor, icon;
 
   switch (request.status) {
-    case 'Hoàn thành':
-      statusColor = '#4caf50';
-      backgroundColor = '#d0f0c0';
+    case 'RESOLVED':
+      statusColor = 'green';
+      backgroundColor = '#d0f0c0'; 
       icon = <FaCheck style={{ marginRight: '8px', fontSize: '20px' }} />;
       break;
-    case 'Đang xử lý':
-      statusColor = '#ff9800';
-      backgroundColor = '#ffe0b2';
-      icon = <TbClockEdit style={{ marginRight: '8px', fontSize: '20px' }} />;
-      break;
-    case 'Thất bại':
-      statusColor = '#f44336';
-      backgroundColor = '#ffcccb';
+    case 'CLOSED':
+      statusColor = 'red';
+      backgroundColor = '#ffcccb'; 
       icon = <MdOutlineErrorOutline style={{ marginRight: '8px', fontSize: '20px' }} />;
       break;
-    default:
-      statusColor = '#000';
-      backgroundColor = '#f0f0f0';
+    case 'OPEN':
+      statusColor = 'orange';
+      backgroundColor = '#ffe0b2'; 
+      icon = <TbClockEdit style={{ marginRight: '8px', fontSize: '20px' }} />;
       break;
   }
 
@@ -46,17 +42,51 @@ const TicketDetail = () => {
     setOpenDialog(true);
   };
 
-  const handleConfirmRequest = () => {
-    toast.success("Yêu cầu hỗ trợ đã được xác nhận!");
-  };
-
   const handleDialogClose = () => {
     setOpenDialog(false);
   };
 
-  const handleDialogConfirm = () => {
-    toast.success("Đã gửi yêu cầu hỗ trợ lại!");
-    setOpenDialog(false);
+  const requetTicketAgain = async (ticketId) => {
+    const userId = user?.id;
+    const body = {
+        title: request.title,  
+        content: request.content, 
+        customer: {
+            id: userId,
+        },
+        status: "OPEN",
+    };
+
+    try {
+        const response = await wPost(`http://localhost:8080/v1/ticket/${ticketId}/again`, body);
+        if (typeof response === 'string') {
+          return { success: true, message: response };  
+        }
+        if (response.data && response.data.success) {
+            return response.data;
+        } else {
+            throw new Error("Phản hồi không hợp lệ từ API.");
+        }
+    } catch (error) {
+        const errorMessage = error.response?.data || "Đã xảy ra lỗi từ phía server.";
+        throw new Error(errorMessage);
+    }
+  };
+  
+
+  const handleDialogConfirm = async () => {
+    try {
+      const response = await requetTicketAgain(request.id);
+      if (response.success) {
+        setShowSuccessModal(true);
+      } else {
+        toast.error("Phản hồi không hợp lệ từ API.");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setOpenDialog(false);
+    }
   };
 
   return (
@@ -76,10 +106,7 @@ const TicketDetail = () => {
       <Divider sx={{ marginY: '15px' }} />
       <Box sx={{ lineHeight: '1.8', padding: '10px 20px' }}>
         <Typography variant="body1">
-          <strong>Ngày yêu cầu:</strong> {request.date}
-        </Typography>
-        <Typography variant="body1">
-          <strong>Mã tra cứu:</strong> {request.searchId}
+          <strong>Mã tra cứu:</strong> {request.id}
         </Typography>
         <Typography variant="body1">
           <strong>Vấn đề:</strong> {request.title}
@@ -91,7 +118,7 @@ const TicketDetail = () => {
           <div style={{ color: statusColor, background: backgroundColor, padding: '5px 10px', borderRadius: '4px', display: 'flex', alignItems: 'center' }}>
             {icon}
             <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-              {request.status}
+              {request.status === 'RESOLVED' ? 'Đã xử lý' : request.status === 'CLOSED' ? 'Không chấp thuận' : 'Đang chờ'}
             </Typography>
           </div>
         </Box>
@@ -115,7 +142,7 @@ const TicketDetail = () => {
         <Button
           variant="contained"
           startIcon={<MdContactSupport />}
-          onClick={handleConfirmRequest}
+          onClick={() => toast.info("Hỗ trợ trực tiếp đang trong quá trình phát triển!")} // Bạn có thể thay thế bằng hành động thực tế
           sx={{
             backgroundColor: '#388e3c',
             color: 'white',
@@ -150,6 +177,12 @@ const TicketDetail = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {showSuccessModal && (
+          <TicketRequestSuccess onClose={() => setShowSuccessModal(false)} />
+      )}
+
+      <ToastContainer />
     </Paper>
   );
 };

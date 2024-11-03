@@ -10,7 +10,6 @@ import {
   Button,
   Paper,
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
 } from '@mui/material';
@@ -40,8 +39,7 @@ const TicketHistory = ({ displayedHistoryData, currentPage, totalPages, handlePa
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold' }}>Ngày</TableCell>
-              <TableCell sx={{ fontWeight: 'bold' }}>Mã tra cứu</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Mã yêu cầu</TableCell>
               <TableCell sx={{ fontWeight: 'bold' }}>Trạng thái</TableCell>
               <TableCell sx={{ fontWeight: 'bold' }}>Chi tiết</TableCell>
             </TableRow>
@@ -49,13 +47,14 @@ const TicketHistory = ({ displayedHistoryData, currentPage, totalPages, handlePa
           <TableBody>
             {displayedHistoryData.map((item, index) => (
               <TableRow key={index} style={{ cursor: 'pointer' }}>
-                <TableCell>{item.date}</TableCell>
-                <TableCell>{item.searchId}</TableCell>
+                <TableCell>{item.id}</TableCell>
                 <TableCell>
-                  {item.status === 'Hoàn thành' ? (
-                    <Typography sx={{ color: 'green' }}>Hoàn thành</Typography>
+                  {item.status === 'RESOLVED' ? (
+                    <Typography sx={{ color: 'green' }}>Đã xử lý</Typography>
+                  ) : item.status === 'CLOSED' ? (
+                    <Typography sx={{ color: 'red' }}>Không chấp thuận</Typography>
                   ) : (
-                    <Typography sx={{ color: 'red' }}>Thất bại</Typography>
+                    <Typography sx={{ color: 'orange' }}>Đang chờ</Typography>
                   )}
                 </TableCell>
                 <TableCell onClick={() => handleRowClick(item)}>
@@ -88,9 +87,6 @@ const TicketHistory = ({ displayedHistoryData, currentPage, totalPages, handlePa
             }
         }}
         >
-        <DialogTitle sx={{ background: 'linear-gradient(to right, #06b6d4, #3b82f6)', color: 'white', borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
-            Chi tiết yêu cầu
-        </DialogTitle>
         <DialogContent sx={{ background: 'linear-gradient(to right, #06b6d4, #3b82f6)', color: 'white' }}>
             {selectedTicket && <TicketDetail request={selectedTicket} />}
         </DialogContent>
