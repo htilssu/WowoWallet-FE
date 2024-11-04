@@ -1,88 +1,119 @@
-import {FaCreditCard, FaDownload, FaExchangeAlt, FaUndoAlt, FaUpload} from 'react-icons/fa';
-import {ScrollRestoration, useNavigate, useParams} from 'react-router-dom';
-import {IoArrowBackSharp} from 'react-icons/io5';
-import {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
 import {wGet} from '../../util/request.util.js';
-import {formatCurrency} from '../../util/currency.util.js';
-
-// Các icon và màu sắc trạng thái
-const transactionIcons = {
-  'NẠP TIỀN': <FaDownload/>,
-  'RÚT TIỀN': <FaUpload/>,
-  'service': <FaCreditCard/>,
-  'transfer': <FaExchangeAlt/>,
-  'NHẬN TIỀN': <FaDownload/>,
-  'HOÀN TIỀN': <FaUndoAlt/>,
-};
-
-const statusColor = {
-  'PENDING': 'text-green-500',
-  'SUCCESS': 'text-green-500',
-  'Đang xử lý': 'text-yellow-500',
-  'Thất bại': 'text-red-500',
-  'Đã hủy': 'text-red-500',
-};
+import {useQuery} from '@tanstack/react-query';
+import {Card, Skeleton, Avatar, Button, Tooltip} from '@mantine/core';
+import {IoIosCheckmarkCircle} from 'react-icons/io';
+import {statusStrings, transactionStatusColor} from '../../util/status.util.js';
+import {MdArrowOutward} from 'react-icons/md';
 
 const TransactionDetailPage = () => {
   const navigate = useNavigate();
-  const [transaction, setTransaction] = useState({});
   const {id} = useParams();
-  useEffect(() => {
-    wGet(`/v1/transaction/${id}`).then(res => {
-      setTransaction(res);
-    });
-  }, [id]);
+
+  const {isLoading, data: transaction} = useQuery({
+    queryKey: ['transaction', id],
+    queryFn: () => wGet(`/v1/transaction/${id}`),
+    staleTime: 5 * 60 * 1000,
+  });
 
   return (
-      <div className="p-2 bg-gray-100 mb-10">
-        <div className="flex items-center mb-2 cursor-pointer text-blue-600" onClick={() => navigate(-1)}>
-          <IoArrowBackSharp size={24}/>
-          <span className="ml-2">Quay lại</span>
+      <Card className="max-w-2xl mx-auto bg-white shadow-lg p-6 my-10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            {isLoading ? (
+                <Skeleton height={20} width={20}/>
+            ) : (
+                 // {transactionIcon[transaction.variant]}
+                 <div></div>
+             )}
+            <h2 className="text-xl font-semibold">
+              {isLoading ? <Skeleton width="120px"/> : 'Chi tiết giao dịch'}
+            </h2>
+          </div>
+          <span className={`flex items-center ${transactionStatusColor[transaction?.status]}`}>
+          <IoIosCheckmarkCircle/>
+            {isLoading ? <Skeleton width="80px"/> : statusStrings[transaction.status]}
+        </span>
         </div>
-        <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-          <div className="flex items-center mb-2">
-            <div className="text-2xl text-green-500">
-              {transactionIcons[transaction.transactionType]}
+
+        {/* Transaction ID */}
+        <div className="mb-6">
+          <p className="text-sm text-gray-500">Mã giao dịch</p>
+          <p className="font-medium">
+            {isLoading ? <Skeleton width="100%" height="20px"/> : transaction.id}
+          </p>
+        </div>
+
+        {/* Amount */}
+        <div className="mb-6">
+          <p className="text-sm text-gray-500">Số tiền</p>
+          <p className="text-2xl font-bold text-green-600">
+            {isLoading ? <Skeleton width="150px" height="32px"/> : `${transaction.amount.toLocaleString('vi-VN')} VND`}
+          </p>
+        </div>
+
+        {/* Transfer Details */}
+        <div className="bg-gray-100 p-4 rounded-lg mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              {/*<p className="text-sm text-gray-500">Người nhận</p>*/}
+              <div className="flex items-center space-x-2 mt-1">
+                {isLoading ? (
+                    <Skeleton circle width="32px" height="32px"/>
+                ) : (
+                     <Avatar
+                         src={transaction.receiver.avatar}
+                         alt={transaction.receiver.fullName}
+                         name={transaction.receiver.fullName}
+                         className="w-12 h-12 rounded-full"
+                     />
+                 )}
+                <div>
+                  <p className="font-medium">
+                    {isLoading ? <Skeleton width="80px"/> : transaction.receiver.fullName}
+                  </p>
+                  {transaction?.receiver.email && (
+                      <p className="text-sm text-gray-500">
+                        {isLoading ? <Skeleton width="120px"/> : transaction.receiver.email}
+                      </p>
+                  )}
+                </div>
+              </div>
             </div>
-            <p className="text-2xl font-semibold ml-2">{transaction.transactionType === 'transfer'
-                                                        ? 'Chuyển Tiền'
-                                                        : 'Thanh Toán'}</p>
+            <MdArrowOutward/>
           </div>
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-2xl font-semibold text-red-600">{formatCurrency(transaction.money)}</p>
-            <p className={`text-lg font-semibold ${statusColor[transaction.status]}`}>{transaction.status}</p>
-          </div>
-          <div className="border-t-2 pt-4">
-            <div className="mb-2">
-              <p className="font-semibold">Mã giao dịch:</p>
-              <p>{transaction.id}</p>
-            </div>
-            <div className="mb-2">
-              <p className="font-semibold">Mã hoá đơn:</p>
-              <p>HD1010119299</p>
-            </div>
-            <div className="mb-2">
-              <p className="font-semibold">Thời gian tạo:</p>
-              <p>{transaction.created}</p>
-            </div>
-            <div className="mb-2">
-              <p className="font-semibold">Tài khoản nhận:</p>
-              <p>{transaction.receiverEmail}</p>
-            </div>
-            <div className="mb-2 border-b border-t p-3">
-              <p className="font-semibold">Nội dung:</p>
-              <p>{transaction.content || 'Không có nội dung'}</p>
-            </div>
+        </div>
+
+        {/* Additional Info */}
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm text-gray-500">Nội dung chuyển khoản</p>
+            <p className="font-medium">
+              {isLoading ? <Skeleton width="100%" height="20px"/> : transaction.message || 'Không có nội dung'}
+            </p>
           </div>
           <div>
-            <button
-                className="border-2 p-2 text-red-600 rounded-lg bg-yellow-100">
-              Khiếu nại
-            </button>
+            <p className="text-sm text-gray-500">Thời gian giao dịch</p>
+            <p className="font-medium">
+              {isLoading ? <Skeleton width="150px"/> : new Date(transaction.created).toLocaleString('vi-VN')}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Loại giao dịch</p>
+            <p className="font-medium">
+              {isLoading ? <Skeleton width="150px"/> : transaction.variant === 'WALLET'
+                                                       ? 'Chuyển đến ví cá nhân'
+                                                       : 'Chuyển đến quỹ nhóm'}
+            </p>
           </div>
         </div>
-        <ScrollRestoration/>
-      </div>
+        <div className={'flex justify-end items-center'}>
+          <Tooltip label={"Tính năng đang phát triển"}>
+            <Button variant={'outline'} color={'orange'} disabled>Khiếu nại</Button>
+          </Tooltip>
+        </div>
+      </Card>
   );
 };
 

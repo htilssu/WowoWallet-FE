@@ -1,23 +1,25 @@
 import {FaDownload} from 'react-icons/fa';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Button, NumberInput} from '@mantine/core';
 import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {ScrollRestoration} from 'react-router-dom';
 import {Collapse} from '@material-tailwind/react';
 import {getRevealFormat} from '../../util/number.util.js';
+import {topUp} from '../../modules/topup.js';
+import {getMyWallet} from '../../modules/wallet/wallet.js';
 
 const suggestedAmounts = [20000, 50000, 100000, 200000, 500000, 1000000];
 const paymentMethods = [
   {
     label: 'Paypal',
-    method: 'paypal',
+    method: 'PAYPAL',
     minAmount: 10000,
     image: '/paypal_icon.png',
   },
   {
     label: 'Online bằng thẻ liên kết',
-    method: 'link-card',
+    method: 'ATM_CARD',
     minAmount: 10000,
     fee: '0,33%',
   },
@@ -29,6 +31,11 @@ const TopUpForm = () => {
   const [error, setError] = useState(false);
   const [suggestAmount, setSuggestAmount] = useState(0);
   const [selectedCardNumber, setSelectedCardNumber] = useState(undefined);
+
+  const {data: wallet} = useQuery({
+    queryKey: ['wallet'],
+    queryFn: async () => getMyWallet(),
+  });
 
   const {
     data: cardList,
@@ -43,10 +50,6 @@ const TopUpForm = () => {
     queryFn: async () => await wGet('/v1/banks'),
     staleTime: 1000 * 60 * 60,
   });
-
-  useEffect(() => {
-
-  }, []);
 
   const handleAmountChange = (e) => {
     setSuggestAmount(0);
@@ -75,8 +78,7 @@ const TopUpForm = () => {
       return;
     }
     setError(null);
-
-    //TODO: call api top up
+    topUp(wallet.id, amount);
   }
 
   function handleSelectCard(card) {
@@ -167,7 +169,7 @@ const TopUpForm = () => {
             </div>
 
 
-            <Collapse open={methodPay === 'link-card'}>
+            <Collapse open={methodPay === 'ATM_CARD'}>
               <div className={'p-4'}>
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                   CHỌN THẺ LIÊN KẾT
