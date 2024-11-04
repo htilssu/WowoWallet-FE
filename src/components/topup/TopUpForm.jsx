@@ -78,7 +78,11 @@ const TopUpForm = () => {
       return;
     }
     setError(null);
-    topUp(wallet.id, amount);
+    topUp(wallet.id, amount, methodPay, selectedCardNumber, methodPay).then(r => {
+      if (r) {
+        window.location.href = r.redirectTo;
+      }
+    });
   }
 
   function handleSelectCard(card) {

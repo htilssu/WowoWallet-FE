@@ -2,7 +2,7 @@ import {wPost} from '../util/request.util.js';
 
 export async function topUp(walletId, amount, topUpMethod, sourceId, sourceType) {
   switch (topUpMethod) {
-    case 'paypal':
+    case 'PAYPAL':
       return topUpByPaypal(walletId, amount);
     default:
       return null;
