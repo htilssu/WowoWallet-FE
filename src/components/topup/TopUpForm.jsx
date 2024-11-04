@@ -79,7 +79,7 @@ const TopUpForm = () => {
     }
     setError(null);
     topUp(wallet.id, amount, methodPay, selectedCardNumber, methodPay).then(r => {
-      if (r) {
+      if (r.redirectTo) {
         window.location.href = r.redirectTo;
       }
     });
