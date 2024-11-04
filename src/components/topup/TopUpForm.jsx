@@ -21,7 +21,7 @@ const paymentMethods = [
     label: 'Online bằng thẻ liên kết',
     method: 'ATM_CARD',
     minAmount: 10000,
-    fee: '0,33%',
+    // fee: '0,33%',
   },
 ];
 
