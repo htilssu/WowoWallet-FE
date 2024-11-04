@@ -9,7 +9,7 @@ const InviteCard = ({ groupName, createdAt, senderEmail, avatar, onJoin, onDecli
             />
         </div>
         <div className="px-2 flex flex-col space-y-3">
-            <div className="bg-gray-100 p-2 rounded-lg text-center">
+            <div className="bg-gray-100 p-2 rounded-lg text-center truncate" title={groupName}>
                 <h3 className="text-lg font-bold text-gray-800">{groupName}</h3>
             </div>
             <div className="text-center">

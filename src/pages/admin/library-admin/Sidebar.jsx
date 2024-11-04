@@ -36,7 +36,7 @@ const Sidebar = ({
     },
     {
       name: 'Phân Quyền',
-      link: '/',
+      link: '/admin1/role-manage',
       icon: <MdManageAccounts/>,
     },
     {
@@ -134,9 +134,7 @@ const Sidebar = ({
               <div key={idx}>
                 <NavLink
                     to={item.link}
-                    className={`hover:ml-4 ${isSidebarOpen
-                                             ? 'pl-8'
-                                             : 'justify-end pr-5'} text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex items-center space-x-3`}
+                    className={`hover:ml-4 ${isSidebarOpen ? 'pl-8' : 'justify-end pr-5'} text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 w-full bg-[#1E293B] p-2 rounded-full transform ease-in-out duration-300 flex items-center space-x-3`}
                     onClick={() => {
                       if (item.name === 'Quản Lý') {
                         setOpenTable(!openTable);
@@ -163,9 +161,8 @@ const Sidebar = ({
                             <NavLink
                                 key={subIdx}
                                 to={subItem.link}
-                                className={`text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 p-2 rounded-lg bg-[#2E3B4E] mt-1 flex items-center 
-        ${isSidebarOpen ? 'space-x-2' : 'justify-end mr-2'}`
-                                }
+                                className={`hover:translate-x-2 text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 p-2 rounded-lg bg-[#2E3B4E] mt-1 flex items-center transition-all duration-300 ease-in-out
+    ${isSidebarOpen ? 'space-x-2' : 'justify-end mr-2'}`}
                             >
                               {subItem.icon}
                               {isSidebarOpen && (

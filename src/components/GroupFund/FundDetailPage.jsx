@@ -2,7 +2,7 @@ import {ScrollRestoration, useNavigate} from 'react-router-dom';
 import RecentActivities from "./component/recentActivitiesFund.jsx";
 import {useParams} from 'react-router-dom';
 import DonateForm from "./component/DonateForm.jsx";
-import {Fragment, useEffect, useState} from "react";
+import {Fragment, useState} from "react";
 import {wGet, wPost} from "../../util/request.util.js";
 import {useAuth} from "../../modules/hooks/useAuth.jsx";
 import InviteMember from "./component/InviteForm.jsx";
@@ -122,10 +122,10 @@ const FundDetailPage = () => {
                     </div>
                     <div className="bg-white rounded-lg shadow-lg py-4 px-6 sm:px-10 mb-8">
                         {/* Fund Title */}
-                        <h2 className="text-xl sm:text-3xl font-bold sm:mb-2 mb-1">{fundData.name}</h2>
+                        <h2 className="text-xl sm:text-3xl font-bold sm:mb-2 break-words">{fundData.name}</h2>
 
                         {/* Fund Purpose */}
-                        <p className="sm:text-lg mb-4">{fundData.description}</p>
+                        <p className="sm:text-lg mb-4 break-words">{fundData.description}</p>
 
                         {/* Action Buttons */}
                         <div className="mb-2 sm:mb-6 flex justify-center sm:justify-start">
