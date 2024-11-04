@@ -8,12 +8,10 @@ import AddAtmForm from '../../components/atm/AddAtmForm.jsx';
 import {useQuery} from '@tanstack/react-query';
 import {revalidateCache} from '../../modules/cache.js';
 import {toast} from 'react-toastify';
-import {getRevealFormat} from '../../util/number.util.js';
 
 const AtmPage = () => {
   const [bankList, setBankList] = useState([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  console.log(getRevealFormat("342738273465"));
 
   useEffect(() => {
     wGet('/v1/banks').then((res) => {
@@ -82,7 +80,9 @@ const AtmPage = () => {
                         <ATMCard
                             cardNumber={card.cardNumber}
                             cardHolder={card.holderName}
-                            expiryDate="12/26"
+                            month={card.month}
+                            year={card.year}
+                            cvv={999}
                             bankName={bank.shortName}
                             backgroundColor="bg-blue-500"
                             chipIcon={bank.logo}

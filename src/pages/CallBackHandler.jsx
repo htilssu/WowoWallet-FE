@@ -14,8 +14,10 @@ const CallBackHandler = () => {
     if (token) {
       try {
         setToken(token);
-        ssoCallback().then();
-        navigate('/');
+        ssoCallback().then(() => {
+          navigate('/');
+          location.reload();
+        });
       }
       catch (e) {
         navigate('/sign-in');
