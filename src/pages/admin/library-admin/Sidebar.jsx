@@ -6,8 +6,9 @@ import {useState} from 'react';
 import {SiGoogletagmanager} from 'react-icons/si';
 import {IoIosArrowForward, IoMdPersonAdd} from 'react-icons/io';
 import {BsPersonVcardFill} from 'react-icons/bs';
-import {RiFileList3Fill} from 'react-icons/ri';
 import {NavLink} from 'react-router-dom';
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { RiExchangeFill } from "react-icons/ri";
 
 const Sidebar = ({
   isSidebarOpen,
@@ -15,7 +16,7 @@ const Sidebar = ({
   isDarkMode,
   setIsDarkMode,
 }) => {
-  // Function to toggle sidebar open/close
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -23,7 +24,6 @@ const Sidebar = ({
   const [openTable, setOpenTable] = useState(false);
   const [isArrowRotated, setIsArrowRotated] = useState(false);
 
-  // Updated menuItems array with icons
   const menuItems = [
     {
       name: 'Home',
@@ -40,7 +40,7 @@ const Sidebar = ({
       icon: <MdManageAccounts/>,
     },
     {
-      name: 'Thống Kê',
+      name: 'Dữ Liệu',
       link: '/admin1/statistic-manage',
       icon: <MdAssessment/>,
     },
@@ -51,20 +51,24 @@ const Sidebar = ({
     },
   ];
 
-  // Sub-menu items
   const tableSubItems = [
     {
       name: 'Quản lý Giao dịch',
-      link: '/admin1/',
-      icon: <RiFileList3Fill/>,
+      link: '/admin1/transaction-manage',
+      icon: <RiExchangeFill/>,
     },
     {
-      name: 'Quản lý Khách hàng',
+      name: 'Quản lý Kế toán',
+      link: '/admin1/statistic-manage',
+      icon: <FaMoneyBillTrendUp/>,
+    },
+    {
+      name: 'Quản lý CSKH',
       link: '/admin1/customer-manage',
       icon: <BsPersonVcardFill/>,
     },
     {
-      name: 'Quản lý Nhân viên',
+      name: 'Quản lý IT',
       link: '/admin1/employee-manage',
       icon: <MdGroups2/>,
     },
@@ -87,7 +91,6 @@ const Sidebar = ({
         >
           <div className="flex pl-4 items-center space-x-2">
             <div>
-              {/* Toggle between moon and sun icons */}
               {!isDarkMode ? (
                   <div
                       onClick={() => setIsDarkMode(true)}
@@ -116,7 +119,6 @@ const Sidebar = ({
           </div>
         </div>
 
-        {/* Open Sidebar Button */}
         <div
             className={`absolute top-2 -right-6 p-3 rounded-full bg-[#1E293B] border-4 border-white dark:border-[#0F172A] 
     text-white shadow-lg transform transition-transform duration-500 hover:rotate-45 hover:scale-110 hover:bg-gradient-to-r hover:from-green-500 hover:to-green-600 dark:hover:from-blue-400 dark:hover:to-blue-600`}

@@ -1,13 +1,26 @@
 import {createContext, useContext, useEffect, useState} from 'react';
-import {getAuthByToken, removeToken} from '../../util/token.util.js';
+import {removeToken} from '../../util/token.util.js';
+import {getUser} from '../user/user.js';
 
 const AuthContext = createContext({});
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = (props) => {
   const [auth, setAuth] = useState({
-    user: getAuthByToken(),
+    user: null,
   });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getUser().then((user) => {
+      setAuth({
+        user: user,
+      });
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+    });
+  }, []);
 
   function handleSetUser(user) {
     setAuth((prevAuth) => ({
@@ -15,15 +28,6 @@ export const AuthProvider = (props) => {
       user: user,
     }));
   }
-
-
-  useEffect(() => {
-    if (!auth) {
-      setAuth({
-        user: null,
-      });
-    }
-  }, [auth]);
 
   function handleLogout() {
     removeToken();
@@ -38,6 +42,7 @@ export const AuthProvider = (props) => {
             user: auth.user,
             login: handleSetUser,
             logout: handleLogout,
+            loading,
           }}
       >
         {props.children}

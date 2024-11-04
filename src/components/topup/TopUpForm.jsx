@@ -1,23 +1,25 @@
 import {FaDownload} from 'react-icons/fa';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Button, NumberInput} from '@mantine/core';
 import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {ScrollRestoration} from 'react-router-dom';
 import {Collapse} from '@material-tailwind/react';
 import {getRevealFormat} from '../../util/number.util.js';
+import {topUp} from '../../modules/topup.js';
+import {getMyWallet} from '../../modules/wallet/wallet.js';
 
 const suggestedAmounts = [20000, 50000, 100000, 200000, 500000, 1000000];
 const paymentMethods = [
   {
     label: 'Paypal',
-    method: 'paypal',
+    method: 'PAYPAL',
     minAmount: 10000,
     image: '/paypal_icon.png',
   },
   {
     label: 'Online bằng thẻ liên kết',
-    method: 'link-card',
+    method: 'ATM_CARD',
     minAmount: 10000,
     fee: '0,33%',
   },
@@ -29,6 +31,11 @@ const TopUpForm = () => {
   const [error, setError] = useState(false);
   const [suggestAmount, setSuggestAmount] = useState(0);
   const [selectedCardNumber, setSelectedCardNumber] = useState(undefined);
+
+  const {data: wallet} = useQuery({
+    queryKey: ['wallet'],
+    queryFn: async () => getMyWallet(),
+  });
 
   const {
     data: cardList,
@@ -44,10 +51,6 @@ const TopUpForm = () => {
     staleTime: 1000 * 60 * 60,
   });
 
-  useEffect(() => {
-
-  }, []);
-
   const handleAmountChange = (e) => {
     setSuggestAmount(0);
     setAmount(e);
@@ -57,8 +60,26 @@ const TopUpForm = () => {
   const handleMethodChange = (methodPay) => {
     setMethodPay(methodPay);
     setError(false);
-    setSelectedCardNumber(undefined)
+    setSelectedCardNumber(undefined);
   };
+
+  function onSubmitTopUp(e) {
+    e.preventDefault();
+    if (!amount || amount < 10000) {
+      setError('Số tiền phải lớn hơn 10.000 VND');
+      return;
+    }
+    if (!methodPay) {
+      setError('Vui lòng chọn phương thức thanh toán');
+      return;
+    }
+    if (methodPay === 'link-card' && !selectedCardNumber) {
+      setError('Vui lòng chọn thẻ liên kết');
+      return;
+    }
+    setError(null);
+    topUp(wallet.id, amount);
+  }
 
   function handleSelectCard(card) {
     setSelectedCardNumber(card.cardNumber);
@@ -72,7 +93,7 @@ const TopUpForm = () => {
             <FaDownload size={25}/>
             <h2 className="text-2xl font-bold ml-3">Nạp tiền</h2>
           </div>
-          <form className={'mt-2 p-3'}>
+          <div className={'p-4'}>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amount">
                 SỐ TIỀN CẦN NẠP
@@ -117,7 +138,7 @@ const TopUpForm = () => {
                 CHỌN PHƯƠNG THỨC NẠP
               </label>
               {error && !amount &&
-                  <p className="text-red-600 text-sm mt-1">Vui lòng nhập số tiền trước khi chọn phương
+                  <p className="text-red-600 text-sm my-2">Vui lòng nhập số tiền trước khi chọn phương
                     thức</p>}
               <div className="grid grid-cols-2 gap-4">
                 {paymentMethods.map(({
@@ -146,39 +167,42 @@ const TopUpForm = () => {
                 ))}
               </div>
             </div>
-          </form>
 
 
-          <Collapse open={methodPay === 'link-card'}>
-            <div className={'p-4'}>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                CHỌN THẺ LIÊN KẾT
-              </label>
+            <Collapse open={methodPay === 'ATM_CARD'}>
+              <div className={'p-4'}>
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  CHỌN THẺ LIÊN KẾT
+                </label>
+              </div>
+              <div className={'w-full grid grid-cols-2 gap-3 px-4'}>
+                {Array.isArray(cardList) && cardList?.map((card) => {
+                  const bank = bankList?.find(b => b.id == card.atmId);
+                  return (
+                      (<div key={card.id}
+                            className={`${card.cardNumber === selectedCardNumber &&
+                            '!bg-green-100 border-green-500'} w-full flex items-center rounded hover:border-green-500 hover:bg-gray-100 transition-colors px-2 py-3 border`}
+                            onClick={() => handleSelectCard(card)}
+                      >
+                        <img src={bank.logo} className={'w-1/3'} alt="bank logo"/>
+                        <div className={'text-center w-full'}>{getRevealFormat(card.cardNumber.toString())}</div>
+                      </div>)
+                  );
+                })}
+              </div>
+
+            </Collapse>
+
+            <div className={'w-full mt-3'}>
+              <Button
+                  color={'green'}
+                  onClick={onSubmitTopUp}
+                  type={'submit'}
+                  size={'md'}
+                  className={'mb-2 w-full'}>
+                Nạp tiền
+              </Button>
             </div>
-            <div className={'w-full grid grid-cols-2 gap-3 px-4'}>
-              {cardList?.map((card) => {
-                const bank = bankList?.find(b => b.id == card.atmId);
-                return (
-                    (<div key={card.id}
-                          className={`${card.cardNumber === selectedCardNumber && '!bg-green-100 border-green-500'} w-full flex items-center rounded hover:border-green-500 hover:bg-gray-100 transition-colors px-2 py-3 border`}
-                          onClick={() => handleSelectCard(card)}
-                    >
-                      <img src={bank.logo} className={'w-1/3'} alt="bank logo"/>
-                      <div className={'text-center w-full'}>{getRevealFormat(card.cardNumber.toString())}</div>
-                    </div>)
-                );
-              })}
-            </div>
-
-          </Collapse>
-
-          <div className={'w-full px-2 mt-3'}>
-            <Button
-                color={'green'}
-                size={'md'}
-                className={'mb-2 w-full'}>
-              Nạp tiền
-            </Button>
           </div>
         </div>
         <ScrollRestoration/>

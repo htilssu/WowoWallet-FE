@@ -159,7 +159,7 @@ function HistorySection() {
           </div>
 
           <div className="mb-4 flex flex-col sm:flex-row gap-1 mt-3">
-            <p>Có {} giao dịch.</p>
+            <p>Có {data?.total} giao dịch.</p>
             <div>
               Tổng Tiền GD: 2,620,000 đ
             </div>
@@ -172,7 +172,7 @@ function HistorySection() {
                   total={totalPage}
                   className={'mt-2'}
                   onChange={(page) => {
-                    setSearchParams({page: page});
+                    setSearchParams({page: page.toString()});
                   }}
                   color={'rgb(26,180,74)'}
               />
