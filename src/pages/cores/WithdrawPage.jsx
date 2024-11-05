@@ -7,12 +7,16 @@ import {getMyWallet} from '../../modules/wallet/wallet.js';
 import {getRevealFormat} from '../../util/number.util.js';
 import {wGet} from '../../util/request.util.js';
 import {withdraw} from '../../modules/withdraw.js';
+import {useNavigate} from 'react-router-dom';
+import {revalidateCache} from '../../modules/cache.js';
+import {toast} from 'react-toastify';
 
 const WithdrawPage = () => {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [suggestAmount, setSuggestAmount] = useState(0);
   const [selectedCard, setSelectedCard] = useState();
+  const navigate = useNavigate();
 
   const {data: wallet} = useQuery({
     queryKey: ['wallet'], queryFn: async () => getMyWallet(),
@@ -51,6 +55,8 @@ const WithdrawPage = () => {
     }
 
     withdraw(selectedCard, amount).then(() => {
+      revalidateCache("wallet").then();
+      toast.success("Rút tiền thành công");
     }).catch((e) => {
       setError(e.response.data.message);
     });

@@ -1,6 +1,6 @@
 import {FaDownload} from 'react-icons/fa';
 import {useState} from 'react';
-import {Button, NumberInput} from '@mantine/core';
+import {Button, LoadingOverlay, NumberInput} from '@mantine/core';
 import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {ScrollRestoration} from 'react-router-dom';
@@ -8,6 +8,8 @@ import {Collapse} from '@material-tailwind/react';
 import {getRevealFormat} from '../../util/number.util.js';
 import {topUp} from '../../modules/topup.js';
 import {getMyWallet} from '../../modules/wallet/wallet.js';
+import {revalidateCache} from '../../modules/cache.js';
+import {toast} from 'react-toastify';
 
 const suggestedAmounts = [20000, 50000, 100000, 200000, 500000, 1000000];
 const paymentMethods = [
@@ -31,6 +33,7 @@ const TopUpForm = () => {
   const [error, setError] = useState(false);
   const [suggestAmount, setSuggestAmount] = useState(0);
   const [selectedCardNumber, setSelectedCardNumber] = useState(undefined);
+  const [loading, setLoading] = useState(false);
 
   const {data: wallet} = useQuery({
     queryKey: ['wallet'],
@@ -78,9 +81,17 @@ const TopUpForm = () => {
       return;
     }
     setError(null);
+    setLoading(true);
     topUp(wallet.id, amount, methodPay, selectedCardNumber, methodPay).then(r => {
       if (r.redirectTo) {
         window.location.href = r.redirectTo;
+      }
+      else {
+        setTimeout(() => {
+          setLoading(false);
+          revalidateCache('wallet').then();
+          toast.success('Nạp tiền thành công');
+        }, 1000);
       }
     });
   }
@@ -90,7 +101,8 @@ const TopUpForm = () => {
   }
 
   return (
-      <div className={'w-full'}>
+      <div className={'w-full relative'}>
+        <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{radius: 'sm', blur: 2}}/>
         <div className="bg-white shadow-md rounded-lg overflow-hidden mb-9">
           <div
               className="flex items-center p-4 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-t-lg">
