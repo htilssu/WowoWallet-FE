@@ -21,7 +21,7 @@ const paymentMethods = [
     label: 'Online bằng thẻ liên kết',
     method: 'ATM_CARD',
     minAmount: 10000,
-    fee: '0,33%',
+    // fee: '0,33%',
   },
 ];
 
@@ -174,7 +174,7 @@ const TopUpForm = () => {
 
 
             <Collapse open={methodPay === 'ATM_CARD'}>
-              <div className={'p-4'}>
+              <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                   CHỌN THẺ LIÊN KẾT
                 </label>
@@ -188,7 +188,7 @@ const TopUpForm = () => {
                             '!bg-green-100 border-green-500'} w-full flex items-center rounded hover:border-green-500 hover:bg-gray-100 transition-colors px-2 py-3 border`}
                             onClick={() => handleSelectCard(card)}
                       >
-                        <img src={bank.logo} className={'w-1/3'} alt="bank logo"/>
+                        <img src={bank?.logo} className={'w-1/3'} alt="bank logo"/>
                         <div className={'text-center w-full'}>{getRevealFormat(card.cardNumber.toString())}</div>
                       </div>)
                   );
