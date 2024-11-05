@@ -1,7 +1,7 @@
 import {FaUpload} from 'react-icons/fa';
 import {useState} from 'react';
 import {WalletSection} from '../../components/account/WalletSection.jsx';
-import {Button, NumberInput} from '@mantine/core';
+import {Button, LoadingOverlay, NumberInput} from '@mantine/core';
 import {useQuery} from '@tanstack/react-query';
 import {getMyWallet} from '../../modules/wallet/wallet.js';
 import {getRevealFormat} from '../../util/number.util.js';
@@ -16,6 +16,7 @@ const WithdrawPage = () => {
   const [error, setError] = useState('');
   const [suggestAmount, setSuggestAmount] = useState(0);
   const [selectedCard, setSelectedCard] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const {data: wallet} = useQuery({
@@ -49,20 +50,29 @@ const WithdrawPage = () => {
     setError('');
     if (parseInt(amount) > parseInt(wallet?.balance)) {
       setError('Số tiền rút không được lớn hơn số dư trong ví.');
-    }
-    if (!selectedCard) {
-      setError('Vui lòng chọn thẻ liên kết.');
+      return;
     }
 
+    if (!amount || amount === '') {
+      setError('Vui lòng nhập số tiền cần rút.');
+      return;
+    }
+    if (!selectedCard || selectedCard === '') {
+      setError('Vui lòng chọn thẻ liên kết');
+      return;
+    }
+    setIsLoading(true);
     withdraw(selectedCard, amount).then(() => {
-      revalidateCache("wallet").then();
-      toast.success("Rút tiền thành công");
+      revalidateCache('wallet').then();
+      toast.success('Rút tiền thành công');
+      setIsLoading(false);
     }).catch((e) => {
       setError(e.response.data.message);
     });
   }
 
-  return (<div className="flex flex-col md:flex-row justify-center">
+  return (<div className="flex relative flex-col md:flex-row justify-center">
+    <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{radius: 'sm', blur: 2}}/>
     <div className="w-full md:w-2/3 lg:w-1/2 bg-white shadow-md rounded-lg overflow-hidden mb-9">
       <div className="flex items-center p-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-t-lg">
         <FaUpload size={25}/>
