@@ -6,6 +6,7 @@ import {useQuery} from '@tanstack/react-query';
 import {getMyWallet} from '../../modules/wallet/wallet.js';
 import {getRevealFormat} from '../../util/number.util.js';
 import {wGet} from '../../util/request.util.js';
+import {withdraw} from '../../modules/withdraw.js';
 
 const WithdrawPage = () => {
   const [amount, setAmount] = useState('');
@@ -49,7 +50,10 @@ const WithdrawPage = () => {
       setError('Vui lòng chọn thẻ liên kết.');
     }
 
-    //TODO: Implement withdraw function
+    withdraw(selectedCard, amount).then(() => {
+    }).catch((e) => {
+      setError(e.response.data.message);
+    });
   }
 
   return (<div className="flex flex-col md:flex-row justify-center">
