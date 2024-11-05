@@ -65,7 +65,7 @@ const GroupFundPage = () => {
                                     >
                                         <img src={fund.image} alt={fund.name}
                                              className="rounded-lg w-full h-48 object-cover mb-4"/>
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2">{fund.name}</h3>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2 truncate" title={fund.name}>{fund.name}</h3>
                                         <p className="text-gray-600">
                                             Số tiền đã góp:
                                             <span className="font-semibold text-green-500 ml-2">
@@ -92,7 +92,7 @@ const GroupFundPage = () => {
                                     >
                                         <img src={fund.image} alt={fund.name}
                                              className="rounded-lg w-full h-48 object-cover mb-4"/>
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2">{fund.name}</h3>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2 truncate" title={fund.name}>{fund.name}</h3>
                                         <p className="text-gray-600">Số tiền đã góp:
                                             <span className="font-semibold text-green-500 ml-2">
                                                 {fund?.wallet.balance?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}

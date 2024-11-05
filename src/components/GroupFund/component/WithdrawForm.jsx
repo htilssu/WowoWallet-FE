@@ -48,13 +48,16 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
         } else if (numericAmount < 10000) {
             setError("Số tiền rút ít nhất 10.000 VNĐ.");
         } else if (numericAmount > fundBalance) {
-            setError("Số tiền rút không được lớn hơn số dư quỹ.");
+            setError("Số dư quỹ không đủ.");
         }
         else if (numericAmount > 99999999) {
             setError("Hạn mức rút nhỏ hơn 100.000.000 VND");
         }else if (note.length < 1) {
+            setError(false);
             setError1("Vui lòng nhập lý do.");
         } else {
+            setError(false);
+            setError1(false);
             setLoading(true);
             try {
                 const transferData = {
@@ -69,17 +72,14 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
                     queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
                     queryClient.invalidateQueries({queryKey: ['groupFunds']});
                     queryClient.invalidateQueries({queryKey: ['transactions', fundId]});
+                    queryClient.invalidateQueries({queryKey: ['wallet']});
 
                     setFundBalance(prevBalance => prevBalance - numericAmount);
-                    setAmount("");
-                    setError("");
 
                     setLoading(false);
                     toast.success('Rút quỹ thành công');
                     onClose();
                 }, 2000);
-
-
 
             } catch (error) {
                 console.error("Lỗi:", error);

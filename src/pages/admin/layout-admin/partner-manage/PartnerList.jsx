@@ -24,7 +24,7 @@ const PartnerList = ({ setSelectedPartner }) => {
 
     return (
         <div className="bg-white shadow-lg rounded-xl p-6">
-            <h2 className="text-3xl font-semibold text-gray-800 mb-6">Partners</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Partners</h2>
 
             {/* Search Input */}
             <div className="mb-6 relative">

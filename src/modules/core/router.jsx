@@ -7,6 +7,8 @@ import ProtectedLayout from './layouts/ProtectedLayout.jsx';
 import {MainLayout} from './layouts/MainLayout.jsx';
 import AuthorizedView from './system-component/AuthorizedView.jsx';
 import {callBackUrl} from '../../pages/CallBackHandler.jsx';
+import RoleLayout from "../../pages/admin/layout-admin/role-manage/RoleLayout.jsx";
+import SettingLayout from "../../pages/admin/layout-admin/setting-manage/SettingLayout.jsx";
 
 // Lazy loading components
 const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
@@ -85,6 +87,14 @@ export const router = createBrowserRouter([
       }, {
         path: 'employee-manage',
         element: <EmployeeLayout/>,
+      },
+      {
+        path: 'role-manage',
+        element: <RoleLayout/>,
+      },
+      {
+        path: 'setting',
+        element: <SettingLayout/>,
       },
     ],
   }, {
