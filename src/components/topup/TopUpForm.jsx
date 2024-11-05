@@ -179,7 +179,7 @@ const TopUpForm = () => {
                   CHỌN THẺ LIÊN KẾT
                 </label>
               </div>
-              <div className={'w-full grid grid-cols-2 gap-3 px-4'}>
+              <div className={'w-full grid grid-cols-2 gap-3'}>
                 {Array.isArray(cardList) && cardList?.map((card) => {
                   const bank = bankList?.find(b => b.id == card.atmId);
                   return (
