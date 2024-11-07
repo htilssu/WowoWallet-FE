@@ -55,10 +55,15 @@ const TopUpForm = () => {
   });
 
   const handleAmountChange = (e) => {
-    setSuggestAmount(0);
-    setAmount(e);
-    setError(null);
-  };
+        setSuggestAmount(0);
+        if (parseInt(e) > BigInt(Number.MAX_SAFE_INTEGER)) {
+          setError('Số tiền quá lớn');
+          return;
+        }
+        setAmount(e);
+        setError(null);
+      }
+  ;
 
   const handleMethodChange = (methodPay) => {
     setMethodPay(methodPay);
@@ -93,6 +98,8 @@ const TopUpForm = () => {
           toast.success('Nạp tiền thành công');
         }, 1000);
       }
+    }).catch(() => {
+      setLoading(false);
     });
   }
 
@@ -117,7 +124,7 @@ const TopUpForm = () => {
               <NumberInput
                   size={'md'}
                   suffix={''}
-                  max={9999999999}
+                  max={BigInt(Number.MAX_SAFE_INTEGER)}
                   min={10000}
                   rightSection={<div className={'mr-10'}>VNĐ</div>}
                   allowNegative={false}
