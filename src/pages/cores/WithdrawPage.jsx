@@ -17,7 +17,6 @@ const WithdrawPage = () => {
   const [suggestAmount, setSuggestAmount] = useState(0);
   const [selectedCard, setSelectedCard] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const {data: wallet} = useQuery({
     queryKey: ['wallet'], queryFn: async () => getMyWallet(),
@@ -46,6 +45,10 @@ const WithdrawPage = () => {
     setAmount(e);
   };
 
+  function showSuccessMessage() {
+    toast.success('Rút tiền thành công');
+  }
+
   function handleSubmitWithdraw() {
     setError('');
     if (parseInt(amount) > parseInt(wallet?.balance)) {
@@ -64,7 +67,7 @@ const WithdrawPage = () => {
     setIsLoading(true);
     withdraw(selectedCard, amount).then(() => {
       revalidateCache('wallet').then();
-      toast.success('Rút tiền thành công');
+      showSuccessMessage();
       setIsLoading(false);
     }).catch((e) => {
       setError(e.response.data.message);

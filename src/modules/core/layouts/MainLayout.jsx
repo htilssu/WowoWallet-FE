@@ -12,7 +12,7 @@ export function MainLayout() {
         <div className={"w-full"}></div>
         <Outlet />
       </div>
-        <ToastContainer hideProgressBar={true} limit={2} pauseOnHover={false}/>
+        <ToastContainer  hideProgressBar={true} limit={2} pauseOnHover={false}/>
       <Footer />
     </div>
   );
