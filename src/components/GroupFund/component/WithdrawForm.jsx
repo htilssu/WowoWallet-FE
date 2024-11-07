@@ -83,6 +83,7 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
 
             } catch (error) {
                 console.error("Lỗi:", error);
+                setLoading(false);
                 setError(error.response.data.message);
             }
         }
