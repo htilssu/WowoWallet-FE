@@ -1,8 +1,34 @@
 import {Badge, Button, Container, Group, Skeleton, Text, Title} from '@mantine/core';
 import {statusColors, statusStrings} from '../util/status.util.js';
 import {getToken} from '../util/token.util.js';
+import {toast} from 'react-toastify';
+import {payOrder} from '../modules/transfer.js';
+import {useQuery} from '@tanstack/react-query';
+import {getMyWallet} from '../modules/wallet/wallet.js';
+import {revalidateCache} from '../modules/cache.js';
 
 const OrderDetails = ({order, isLoading}) => {
+  const {data: wallet} = useQuery({
+    queryKey: ['wallet'],
+    queryFn: async () => getMyWallet(),
+  });
+
+  function handlePayOrder() {
+    if (order.status === 'PENDING') {
+      if (order.money > wallet.balance) {
+        toast.error('Số dư không đủ để thanh toán đơn hàng');
+      }
+      payOrder(order.id).then(r => {
+        if (r) {
+          toast.success('Thanh toán đơn hàng thành công');
+          revalidateCache([`order-${order.id}`, order.id]).then();
+        }
+        else {
+          toast.error('Thanh toán đơn hàng thất bại');
+        }
+      });
+    }
+  }
 
   return (<Container fluid className="w-full bg-white shadow-md px-6 py-4 rounded-lg">
     <Title order={2} className="text-gray-800 mb-4">
@@ -74,12 +100,16 @@ const OrderDetails = ({order, isLoading}) => {
           Quay lại
         </Button>
       </Group>)}
-      {isLoading ? (<Skeleton height={40} width="30%"/>) : (<Button component="a" color="blue">
-        Thanh toán
-      </Button>)}
-      {isLoading ? (<Skeleton height={40} width="30%"/>) : (<Button component="a" href={`https://voucher4u-fe.vercel.app/?Token=${getToken()}}&OrderID=${order.id}`} color="blue">
-        Sử dụng voucher
-      </Button>)}
+      {isLoading ? (<Skeleton height={40} width="30%"/>) :
+       order.status === 'PENDING' && <Button color="blue" onClick={handlePayOrder}>
+             Thanh toán
+           </Button>
+      }
+      {isLoading ? (<Skeleton height={40} width="30%"/>) : (
+          <Button component="a" href={`https://voucher4u-fe.vercel.app/?Token=${getToken()}}&OrderID=${order.id}`}
+                  color="blue">
+            Sử dụng voucher
+          </Button>)}
     </Group>
   </Container>);
 };

@@ -1,5 +1,5 @@
 import 'react-toastify/dist/ReactToastify.css';
-import {ScrollRestoration, useParams} from 'react-router-dom';
+import {ScrollRestoration, useNavigate, useParams} from 'react-router-dom';
 import {wGet} from '../../util/request.util.js';
 import {ToastContainer} from 'react-toastify';
 import MyWallet from '../account/WalletSection.jsx';
@@ -9,14 +9,19 @@ import OrderDetails from '../OrderDetails.jsx';
 const ServicePayment = () => {
   //lấy thông tin thanh toán
   const {id} = useParams();
+  const navigate = useNavigate();
 
-  const {isLoading, data: order} = useQuery({
+  const {isLoading, data: order, error} = useQuery({
     queryKey: [`order-${id}`, id],
     queryFn: () => wGet(`/v1/orders/${id}`),
   });
 
-  return (<div className={'flex justify-around w-full px-10 py-5'}>
-    <div className={'w-full'}>
+  if (error) {
+    navigate('/404');
+  }
+
+  return (<div className={'md:flex justify-around w-full md:gap-3 md:px-10 py-5'}>
+    <div className={'w-full hidden md:flex'}>
       <MyWallet/>
     </div>
     <div className="flex justify-center w-full items-start bg-gray-100">
