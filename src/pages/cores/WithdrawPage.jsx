@@ -7,7 +7,6 @@ import {getMyWallet} from '../../modules/wallet/wallet.js';
 import {getRevealFormat} from '../../util/number.util.js';
 import {wGet} from '../../util/request.util.js';
 import {withdraw} from '../../modules/withdraw.js';
-import {useNavigate} from 'react-router-dom';
 import {revalidateCache} from '../../modules/cache.js';
 import {toast} from 'react-toastify';
 
@@ -17,7 +16,6 @@ const WithdrawPage = () => {
   const [suggestAmount, setSuggestAmount] = useState(0);
   const [selectedCard, setSelectedCard] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const {data: wallet} = useQuery({
     queryKey: ['wallet'], queryFn: async () => getMyWallet(),
@@ -46,6 +44,10 @@ const WithdrawPage = () => {
     setAmount(e);
   };
 
+  function showSuccessMessage() {
+    toast.success('Rút tiền thành công');
+  }
+
   function handleSubmitWithdraw() {
     setError('');
     if (parseInt(amount) > parseInt(wallet?.balance)) {
@@ -57,6 +59,11 @@ const WithdrawPage = () => {
       setError('Vui lòng nhập số tiền cần rút.');
       return;
     }
+
+    if (parseInt(amount) > BigInt(Number.MAX_SAFE_INTEGER)){
+      setError('Số tiền rút không hợp lệ')
+    }
+
     if (!selectedCard || selectedCard === '') {
       setError('Vui lòng chọn thẻ liên kết');
       return;
@@ -64,7 +71,7 @@ const WithdrawPage = () => {
     setIsLoading(true);
     withdraw(selectedCard, amount).then(() => {
       revalidateCache('wallet').then();
-      toast.success('Rút tiền thành công');
+      showSuccessMessage();
       setIsLoading(false);
     }).catch((e) => {
       setError(e.response.data.message);
@@ -96,6 +103,7 @@ const WithdrawPage = () => {
                 placeholder="Số tiền cần rút"
                 value={amount}
                 size="md"
+                max={BigInt(Number.MAX_SAFE_INTEGER)}
                 min={10000}
                 error={error}
                 thousandSeparator={','}

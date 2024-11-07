@@ -73,7 +73,7 @@ const MyWallet = () => {
   };
 
   return (
-      <div>
+      <div className={'w-full'}>
         <div className="max-w-lg mx-auto bg-white rounded-lg overflow-hidden mb-9">
           <div>
             <div className="bg-[url('/backgroundLogin.png')] bg-cover">
