@@ -40,7 +40,7 @@ const Sidebar = ({
       icon: <MdManageAccounts/>,
     },
     {
-      name: 'Dữ Liệu',
+      name: 'Thống Kê',
       link: '/admin1/statistic-manage',
       icon: <MdAssessment/>,
     },
@@ -58,17 +58,12 @@ const Sidebar = ({
       icon: <RiExchangeFill/>,
     },
     {
-      name: 'Quản lý Kế toán',
-      link: '/admin1/statistic-manage',
+      name: 'Quản lý ...',
+      link: '/admin1/',
       icon: <FaMoneyBillTrendUp/>,
     },
     {
-      name: 'Quản lý CSKH',
-      link: '/admin1/customer-manage',
-      icon: <BsPersonVcardFill/>,
-    },
-    {
-      name: 'Quản lý IT',
+      name: 'Quản lý Nhân Viên',
       link: '/admin1/employee-manage',
       icon: <MdGroups2/>,
     },
@@ -77,6 +72,11 @@ const Sidebar = ({
       link: '/admin1/partner-manage',
       icon: <IoMdPersonAdd/>,
     },
+    {
+      name: 'Chăm sóc Khách hàng',
+      link: '/admin1/customer-manage',
+      icon: <BsPersonVcardFill/>,
+    }
   ];
 
   return (

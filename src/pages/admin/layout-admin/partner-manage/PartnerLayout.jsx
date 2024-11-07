@@ -1,8 +1,8 @@
 import { useState } from "react";
-import PartnerList from "./PartnerList.jsx";
-import PartnerDetails from "./PartnerDetail.jsx";
-import TransactionList from "./TransactionList.jsx";
-import ServiceManagement from "./ServiceManagement.jsx";
+import PartnerList from "./components/PartnerList.jsx";
+import PartnerDetails from "./components/PartnerDetail.jsx";
+import TransactionList from "./components/TransactionList.jsx";
+import ServiceManagement from "./components/ServiceManagement.jsx";
 
 function PartnerLayout() {
     const [selectedPartner, setSelectedPartner] = useState(null);
