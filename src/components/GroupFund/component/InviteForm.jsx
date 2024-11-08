@@ -105,7 +105,7 @@ const InviteMember = ({ fundId, userId, onCancel }) => {
                     <button
                         onClick={handleInvite}
                         className={`px-6 py-2 text-white rounded-lg font-semibold shadow-md transition-all duration-200 ${
-                            isEmailValid ? 'bg-indigo-500 hover:bg-indigo-600' : 'bg-gray-300 cursor-not-allowed'
+                            isEmailValid ? 'bg-cyan-500 hover:bg-cyan-600' : 'bg-gray-300 cursor-not-allowed'
                         }`}
                         disabled={!isEmailValid}
                     >
