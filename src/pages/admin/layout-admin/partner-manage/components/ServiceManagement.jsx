@@ -1,4 +1,5 @@
-import {useState} from "react";
+import { useState } from "react";
+import { FaToggleOn, FaToggleOff } from "react-icons/fa";
 
 const services = [
     { id: 1, name: "Payment Gateway", enabled: true },
@@ -18,19 +19,30 @@ const ServiceManagement = ({ partner }) => {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-4">
-            <h2 className="text-2xl font-semibold">Service Management</h2>
-            <ul className="mt-4">
+        <div className="bg-white text-gray-800 border rounded-lg p-6 shadow-sm mb-2">
+            <h2 className="text-xl font-semibold text-center mb-5">Service Management</h2>
+            <ul className="space-y-3">
                 {serviceList.map((service) => (
-                    <li key={service.id} className="flex justify-between p-2 mb-2 bg-gray-50 rounded">
-                        <span>{service.name}</span>
+                    <li
+                        key={service.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-md border border-gray-200"
+                    >
+                        <span className="text-md font-medium">{service.name}</span>
+
                         <button
-                            className={`${
-                                service.enabled ? "bg-green-500" : "bg-red-500"
-                            } text-white px-4 py-1 rounded`}
+                            className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 ${
+                                service.enabled ? "bg-green-500" : "bg-gray-300"
+                            }`}
                             onClick={() => toggleService(service.id)}
                         >
-                            {service.enabled ? "Disable" : "Enable"}
+                            {service.enabled ? (
+                                <FaToggleOn className="text-white h-5 w-5 mr-1" />
+                            ) : (
+                                <FaToggleOff className="text-gray-500 h-5 w-5 mr-1" />
+                            )}
+                            <span className={`text-sm ${service.enabled ? "text-white" : "text-gray-600"}`}>
+                                {service.enabled ? "Enabled" : "Disabled"}
+                            </span>
                         </button>
                     </li>
                 ))}

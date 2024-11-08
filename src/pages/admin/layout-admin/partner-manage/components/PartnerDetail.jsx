@@ -1,25 +1,163 @@
+import { useState } from "react";
+
+import {IoIosEye, IoIosEyeOff } from "react-icons/io";
+import {FaRegCopy} from "react-icons/fa";
+import {Confirm} from "react-admin";
+import EditPartnerModal from "./EditPartnerModal.jsx";
 
 const PartnerDetails = ({ partner }) => {
+    // State to toggle visibility of the API key
+    const [isApiKeyVisible, setIsApiKeyVisible] = useState(false);
+    const [copySuccess, setCopySuccess] = useState("");
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+
+    // Function to toggle API Key visibility
+    const toggleApiKeyVisibility = () => {
+        setIsApiKeyVisible(!isApiKeyVisible);
+    };
+
+    // Function to copy API Key to clipboard
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(partner.apiKey).then(() => {
+            setCopySuccess("API Key copied to clipboard!");
+            setTimeout(() => setCopySuccess(""), 2000);
+        }).catch(err => {
+            setCopySuccess("Failed to copy API Key!");
+            setTimeout(() => setCopySuccess(""), 2000);
+        });
+    };
+
+    // Edit Modal
+    const EditModal = () => {
+        setIsEditModalOpen(!isEditModalOpen);
+    };
+    const handleSaveEdit = (updatedData) => {
+        console.log("Saved partner data:", updatedData);
+        // Gọi API để cập nhật dữ liệu
+    };
+
+    // Open Delete Confirmation Modal
+    const openDeleteModal = () => {
+        setIsModalOpenDelete(!isModalOpenDelete);
+    };
+
+    const handleDeleteConfirm = () => {
+        console.log("Partner deleted:", partner.id);
+        openDeleteModal();
+        // Gọi API để xóa dữ liệu
+    };
+
     return (
-        <div className="bg-white shadow-md rounded-lg p-4 mb-4">
-            <h2 className="text-2xl font-semibold">Partner Details</h2>
-            <p className="mt-2">
-                <strong>Name:</strong> {partner.name}
-            </p>
-            <p className="mt-2">
-                <strong>Status:</strong>{" "}
-                <span
-                    className={`${
-                        partner.status === "Active"
-                            ? "text-green-500"
-                            : partner.status === "Inactive"
-                                ? "text-red-500"
-                                : "text-yellow-500"
-                    }`}
-                >
-          {partner.status}
-        </span>
-            </p>
+        <div>
+            <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mb-2">
+                {/* Header Section */}
+                <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                        <div className="h-16 w-16 bg-gray-300 rounded-full overflow-hidden">
+                            <img
+                                src={partner.avatar ? partner.avatar : "/avatarH.png"}
+                                alt="Partner Avatar"
+                                className="h-full w-full object-cover"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex-1">
+                        <h2 className="text-3xl font-semibold text-gray-800">{partner.name}</h2>
+                        <p className="text-lg text-gray-500">{partner.description}</p>
+                    </div>
+                </div>
+
+                {/* Details Section */}
+                <div className="mt-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-gray-600">Email:</p>
+                        <p className="text-sm text-gray-700">{partner.email}</p>
+                    </div>
+
+                    {/* API Key Section with Toggle Visibility and Copy Button */}
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-gray-600">API Key:</p>
+                        <div className="flex items-center space-x-2">
+                            <button
+                                onClick={copyToClipboard}
+                                className="text-gray-900 hover:text-gray-700"
+                                aria-label="Copy API Key"
+                            >
+                                <FaRegCopy/>
+                            </button>
+                            <p className="text-sm text-gray-700">
+                                {isApiKeyVisible ? partner.apiKey : "***************"}
+                            </p>
+                            <button
+                                onClick={toggleApiKeyVisibility}
+                                className="text-gray-500 hover:text-gray-700"
+                                aria-label={isApiKeyVisible ? "Hide API Key" : "Show API Key"}
+                            >
+                                {isApiKeyVisible ? (
+                                    <IoIosEyeOff className="h-5 w-5"/>
+                                ) : (
+                                    <IoIosEye className="h-5 w-5"/>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Success message for copying */}
+                    {copySuccess && (
+                        <p className="text-sm text-green-600 mt-2">{copySuccess}</p>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-gray-600">Balance:</p>
+                        <p className="text-lg font-semibold text-green-600">
+                            {partner.balance.toLocaleString("en-VN", {style: "currency", currency: "VND"})}
+                        </p>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-gray-600">API Base URL:</p>
+                        <p className="text-sm text-gray-700">{partner.apiBaseUrl || "N/A"}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-gray-600">Created:</p>
+                        <p className="text-sm text-gray-700">{partner.created ? partner.created : "N/A"}</p>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-6 flex space-x-4">
+                    <button
+                        onClick={EditModal}
+                        className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    >
+                        Edit
+                    </button>
+                    <button
+                        onClick={openDeleteModal}
+                        className="px-6 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </div>
+            {/* Modal Edit */}
+            <EditPartnerModal
+                isOpen={isEditModalOpen}
+                onClose={EditModal}
+                partner={partner}
+                onSave={handleSaveEdit}
+            />
+            <Confirm
+                isOpen={isModalOpenDelete}
+                title={`Đối tác: ${partner.name}`}
+                content="Bạn có chắc chắn muốn xóa Đối tác này không?"
+                cancel="Quay lại"
+                confirm="Xác nhận"
+                onConfirm={handleDeleteConfirm}
+                onClose={openDeleteModal}
+            />
         </div>
     );
 };

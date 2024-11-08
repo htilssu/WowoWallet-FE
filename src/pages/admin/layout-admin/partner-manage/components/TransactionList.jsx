@@ -1,93 +1,79 @@
 import { useState } from "react";
+import TransactionDetails from "./TransactionDetails";
+import { IoIosEye } from "react-icons/io";
 
 const transactions = [
-    { id: 1, date: "2024-10-01", amount: 1000, status: "Completed", description: "Payment for order #1234" },
-    { id: 2, date: "2024-09-15", amount: 500, status: "Pending", description: "Deposit for service A" },
-    { id: 3, date: "2024-08-10", amount: 1200, status: "Failed", description: "Failed payment for subscription" },
+    { id: 1, date: "2024-10-01", amount: 1000, status: "Completed", description: "Thanh toán đơn hàng #1234" },
+    { id: 2, date: "2024-09-15", amount: 500, status: "Pending", description: "Đặt cọc dịch vụ A" },
+    { id: 3, date: "2024-08-10", amount: 1200, status: "Failed", description: "Thanh toán không thành công cho đăng ký" },
 ];
 
 const TransactionList = ({ partner }) => {
-    const [selectedTransaction, setSelectedTransaction] = useState(null); // State to store selected transaction
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-    const handleViewDetails = (transaction) => {
-        setSelectedTransaction(transaction); // Set selected transaction to show details
-    };
-
-    const closeDetails = () => {
-        setSelectedTransaction(null); // Close the details view
-    };
+    const handleViewDetails = (transaction) => setSelectedTransaction(transaction);
+    const closeDetails = () => setSelectedTransaction(null);
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-4 mb-4">
-            <h2 className="text-2xl font-semibold">Transactions for {partner.name}
-            </h2>
-            <table className="min-w-full mt-4">
-                <thead>
-                <tr className="bg-gray-100">
-                    <th className="py-2 px-4 text-left">Date</th>
-                    <th className="py-2 px-4 text-left">Amount</th>
-                    <th className="py-2 px-4 text-left">Status</th>
-                    <th className="py-2 px-4 text-left">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {transactions.map((transaction) => (
-                    <tr key={transaction.id} className="border-b">
-                        <td className="py-2 px-4">{transaction.date}</td>
-                        <td className="py-2 px-4">${transaction.amount}</td>
-                        <td className="py-2 px-4">
-                <span
-                    className={`${
-                        transaction.status === "Completed"
-                            ? "text-green-500"
-                            : transaction.status === "Pending"
-                                ? "text-yellow-500"
-                                : "text-red-500"
-                    }`}
-                >
-                  {transaction.status}
-                </span>
-                        </td>
-                        <td className="py-2 px-4">
-                            <button
-                                className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-700"
-                                onClick={() => handleViewDetails(transaction)}
-                            >
-                                View Details
-                            </button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div className="bg-white shadow-lg rounded-xl p-6 mx-auto">
+            {/* Header */}
+            <header className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">Lịch Sử Giao Dịch {partner.name}</h2>
+            </header>
 
-            {/* Modal to show transaction details */}
+            {/* Transaction Table */}
+            <div className="overflow-hidden border border-gray-200 rounded-lg shadow-sm">
+                <table className="w-full table-auto text-left bg-white">
+                    <thead className="bg-gray-100">
+                    <tr>
+                        {["Date", "Amount", "Status", "Actions"].map((header) => (
+                            <th key={header} className="py-3 px-4 text-gray-600 font-semibold">
+                                {header}
+                            </th>
+                        ))}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {transactions.map((transaction) => (
+                        <tr key={transaction.id} className="hover:bg-gray-50 transition-colors border-b">
+                            <td className="py-3 px-4 text-gray-700">{transaction.date}</td>
+                            <td className="py-3 px-4 text-gray-700 font-semibold">
+                                ${transaction.amount.toLocaleString()}
+                            </td>
+                            <td className="py-3 px-4">
+                                    <span
+                                        className={`px-2 py-1 rounded-full text-sm font-medium ${
+                                            transaction.status === "Completed"
+                                                ? "bg-green-100 text-green-600"
+                                                : transaction.status === "Pending"
+                                                    ? "bg-yellow-100 text-yellow-600"
+                                                    : "bg-red-100 text-red-600"
+                                        }`}
+                                    >
+                                        {transaction.status}
+                                    </span>
+                            </td>
+                            <td className="py-3 px-4">
+                                <button
+                                    className="flex items-center space-x-2 bg-blue-600 text-white px-3 py-1.5 rounded-full hover:bg-blue-700 transition-colors"
+                                    onClick={() => handleViewDetails(transaction)}
+                                >
+                                    <IoIosEye className="text-white" />
+                                    <span>Chi tiết</span>
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Transaction Details Modal */}
             {selectedTransaction && (
-                <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-                        <h3 className="text-2xl font-semibold mb-4">Transaction Details</h3>
-                        <p>
-                            <strong>Date:</strong> {selectedTransaction.date}
-                        </p>
-                        <p>
-                            <strong>Amount:</strong> ${selectedTransaction.amount}
-                        </p>
-                        <p>
-                            <strong>Status:</strong> {selectedTransaction.status}
-                        </p>
-                        <p className="mt-2">
-                            <strong>Description:</strong> {selectedTransaction.description}
-                        </p>
-                        <div className="mt-4 text-right">
-                            <button
-                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-                                onClick={closeDetails}
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <TransactionDetails
+                    transaction={selectedTransaction}
+                    onClose={closeDetails}
+                />
             )}
         </div>
     );
