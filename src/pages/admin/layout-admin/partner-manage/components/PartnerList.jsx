@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-
 import { FaSearch } from "react-icons/fa";
 import { wGet } from "../../../../../util/request.util.js";
-import {CheckCircleIcon, ClockIcon, XCircleIcon} from "@heroicons/react/16/solid/index.js";
+import { CheckCircleIcon, ClockIcon, XCircleIcon } from "@heroicons/react/16/solid/index.js";
 
-// Fetch data từ API
 const fetchPartners = async () => {
     try {
         const response = await wGet("/v1/partner/all");
@@ -16,7 +14,6 @@ const fetchPartners = async () => {
     }
 };
 
-// Biểu tượng trạng thái
 const statusIcons = {
     Active: <CheckCircleIcon className="h-5 w-5 text-green-500" />,
     Inactive: <XCircleIcon className="h-5 w-5 text-red-500" />,
@@ -26,16 +23,15 @@ const statusIcons = {
 
 const PartnerList = ({ setSelectedPartner }) => {
     const [searchTerm, setSearchTerm] = useState("");
-    const { data, error, isLoading } = useQuery({
+    const { data:partners, error, isLoading } = useQuery({
         queryKey: ["partners"],
         queryFn: fetchPartners,
         staleTime: 300000,
         cacheTime: 600000,
     });
 
-    // Lọc danh sách đối tác theo từ khóa tìm kiếm
-    const filteredPartners = data?.filter((partner) =>
-        partner.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredPartners = partners?.filter((partner) =>
+        partner.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (isLoading) return <div>Loading...</div>;
@@ -43,9 +39,10 @@ const PartnerList = ({ setSelectedPartner }) => {
 
     return (
         <div className="bg-white shadow-lg rounded-xl p-6">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-5">Quản Lý Đối Tác</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-5 bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
+                Danh sách Partner
+            </h2>
 
-            {/* Tìm kiếm */}
             <div className="relative mb-5">
                 <FaSearch className="absolute left-3 top-2.5 text-gray-400" size={18} />
                 <input
@@ -57,7 +54,6 @@ const PartnerList = ({ setSelectedPartner }) => {
                 />
             </div>
 
-            {/* Danh sách đối tác */}
             <ul className="space-y-4">
                 {filteredPartners?.length > 0 ? (
                     filteredPartners.map((partner) => {
@@ -65,7 +61,7 @@ const PartnerList = ({ setSelectedPartner }) => {
                         return (
                             <li
                                 key={partner.id}
-                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg shadow-sm hover:shadow-lg transition-all cursor-pointer"
+                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg shadow-sm hover:shadow-lg transition-all cursor-pointer hover:bg-gray-100"
                                 onClick={() => setSelectedPartner(partner)}
                             >
                                 <div className="flex items-center">
@@ -81,9 +77,9 @@ const PartnerList = ({ setSelectedPartner }) => {
                                     <span className="text-lg font-medium text-gray-700">{partner.name}</span>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    {statusIcons[partnerStatus]} {/* Hiển thị biểu tượng trạng thái */}
+                                    {statusIcons[partnerStatus]}
                                     <span className="text-sm font-semibold text-gray-600">
-                                        {partnerStatus} {/* Hiển thị trạng thái */}
+                                        {partnerStatus}
                                     </span>
                                     <svg
                                         className="w-5 h-5 text-gray-400"
