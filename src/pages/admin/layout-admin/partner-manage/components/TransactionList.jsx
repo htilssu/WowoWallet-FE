@@ -65,7 +65,7 @@ const TransactionList = ({ partner }) => {
                     transactions.data.map((transaction) => (
                         <tr key={transaction.id} className="border-b hover:bg-gray-50 transition">
                             <td className="py-4 px-6 text-gray-700">{new Date(transaction.created).toLocaleDateString()}</td>
-                            <td className="py-4 px-6 text-gray-700 font-semibold">
+                            <td className="py-4 px-6 text-green-500 font-semibold">
                                 {transaction.amount.toLocaleString()} VND
                             </td>
                             <td className="py-4 px-6">
@@ -83,7 +83,7 @@ const TransactionList = ({ partner }) => {
                             </td>
                             <td className="py-4 px-6">
                                 <button
-                                    className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-3 py-1.5 rounded-full hover:bg-blue-600 transition-colors"
+                                    className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition-colors"
                                     onClick={() => handleViewDetails(transaction)}
                                 >
                                     <IoIosEye className="text-white" />

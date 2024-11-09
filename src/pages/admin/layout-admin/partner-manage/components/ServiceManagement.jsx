@@ -19,9 +19,11 @@ const ServiceManagement = ({ partner }) => {
     };
 
     return (
-        <div className="bg-white text-gray-800 border rounded-lg p-6 shadow-sm mb-2">
-            <h2 className="text-xl font-semibold text-center mb-5">Service Management</h2>
-            <ul className="space-y-3">
+        <div className="bg-white text-gray-800 border rounded-lg px-8 py-4 shadow-sm mb-2">
+            <header className="text-center mb-2">
+                <h2 className="text-2xl font-bold text-gray-900">Service Management</h2>
+            </header>
+            <ul className="space-y-3 mb-2">
                 {serviceList.map((service) => (
                     <li
                         key={service.id}
@@ -36,9 +38,9 @@ const ServiceManagement = ({ partner }) => {
                             onClick={() => toggleService(service.id)}
                         >
                             {service.enabled ? (
-                                <FaToggleOn className="text-white h-5 w-5 mr-1" />
+                                <FaToggleOn className="text-white h-5 w-5 mr-1"/>
                             ) : (
-                                <FaToggleOff className="text-gray-500 h-5 w-5 mr-1" />
+                                <FaToggleOff className="text-gray-500 h-5 w-5 mr-1"/>
                             )}
                             <span className={`text-sm ${service.enabled ? "text-white" : "text-gray-600"}`}>
                                 {service.enabled ? "Enabled" : "Disabled"}
