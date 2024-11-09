@@ -23,15 +23,15 @@ const statusIcons = {
 
 const PartnerList = ({ setSelectedPartner }) => {
     const [searchTerm, setSearchTerm] = useState("");
-    const { data, error, isLoading } = useQuery({
+    const { data:partners, error, isLoading } = useQuery({
         queryKey: ["partners"],
         queryFn: fetchPartners,
         staleTime: 300000,
         cacheTime: 600000,
     });
 
-    const filteredPartners = data?.filter((partner) =>
-        partner.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredPartners = partners?.filter((partner) =>
+        partner.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (isLoading) return <div>Loading...</div>;
