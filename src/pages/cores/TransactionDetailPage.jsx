@@ -11,7 +11,6 @@ const TransactionDetailPage = () => {
   const navigate = useNavigate();
   const {id} = useParams();
   const [other, setOther] = useState();
-
   const {isLoading, data: transaction} = useQuery({
     queryKey: ['transaction', id],
     queryFn: () => wGet(`/v1/transaction/${id}`),
