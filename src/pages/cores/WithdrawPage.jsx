@@ -59,6 +59,10 @@ const WithdrawPage = () => {
       setError('Vui lòng nhập số tiền cần rút.');
       return;
     }
+    if (amount < 10000) {
+      setError('Số tiền rút ít nhất 10.000 VNĐ.');
+      return;
+    }
 
     if (parseInt(amount) > BigInt(Number.MAX_SAFE_INTEGER)){
       setError('Số tiền rút không hợp lệ')

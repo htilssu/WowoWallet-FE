@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
-import {Card, Skeleton, Avatar, Button, Tooltip} from '@mantine/core';
+import {Avatar, Button, Card, Skeleton, Tooltip} from '@mantine/core';
 import {IoIosCheckmarkCircle} from 'react-icons/io';
 import {statusStrings, transactionStatusColor} from '../../util/status.util.js';
 import {MdArrowOutward} from 'react-icons/md';
@@ -11,7 +11,6 @@ const TransactionDetailPage = () => {
   const navigate = useNavigate();
   const {id} = useParams();
   const [other, setOther] = useState();
-  
   const {isLoading, data: transaction} = useQuery({
     queryKey: ['transaction', id],
     queryFn: () => wGet(`/v1/transaction/${id}`),
@@ -64,12 +63,13 @@ const TransactionDetailPage = () => {
             {isLoading ? <Skeleton width="150px" height="32px"/> : `${transaction.amount.toLocaleString('vi-VN')} VND`}
           </p>
         </div>
-
         {/* Transfer Details */}
         <div className="bg-gray-100 p-4 rounded-lg mb-6">
           <div className="flex items-center justify-between">
             <div>
-              {/*<p className="text-sm text-gray-500">Người nhận</p>*/}
+              {isLoading ? (<Skeleton height={'32px'} width={'32px'}/>) : (
+                  <p className="text-sm text-gray-500 mt-1">{transaction.type === 'IN' ? 'Bên gửi' : 'Bên nhận'}</p>
+              )}
               <div className="flex items-center space-x-2 mt-1">
                 {isLoading ? (
                     <Skeleton circle width="32px" height="32px"/>
@@ -82,9 +82,14 @@ const TransactionDetailPage = () => {
                      />
                  )}
                 <div>
-                  <div   className="font-medium">
+                  <p className="font-medium">
                     {isLoading ? <Skeleton width="80px"/> : other}
-                  </div>
+                  </p>
+
+                  {/* <p className="text-sm text-gray-500">
+                   {isLoading ? <Skeleton width="120px"/> : other}
+                   </p>*/}
+
                 </div>
               </div>
             </div>
@@ -116,7 +121,7 @@ const TransactionDetailPage = () => {
           </div>
         </div>
         <div className={'flex justify-end items-center'}>
-          <Tooltip label={"Tính năng đang phát triển"}>
+          <Tooltip label={'Tính năng đang phát triển'}>
             <Button variant={'outline'} color={'orange'} disabled>Khiếu nại</Button>
           </Tooltip>
         </div>
