@@ -7,8 +7,11 @@ import ProtectedLayout from './layouts/ProtectedLayout.jsx';
 import {MainLayout} from './layouts/MainLayout.jsx';
 import AuthorizedView from './system-component/AuthorizedView.jsx';
 import {callBackUrl} from '../../pages/CallBackHandler.jsx';
-import RoleLayout from "../../pages/admin/layout-admin/role-manage/RoleLayout.jsx";
-import SettingLayout from "../../pages/admin/layout-admin/setting-manage/SettingLayout.jsx";
+import RoleLayout from '../../pages/admin/layout-admin/role-manage/RoleLayout.jsx';
+import SettingLayout from '../../pages/admin/layout-admin/setting-manage/SettingLayout.jsx';
+
+const ApiKeyPage = lazy(() => import('../../pages/partner/ApiKeyPage.jsx'));
+const PartnerLayout = lazy(() => import('../../pages/partner/PartnerLayout.jsx'));
 
 // Lazy loading components
 const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
@@ -30,7 +33,7 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     FundDetailPage = lazy(() => import('../../components/GroupFund/FundDetailPage.jsx')),
     Dashboard = lazy(() => import('../../components/admin/dashboard/Dashboard.jsx')),
     CustomerManage = lazy(() => import('../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx')),
-    PartnerLayout = lazy(() => import('../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx')),
+    PartnerLayoutAdmin = lazy(() => import('../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx')),
     StatisticalLayout = lazy(() => import('../../pages/admin/layout-admin/statistics-manage/StatisticalLayout.jsx')),
     EmployeeLayout = lazy(() => import('../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx')),
     WithdrawPage = lazy(() => import('../../pages/cores/WithdrawPage.jsx')),
@@ -41,10 +44,14 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     TicketRequestSuccess = lazy(() => import('../../components/support-ticket/TicketRequestSuccess.jsx')),
     TicketDetail = lazy(() => import('../../components/support-ticket/TicketDetail.jsx')),
     LayoutTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/LayoutTransaction.jsx')),
-    CurrentTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/CurrentTransaction.jsx')), 
-    WalletTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/WalletTransaction.jsx')), 
-    BankTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/BankTransaction.jsx')),
-    ServiceTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/ServiceTransaction.jsx'));
+    CurrentTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/CurrentTransaction.jsx')),
+    WalletTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/WalletTransaction.jsx')),
+    BankTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/BankTransaction.jsx')),
+    ServiceTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/ServiceTransaction.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -60,27 +67,27 @@ export const router = createBrowserRouter([
         children: [
           {
             path: 'current-transaction',
-            element: <CurrentTransaction />, 
+            element: <CurrentTransaction/>,
           },
           {
             path: 'wallet-transaction',
-            element: <WalletTransaction />, 
+            element: <WalletTransaction/>,
           },
           {
             path: 'bank-transaction',
-            element: <BankTransaction />, 
+            element: <BankTransaction/>,
           },
           {
             path: 'service-transaction',
-            element: <ServiceTransaction />,
+            element: <ServiceTransaction/>,
           },
-        ]
-      },{
+        ],
+      }, {
         path: 'customer-manage',
         element: <CustomerManage/>,
       }, {
         path: 'partner-manage',
-        element: <PartnerLayout/>,
+        element: <PartnerLayoutAdmin/>,
       }, {
         path: 'statistic-manage',
         element: <StatisticalLayout/>,
@@ -101,6 +108,15 @@ export const router = createBrowserRouter([
     path: 'admin',
     element: <AuthorizedView ROLE={'ADMIN'}/>,
     children: [],
+  }, {
+    path: '/partner',
+    element: <PartnerLayout/>,
+    children: [
+      {
+        path: 'api-key',
+        element: <ApiKeyPage/>,
+      },
+    ],
   }, {
     path: '/',
     element: <ProtectedLayout/>,
@@ -159,7 +175,7 @@ export const router = createBrowserRouter([
           }, {
             path: 'ticket-detail/:id',
             element: <TicketDetail/>,
-          },  {
+          }, {
             path: 'ticket-success',
             element: <TicketRequestSuccess/>,
           },
