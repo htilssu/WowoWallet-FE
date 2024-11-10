@@ -58,7 +58,7 @@ const TicketDetail = ({ request }) => {
     };
 
     try {
-        const response = await wPost(`http://localhost:8080/v1/ticket/${ticketId}/again`, body);
+        const response = await wPost(`/v1/ticket/${ticketId}/again`, body);
         if (typeof response === 'string') {
           return { success: true, message: response };  
         }

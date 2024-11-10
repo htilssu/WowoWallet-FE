@@ -31,6 +31,11 @@ const Sidebar = ({
       icon: <MdHome/>,
     },
     {
+      name: 'Chăm sóc Khách hàng',
+      link: '/admin1/care-cus-manage',
+      icon: <BsPersonVcardFill/>,
+    },
+    {
       name: 'Quản Lý',
       icon: <SiGoogletagmanager/>,
     },
@@ -72,11 +77,6 @@ const Sidebar = ({
       link: '/admin1/partner-manage',
       icon: <IoMdPersonAdd/>,
     },
-    {
-      name: 'Chăm sóc Khách hàng',
-      link: '/admin1/customer-manage',
-      icon: <BsPersonVcardFill/>,
-    }
   ];
 
   return (
