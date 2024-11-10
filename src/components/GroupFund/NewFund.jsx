@@ -107,7 +107,7 @@ const NewFund = () => {
         e.preventDefault();
         if (validateForm()) {
             try {
-                const response = await wPost('http://localhost:8080/v1/group-fund', {
+                const response = await wPost('/v1/group-fund', {
                     name: fundData.fundName,
                     image: "/sanmay.png",
                     type: fundData.fundType,

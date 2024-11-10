@@ -245,7 +245,7 @@ const FundDetailPage = () => {
                             <h3 className="text-2xl font-bold mb-2">Thành Viên</h3>
                             <div className="flex space-x-2 mb-4">
                                 <button
-                                    className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition duration-150"
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition duration-150"
                                     onClick={handleInviteClick}
                                 >
                                     Mời Bạn
