@@ -16,7 +16,7 @@ function TransactionTable({list}) {
     }),
     columnHelper.accessor('type', {
       header: 'Loại giao dịch',
-      cell: (info) => info.getValue(),
+      cell: (info) => info.getValue() === 'IN' ? 'Nhận tiền' : 'Chuyển tiền',
     }),
     columnHelper.accessor('amount', {
       header: 'Số tiền',
