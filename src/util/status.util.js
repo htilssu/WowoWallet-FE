@@ -11,6 +11,11 @@ const transactionStatusColor = {
   'CANCEL': 'text-gray-500',
 };
 
+export const transactionType = {
+  'IN': 'Nhận tiền',
+  'OUT': 'Chuyển tiền',
+};
+
 const statusColors = {
   PENDING: 'yellow',
   SUCCESS: 'green',

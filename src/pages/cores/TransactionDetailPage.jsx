@@ -5,16 +5,28 @@ import {Card, Skeleton, Avatar, Button, Tooltip} from '@mantine/core';
 import {IoIosCheckmarkCircle} from 'react-icons/io';
 import {statusStrings, transactionStatusColor} from '../../util/status.util.js';
 import {MdArrowOutward} from 'react-icons/md';
+import {useEffect, useState} from 'react';
 
 const TransactionDetailPage = () => {
   const navigate = useNavigate();
   const {id} = useParams();
-
+  const [other, setOther] = useState();
+  
   const {isLoading, data: transaction} = useQuery({
     queryKey: ['transaction', id],
     queryFn: () => wGet(`/v1/transaction/${id}`),
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (transaction){
+      if (transaction.type === 'IN'){
+        setOther(transaction.senderName);
+      }else {
+        setOther(transaction.receiverName);
+      }
+    }
+  }, [transaction]);
 
   return (
       <Card className="max-w-2xl mx-auto bg-white shadow-lg p-6 my-10">
@@ -63,21 +75,16 @@ const TransactionDetailPage = () => {
                     <Skeleton circle width="32px" height="32px"/>
                 ) : (
                      <Avatar
-                         src={transaction.receiver.avatar}
-                         alt={transaction.receiver.fullName}
-                         name={transaction.receiver.fullName}
+                         src={null}
+                         alt={other}
+                         name={other}
                          className="w-12 h-12 rounded-full"
                      />
                  )}
                 <div>
-                  <p className="font-medium">
-                    {isLoading ? <Skeleton width="80px"/> : transaction.receiver.fullName}
-                  </p>
-                  {transaction?.receiver.email && (
-                      <p className="text-sm text-gray-500">
-                        {isLoading ? <Skeleton width="120px"/> : transaction.receiver.email}
-                      </p>
-                  )}
+                  <div   className="font-medium">
+                    {isLoading ? <Skeleton width="80px"/> : other}
+                  </div>
                 </div>
               </div>
             </div>
