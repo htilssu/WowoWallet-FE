@@ -113,6 +113,8 @@ const OrderDetails = ({order, isLoading}) => {
               body: JSON.stringify({
                 Price: order.money,
                 OrderId: order.id,
+                ServiceId: order.serviceName,
+                PartnerId: order.partner.id,
               }),
             }).then(() => {
               location.href = `https://voucher4u-fe.vercel.app/?Token=${getToken()}&OrderID=${order.id}`;
