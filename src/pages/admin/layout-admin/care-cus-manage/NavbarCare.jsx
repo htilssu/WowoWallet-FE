@@ -52,7 +52,7 @@ const NavbarCare = () => {
                                 </Button>
                             )}
                         </NavLink>
-                        <NavLink to="feedback">
+                        <NavLink to="chat">
                             {({ isActive }) => (
                                 <Button
                                     variant="contained"
@@ -69,7 +69,7 @@ const NavbarCare = () => {
                                     }}
                                     className="hover:bg-green-400 transform hover:scale-105"
                                 >
-                                    Phản Hồi
+                                    Trao đổi
                                 </Button>
                             )}
                         </NavLink>

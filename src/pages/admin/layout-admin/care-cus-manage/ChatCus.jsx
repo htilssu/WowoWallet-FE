@@ -6,6 +6,8 @@ const mockData = [
   { id: 1, username: "Người dùng 1", messages: ["Xin chào", "Bạn có thể giúp tôi không?"], unread: 1 },
   { id: 2, username: "Người dùng 2", messages: ["Chào bạn, có thể hỗ trợ gì?"], unread: 0 },
   { id: 3, username: "Người dùng 3", messages: ["Tôi cần giúp đỡ về sản phẩm"], unread: 2 },
+  { id: 4, username: "Người dùng 4", messages: ["Cần hỗ trợ ngay!"], unread: 0 },
+  { id: 5, username: "Người dùng 5", messages: ["Chào bạn!"], unread: 1 },
 ];
 
 const ChatCus = () => {
@@ -76,7 +78,7 @@ const ChatCus = () => {
           />
         </div>
         <h2 className="text-xl font-semibold mb-4">Người dùng</h2>
-        <ul className="space-y-4">
+        <ul className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto"> {/* Giới hạn chiều cao và thêm thanh cuộn */}
           {filteredUsers.map((user) => (
             <li
               key={user.id}
@@ -175,7 +177,7 @@ const ChatCus = () => {
 
         {/* Emoji Picker */}
         {showEmojiPicker && (
-          <div className="absolute bottom-16 left-10 bg-white border rounded-md shadow-lg z-50 p-2">
+          <div className="absolute bottom-1 bg-white border rounded-md shadow-lg z-50 p-2">
             <div className="grid grid-cols-4 gap-2">
               <span
                 className="cursor-pointer text-xl"

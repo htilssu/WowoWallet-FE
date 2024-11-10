@@ -50,7 +50,10 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     AllWalletTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/manage/wallet/AllWalletTransaction.jsx')),
     TransferWallet = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/manage/wallet/TransferWallet.jsx')),
     ChatCus = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/ChatCus.jsx')),
-    RequestCustomer = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/RequestCustomer.jsx'));
+    RequestCustomer = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/RequestCustomer.jsx')),
+    OverviewCare = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/OverviewCare.jsx')),
+    ManagementPersonalInfo = lazy(() => import('../../components/account/ManagementPersonalInfo.jsx')),
+    InfoAccount = lazy(() => import('../../components/account/InfoAccount.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -94,7 +97,9 @@ export const router = createBrowserRouter([
         element: <CareCustomerManage/>,
         children: [
           {
-            index: true, element: <ChatCus/>,
+            index: true, element: <OverviewCare/>,
+          },{
+            path: 'overview', element: <OverviewCare/>,
           },{
             path: 'chat', element: <ChatCus/>,
           },{
@@ -182,10 +187,20 @@ export const router = createBrowserRouter([
           }, {
             path: 'ticket-detail/:id',
             element: <TicketDetail/>,
-          },  {
+          }, {
             path: 'ticket-success',
             element: <TicketRequestSuccess/>,
-          },
+          }, {
+            path: 'management-personal',
+            element: <ManagementPersonalInfo/>,
+            children: [
+              {
+                index: true, element: <InfoAccount/>,
+              }, {
+                path: 'info-account', element: <InfoAccount/>,
+              }
+            ],
+          }
         ],
       },
     ],
