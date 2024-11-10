@@ -1,44 +1,29 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { FaSearch } from "react-icons/fa";
-import { wGet } from "../../../../../util/request.util.js";
 import { CheckCircleIcon, ClockIcon, XCircleIcon } from "@heroicons/react/16/solid/index.js";
 
-const fetchPartners = async () => {
-    try {
-        const response = await wGet("/v1/partner/all");
-        return response;
-    } catch (error) {
-        console.error("Lỗi khi lấy danh sách Partner:", error);
-        throw error;
-    }
-};
-
 const statusIcons = {
-    Active: <CheckCircleIcon className="h-5 w-5 text-green-500" />,
-    Inactive: <XCircleIcon className="h-5 w-5 text-red-500" />,
-    Pending: <ClockIcon className="h-5 w-5 text-yellow-500" />,
+    ACTIVE: <CheckCircleIcon className="h-5 w-5 text-green-500" />,
+    INACTIVE: <XCircleIcon className="h-5 w-5 text-red-500" />,
+    SUSPENDED: <ClockIcon className="h-5 w-5 text-yellow-500" />,
     Default: <ClockIcon className="h-5 w-5 text-gray-500" />
 };
 
-const PartnerList = ({ setSelectedPartner }) => {
+const PartnerList = ({ setSelectedPartner, activeOrSuspendedPartners }) => {
     const [searchTerm, setSearchTerm] = useState("");
-    const { data:partners, error, isLoading } = useQuery({
-        queryKey: ["partners"],
-        queryFn: fetchPartners,
-        staleTime: 300000,
-        cacheTime: 600000,
-    });
+    const [selectedPartnerId, setSelectedPartnerId] = useState(null); // Track selected partner ID
 
-    const filteredPartners = partners?.filter((partner) =>
+    const filteredPartners = activeOrSuspendedPartners?.filter((partner) =>
         partner.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    const handleSelectPartner = (partner) => {
+        setSelectedPartner(partner);
+        setSelectedPartnerId(partner.id); // Set selected partner ID for highlighting
+    };
 
     return (
-        <div className="bg-white shadow-lg rounded-xl p-6">
+        <div className="bg-blue-100 shadow-lg rounded-xl p-6">
             <h2 className="text-2xl font-semibold text-gray-800 mb-5 bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
                 Danh sách Partner
             </h2>
@@ -58,11 +43,15 @@ const PartnerList = ({ setSelectedPartner }) => {
                 {filteredPartners?.length > 0 ? (
                     filteredPartners.map((partner) => {
                         const partnerStatus = partner.status || "Default";
+                        const isSelected = partner.id === selectedPartnerId; // Check if this partner is selected
+
                         return (
                             <li
                                 key={partner.id}
-                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg shadow-sm hover:shadow-lg transition-all cursor-pointer hover:bg-gray-100"
-                                onClick={() => setSelectedPartner(partner)}
+                                className={`flex items-center justify-between p-3 rounded-lg shadow-sm hover:shadow-lg transition-all cursor-pointer ${
+                                    isSelected ? "bg-blue-200 text-blue-800" : "bg-gray-50 hover:bg-gray-100"
+                                }`}
+                                onClick={() => handleSelectPartner(partner)}
                             >
                                 <div className="flex items-center">
                                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
@@ -74,13 +63,11 @@ const PartnerList = ({ setSelectedPartner }) => {
                                             <path d="M10 0C4.485 0 0 4.485 0 10s4.485 10 10 10 10-4.485 10-10S15.515 0 10 0zM5 10a5 5 0 0110 0 5 5 0 01-10 0z" />
                                         </svg>
                                     </div>
-                                    <span className="text-lg font-medium text-gray-700">{partner.name}</span>
+                                    <span className="text-lg font-medium">{partner.name}</span>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     {statusIcons[partnerStatus]}
-                                    <span className="text-sm font-semibold text-gray-600">
-                                        {partnerStatus}
-                                    </span>
+                                    <span className="text-sm font-semibold">{partnerStatus}</span>
                                     <svg
                                         className="w-5 h-5 text-gray-400"
                                         fill="none"
