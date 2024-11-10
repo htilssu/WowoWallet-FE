@@ -112,7 +112,7 @@ const OrderDetails = ({order, isLoading}) => {
               },
               body: JSON.stringify({
                 Price: order.money,
-                OrderId: order.id,
+                OrderID: order.id,
                 Service_ID: order.serviceName,
                 Partner_ID: order.partner.id,
               }),
