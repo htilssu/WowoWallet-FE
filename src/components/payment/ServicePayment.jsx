@@ -14,6 +14,7 @@ const ServicePayment = () => {
   const {isLoading, data: order, error} = useQuery({
     queryKey: [`order-${id}`, id],
     queryFn: () => wGet(`/v1/orders/${id}`),
+    staleTime: 5 * 1000 * 60,
   });
 
   if (error) {
