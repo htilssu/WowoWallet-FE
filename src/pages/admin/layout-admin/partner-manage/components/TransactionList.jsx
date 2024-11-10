@@ -6,9 +6,9 @@ import { wGet } from "../../../../../util/request.util.js";
 import {GrNext} from "react-icons/gr";
 
 // Hàm fetch data từ API với phân trang
-const fetchTransactionPartners = async (page, pageSize) => {
+const fetchTransactionPartners = async (id,page, pageSize) => {
     try {
-        const response = await wGet(`/v1/transaction/1/history?offset=${pageSize}&page=${page}`);
+        const response = await wGet(`/v1/transaction/${id}/history?offset=${pageSize}&page=${page}`);
         return response;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách Partner:", error);
@@ -23,7 +23,7 @@ const TransactionList = ({ partner }) => {
 
     const { data: transactions, error, isLoading } = useQuery({
         queryKey: ["transactions", partner.id, page],
-        queryFn: () => fetchTransactionPartners(page, pageSize),
+        queryFn: () => fetchTransactionPartners(partner.id ,page, pageSize),
         keepPreviousData: true,
         staleTime: 300000,
         cacheTime: 600000,

@@ -7,8 +7,11 @@ import ProtectedLayout from './layouts/ProtectedLayout.jsx';
 import {MainLayout} from './layouts/MainLayout.jsx';
 import AuthorizedView from './system-component/AuthorizedView.jsx';
 import {callBackUrl} from '../../pages/CallBackHandler.jsx';
-import RoleLayout from "../../pages/admin/layout-admin/role-manage/RoleLayout.jsx";
-import SettingLayout from "../../pages/admin/layout-admin/setting-manage/SettingLayout.jsx";
+import RoleLayout from '../../pages/admin/layout-admin/role-manage/RoleLayout.jsx';
+import SettingLayout from '../../pages/admin/layout-admin/setting-manage/SettingLayout.jsx';
+
+const ApiKeyPage = lazy(() => import('../../pages/partner/ApiKeyPage.jsx'));
+const PartnerLayout = lazy(() => import('../../pages/partner/PartnerLayout.jsx'));
 
 // Lazy loading components
 const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
@@ -29,8 +32,8 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     NewFund = lazy(() => import('../../components/GroupFund/NewFund.jsx')),
     FundDetailPage = lazy(() => import('../../components/GroupFund/FundDetailPage.jsx')),
     Dashboard = lazy(() => import('../../components/admin/dashboard/Dashboard.jsx')),
-    CareCustomerManage = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/CareCustomerLayout.jsx')),
-    PartnerLayout = lazy(() => import('../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx')),
+    CustomerManage = lazy(() => import('../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx')),
+    PartnerLayoutAdmin = lazy(() => import('../../pages/admin/layout-admin/partner-manage/PartnerLayout.jsx')),
     StatisticalLayout = lazy(() => import('../../pages/admin/layout-admin/statistics-manage/StatisticalLayout.jsx')),
     EmployeeLayout = lazy(() => import('../../pages/admin/layout-admin/employee-manage/EmployeeLayout.jsx')),
     WithdrawPage = lazy(() => import('../../pages/cores/WithdrawPage.jsx')),
@@ -41,19 +44,14 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     TicketRequestSuccess = lazy(() => import('../../components/support-ticket/TicketRequestSuccess.jsx')),
     TicketDetail = lazy(() => import('../../components/support-ticket/TicketDetail.jsx')),
     LayoutTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/LayoutTransaction.jsx')),
-    CurrentTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/CurrentTransaction.jsx')), 
-    WalletLayout = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/manage/wallet/WalletLayout.jsx')), 
-    ServiceTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/ServiceTransaction.jsx')),
-    BankLayout = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/manage/bank/BankLayout.jsx')),
-    AllBankTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/manage/bank/AllBankTransaction.jsx')),
-    TransferBank = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/manage/bank/TransferBank.jsx')),
-    AllWalletTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/manage/wallet/AllWalletTransaction.jsx')),
-    TransferWallet = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/manage/wallet/TransferWallet.jsx')),
-    ChatCus = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/ChatCus.jsx')),
-    RequestCustomer = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/RequestCustomer.jsx')),
-    OverviewCare = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/OverviewCare.jsx')),
-    ManagementPersonalInfo = lazy(() => import('../../components/account/ManagementPersonalInfo.jsx')),
-    InfoAccount = lazy(() => import('../../components/account/InfoAccount.jsx'));
+    CurrentTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/CurrentTransaction.jsx')),
+    WalletTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/WalletTransaction.jsx')),
+    BankTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/BankTransaction.jsx')),
+    ServiceTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/ServiceTransaction.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -97,18 +95,28 @@ export const router = createBrowserRouter([
         element: <CareCustomerManage/>,
         children: [
           {
-            index: true, element: <OverviewCare/>,
-          },{
-            path: 'overview', element: <OverviewCare/>,
-          },{
-            path: 'chat', element: <ChatCus/>,
-          },{
-            path: 'request', element: <RequestCustomer/>,
+            path: 'current-transaction',
+            element: <CurrentTransaction/>,
+          },
+          {
+            path: 'wallet-transaction',
+            element: <WalletTransaction/>,
+          },
+          {
+            path: 'bank-transaction',
+            element: <BankTransaction/>,
+          },
+          {
+            path: 'service-transaction',
+            element: <ServiceTransaction/>,
           },
         ],
       }, {
+        path: 'customer-manage',
+        element: <CustomerManage/>,
+      }, {
         path: 'partner-manage',
-        element: <PartnerLayout/>,
+        element: <PartnerLayoutAdmin/>,
       }, {
         path: 'statistic-manage',
         element: <StatisticalLayout/>,
@@ -129,6 +137,15 @@ export const router = createBrowserRouter([
     path: 'admin',
     element: <AuthorizedView ROLE={'ADMIN'}/>,
     children: [],
+  }, {
+    path: '/partner',
+    element: <PartnerLayout/>,
+    children: [
+      {
+        path: 'api-key',
+        element: <ApiKeyPage/>,
+      },
+    ],
   }, {
     path: '/',
     element: <ProtectedLayout/>,

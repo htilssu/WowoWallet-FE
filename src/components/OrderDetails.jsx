@@ -9,8 +9,8 @@ import {revalidateCache} from '../modules/cache.js';
 
 const OrderDetails = ({order, isLoading}) => {
   const {data: wallet} = useQuery({
-    queryKey: ['wallet'],
-    queryFn: async () => getMyWallet(),
+    queryKey: ['wallet'], queryFn: async () => getMyWallet(),
+    staleTime: 5 * 1000 * 60,
   });
 
   function handlePayOrder() {
@@ -21,7 +21,8 @@ const OrderDetails = ({order, isLoading}) => {
       payOrder(order.id).then(r => {
         if (r) {
           toast.success('Thanh toán đơn hàng thành công');
-          revalidateCache([`order-${order.id}`, order.id]).then();
+          revalidateCache([`order-${order.id}`]).then();
+          location.href = order.returnUrl;
         }
         else {
           toast.error('Thanh toán đơn hàng thất bại');
@@ -50,10 +51,9 @@ const OrderDetails = ({order, isLoading}) => {
     {/* Trạng thái */}
     <div className="mb-4">
       <Text c="dimmed" weight={500}>Trạng thái:</Text>
-      {isLoading ? (<Skeleton height={20} width="40%"/>) : (
-          <Badge color={statusColors[order.status]}>
-            {statusStrings[order.status]}
-          </Badge>)}
+      {isLoading ? (<Skeleton height={20} width="40%"/>) : (<Badge color={statusColors[order.status]}>
+        {statusStrings[order.status]}
+      </Badge>)}
     </div>
 
     {/* Số tiền */}
@@ -100,14 +100,29 @@ const OrderDetails = ({order, isLoading}) => {
           Quay lại
         </Button>
       </Group>)}
-      {isLoading ? (<Skeleton height={40} width="30%"/>) :
-       order.status === 'PENDING' && <Button color="blue" onClick={handlePayOrder}>
-             Thanh toán
-           </Button>
-      }
-      {isLoading ? (<Skeleton height={40} width="30%"/>) : (
-          <Button component="a" href={`https://voucher4u-fe.vercel.app/?Token=${getToken()}}&OrderID=${order.id}`}
-                  color="blue">
+      {isLoading ? (<Skeleton height={40} width="30%"/>) : order.status === 'PENDING' &&
+          <Button color="blue" onClick={handlePayOrder}>
+            Thanh toán
+          </Button>}
+      {isLoading ? (<Skeleton height={40} width="30%"/>) : order.status === 'PENDING' &&
+          (<Button component="a" onClick={() => {
+            fetch('https://server-voucher.vercel.app/api/RequireVoucher', {
+              method: 'POST', headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                Price: order.money,
+                OrderID: order.id,
+                Service_ID: order.serviceName,
+                Partner_ID: order.partner.id,
+              }),
+            }).then((r) => {
+              if (r.ok){
+                location.href = `https://voucher4u-fe.vercel.app/?Token=${getToken()}&OrderID=${order.id}`;
+              }
+            });
+          }}
+                   color="blue">
             Sử dụng voucher
           </Button>)}
     </Group>

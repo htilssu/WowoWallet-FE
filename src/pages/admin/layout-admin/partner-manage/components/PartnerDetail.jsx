@@ -1,9 +1,10 @@
 import { useState } from "react";
 
 import {IoIosEye, IoIosEyeOff } from "react-icons/io";
-import {FaRegCopy} from "react-icons/fa";
+import {FaRegCopy, FaToggleOff, FaToggleOn} from "react-icons/fa";
 import {Confirm} from "react-admin";
 import EditPartnerModal from "./EditPartnerModal.jsx";
+import {wPost} from "../../../../../util/request.util.js";
 
 const PartnerDetails = ({ partner }) => {
     // State to toggle visibility of the API key
@@ -11,6 +12,8 @@ const PartnerDetails = ({ partner }) => {
     const [copySuccess, setCopySuccess] = useState("");
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+    const [isModalOpenStatus, setIsModalOpenStatus] = useState(false);
+    const [isPartnerActive, setIsPartnerActive] = useState(partner.status === "ACTIVE");
 
     // Function to toggle API Key visibility
     const toggleApiKeyVisibility = () => {
@@ -48,9 +51,32 @@ const PartnerDetails = ({ partner }) => {
         // Gọi API để xóa dữ liệu
     };
 
+    const toggleStatusModal = () => setIsModalOpenStatus(!isModalOpenStatus);
+
+    // Thay dổi trạng thái của Partner
+    const toggleServiceStatus = async () => {
+        try {
+            const newStatus = !isPartnerActive;
+            const apiUrl = newStatus ? `/v1/partner/restore/${partner.id}` : `/v1/partner/suspend/${partner.id}`;
+
+            await wPost(apiUrl);
+            setIsPartnerActive(newStatus);
+
+            alert(`Partner is now ${newStatus ? "Active" : "Suspended"}`);
+        } catch (error) {
+            console.error("Error toggling service status:", error);
+            alert("Could not change partner status. Please try again.");
+        }
+    };
+
+    const handleStatusConfirm = () => {
+        toggleServiceStatus();
+        toggleStatusModal();
+    };
+
     return (
         <div>
-            <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mb-2">
+            <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mb-6">
                 {/* Header Section */}
                 <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
@@ -124,6 +150,25 @@ const PartnerDetails = ({ partner }) => {
                         <p className="text-sm font-medium text-gray-600">Created:</p>
                         <p className="text-sm text-gray-700">{partner.created ? partner.created : "N/A"}</p>
                     </div>
+
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium text-gray-600">Status:</p>
+                        <button
+                            className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 ${
+                                isPartnerActive ? "bg-green-500" : "bg-gray-300"
+                            }`}
+                            onClick={toggleStatusModal}
+                        >
+                            {isPartnerActive ? (
+                                <FaToggleOn className="text-white h-5 w-5 mr-1"/>
+                            ) : (
+                                <FaToggleOff className="text-gray-500 h-5 w-5 mr-1"/>
+                            )}
+                            <span className={`text-sm ${isPartnerActive ? "text-white" : "text-gray-600"}`}>
+                                {isPartnerActive ? "ACTIVE" : "SUSPENDED"}
+                            </span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Action Buttons */}
@@ -157,6 +202,15 @@ const PartnerDetails = ({ partner }) => {
                 confirm="Xác nhận"
                 onConfirm={handleDeleteConfirm}
                 onClose={openDeleteModal}
+            />
+            <Confirm
+                isOpen={isModalOpenStatus}
+                title={`Đối tác: ${partner.name}`}
+                content={`Bạn có chắc chắn muốn ${isPartnerActive ? "Tạm Dừng" : "Kích Hoạt lại"} Đối Tác này không?`}
+                cancel="Quay lại"
+                confirm="Xác nhận"
+                onConfirm={handleStatusConfirm}
+                onClose={toggleStatusModal}
             />
         </div>
     );

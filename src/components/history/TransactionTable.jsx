@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {useState} from 'react';
 import StatusDot from '../StatusDot.jsx';
 import {formatCurrency} from '../../util/currency.util.js';
+import {transactionType} from '../../util/status.util.js';
 
 function TransactionTable({list}) {
   const columnHelper = createColumnHelper();
@@ -16,7 +17,7 @@ function TransactionTable({list}) {
     }),
     columnHelper.accessor('type', {
       header: 'Loại giao dịch',
-      cell: (info) => info.getValue(),
+      cell: (info) => transactionType[info.getValue()],
     }),
     columnHelper.accessor('amount', {
       header: 'Số tiền',
