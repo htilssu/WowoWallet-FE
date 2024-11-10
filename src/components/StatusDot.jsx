@@ -1,3 +1,5 @@
+import {statusStrings} from '../util/status.util.js';
+
 const getStatusDotColor = (status) => {
   switch (status) {
     case 'SUCCESS':
@@ -19,7 +21,7 @@ function StatusDot({status}) {
               status,
           )}`}
       ></span>
-        <span className="font-semibold">{status}</span>
+        <span className="font-semibold">{statusStrings[status]}</span>
       </div>
   );
 }
