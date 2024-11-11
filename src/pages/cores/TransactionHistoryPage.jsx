@@ -159,9 +159,6 @@ function HistorySection() {
 
           <div className="mb-4 flex flex-col sm:flex-row gap-1 mt-3">
             <p>Có {data?.total} giao dịch.</p>
-            <div>
-              Tổng Tiền GD: 2,620,000 đ
-            </div>
           </div>
           <>
             <TransactionTable list={transactions}/>
