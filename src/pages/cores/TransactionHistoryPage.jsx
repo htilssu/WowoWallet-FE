@@ -6,7 +6,7 @@ import {DatePickerInput} from '@mantine/dates';
 import '@mantine/dates/styles.css';
 import TransactionTable from '../../components/history/TransactionTable.jsx';
 import {useForm} from '@mantine/form';
-import {useNavigate, useSearchParams} from 'react-router-dom';
+import {useSearchParams} from 'react-router-dom';
 import {useEffect} from 'react';
 
 const options = [
