@@ -63,7 +63,6 @@ const TransactionHistory = () => {
 function HistorySection() {
   let [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get('page') || 0;
-  const navigate = useNavigate();
   const filterForm = useForm({
     initialValues: {
       'filter': 'TẤT CẢ',

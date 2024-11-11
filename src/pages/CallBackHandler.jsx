@@ -2,7 +2,7 @@ import {useNavigate, useSearchParams} from 'react-router-dom';
 import {useEffect} from 'react';
 import {ssoCallback} from '../modules/auth/auth.js';
 import {setToken} from '../util/token.util.js';
-import {getCookie} from '../util/cookie.util.js';
+import {getCookie, removeCookie} from '../util/cookie.util.js';
 
 export const callBackUrl = '/sso/callback';
 
@@ -17,6 +17,7 @@ const CallBackHandler = () => {
       try {
         setToken(token);
         ssoCallback().then(() => {
+          removeCookie('returnUrl');
           location.href = returnUrl ?? '/home';
         });
       }
