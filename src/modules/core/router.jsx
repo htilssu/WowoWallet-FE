@@ -55,7 +55,9 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     CareCustomerLayout = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/CareCustomerLayout.jsx')),
     OverviewCare = lazy(() => import('./../../pages/admin/layout-admin/care-cus-manage/OverviewCare.jsx')),
     RequestCustomer = lazy(() => import('./../../pages/admin/layout-admin/care-cus-manage/RequestCustomer.jsx')),
-    ManagementPersonalInfo = lazy(() => import('../../components/account/ManagementPersonalInfo.jsx'));
+    ManagementPersonalInfo = lazy(() => import('../../components/account/ManagementPersonalInfo.jsx')),
+    IdentityAuth = lazy(() => import('../../components/account/IdentityAuth.jsx')),
+    ManualIdentityAuth = lazy(() => import('../../components/account/ManualIdentityAuth.jsx'));
 
 export const router = createBrowserRouter([
   {
@@ -209,6 +211,10 @@ export const router = createBrowserRouter([
                 index: true, element: <InfoAccount/>,
               }, {
                 path: 'info-account', element: <InfoAccount/>,
+              }, {
+                path: 'identity-auth', element: <IdentityAuth/>,
+              }, {
+                path: 'manual-auth', element: <ManualIdentityAuth/>
               }
             ],
           }

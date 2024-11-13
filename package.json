@@ -33,6 +33,7 @@
     "cookie": "^1.0.1",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "face-api.js": "^0.22.2",
     "jose": "^5.9.4",
     "jsonwebtoken": "^9.0.2",
     "otp-input-react": "^0.3.0",
