@@ -14,7 +14,7 @@ const WithdrawPage = () => {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [suggestAmount, setSuggestAmount] = useState(0);
-  const [selectedCard, setSelectedCard] = useState();
+  const [selectedCard, setSelectedCard] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const {data: wallet} = useQuery({
@@ -64,10 +64,10 @@ const WithdrawPage = () => {
       return;
     }
 
-    if (parseInt(amount) > BigInt(Number.MAX_SAFE_INTEGER)){
-      setError('Số tiền rút không hợp lệ')
+    if (parseInt(amount) > BigInt(Number.MAX_SAFE_INTEGER)) {
+      setError('Số tiền rút không hợp lệ');
     }
-
+    console.log(selectedCard);
     if (!selectedCard || selectedCard === '') {
       setError('Vui lòng chọn thẻ liên kết');
       return;
