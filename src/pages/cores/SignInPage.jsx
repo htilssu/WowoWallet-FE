@@ -10,7 +10,7 @@ const SignInPage = () => {
   setTitle('Đăng nhập - WoWoWallet');
   const [searchParams] = useSearchParams();
 
-  setCookie('returnUrl', searchParams.get('returnUrl') ?? null, 60 * 10);
+  setCookie('returnUrl', searchParams.get('returnUrl') ?? '/home', 60 * 10);
 
   const handleLogin = () => {
     sso.redirectToLogin(location.origin + callBackUrl);
