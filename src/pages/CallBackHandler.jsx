@@ -25,7 +25,7 @@ const CallBackHandler = () => {
         navigate('/sign-in');
       }
     }
-  }, [navigate, token]);
+  }, [navigate, returnUrl, token]);
   return (
       <div/>
   );
