@@ -55,15 +55,14 @@ const TopUpForm = () => {
   });
 
   const handleAmountChange = (e) => {
-        setSuggestAmount(0);
-        if (parseInt(e) > BigInt(Number.MAX_SAFE_INTEGER)) {
-          setError('Số tiền quá lớn');
-          return;
-        }
-        setAmount(e);
-        setError(null);
-      }
-  ;
+    setSuggestAmount(0);
+    if (parseInt(e) > BigInt(Number.MAX_SAFE_INTEGER)) {
+      setError('Số tiền quá lớn');
+      return;
+    }
+    setAmount(e);
+    setError(null);
+  };
 
   const handleMethodChange = (methodPay) => {
     setMethodPay(methodPay);
@@ -81,7 +80,7 @@ const TopUpForm = () => {
       setError('Vui lòng chọn phương thức thanh toán');
       return;
     }
-    if (methodPay === 'link-card' && !selectedCardNumber) {
+    if (methodPay === 'ATM_CARD' && !selectedCardNumber) {
       setError('Vui lòng chọn thẻ liên kết');
       return;
     }
