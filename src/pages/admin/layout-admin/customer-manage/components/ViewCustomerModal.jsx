@@ -33,7 +33,7 @@ const ViewCustomerModal = ({customer, onClose}) => {
                     className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8 space-y-8 transform transition-all scale-105 hover:scale-100 duration-300">
                     {/* Avatar and Name Section */}
                     <div className="flex items-center space-x-6">
-                        <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-blue-500 shadow-lg">
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-500 shadow-lg">
                             <img
                                 src={customer.avatar || '/avatarH.png'} // Placeholder nếu không có avatar
                                 alt={`${customer.lastName} Avatar`}
@@ -44,7 +44,8 @@ const ViewCustomerModal = ({customer, onClose}) => {
                             <h2 className="text-2xl font-bold text-gray-900">
                                 {customer.fullName}
                             </h2>
-                            <p className="text-sm text-gray-500">{customer.email || 'tuananh21@gmail.com'}</p>
+                            <p className="text-lg text-gray-500">{customer.email || 'tuananh21@gmail.com'}</p>
+                            <p className="text-sm text-gray-500">Id: {customer.id || 'Iduser123'}</p>
                         </div>
                     </div>
 

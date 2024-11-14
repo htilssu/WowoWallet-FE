@@ -62,9 +62,6 @@ const TransactionDetails = ({ transaction, onClose }) => {
                         <strong>Loại:</strong> {transaction.type}
                     </p>
                     <p className="text-gray-700">
-                        <strong>Biến Thể:</strong> {transaction.variant}
-                    </p>
-                    <p className="text-gray-700">
                         <strong>Mô Tả:</strong> {transaction.message}
                     </p>
                     <p className="text-gray-700">
@@ -72,19 +69,38 @@ const TransactionDetails = ({ transaction, onClose }) => {
                     </p>
 
                     {/* Receiver Information */}
-                    {transaction.receiver && (
+                    {transaction.receiverName && transaction.type === "OUT" && (
                         <div>
                             <div className="mt-4 border-t border-gray-200">
                                 <div className={"bg-gray-100 rounded-xl px-4 py-2"}>
                                     <h3 className="text-xl font-semibold text-gray-800 mb-2">Thông Tin Người Nhận</h3>
                                     <p className="text-gray-700">
-                                        <strong>Tên:</strong> {transaction.receiver.fullName}
+                                        <strong>Tên:</strong> {transaction?.receiverName || "Chưa cập nhật"}
                                     </p>
                                     <p className="text-gray-700">
-                                        <strong>Email:</strong> {transaction.receiver.email}
+                                        <strong>Email:</strong> {transaction.receiver?.email || "Chưa cập nhật"}
                                     </p>
                                     <p className="text-gray-700">
-                                        <strong>Loại Người Dùng:</strong> {transaction.receiver.type}
+                                        <strong>Biến Thể:</strong> {transaction.variant}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {/* Sender Information for IN transactions */}
+                    {transaction.senderName && transaction.type === "IN" && (
+                        <div>
+                            <div className="mt-4 border-t border-gray-200">
+                                <div className="bg-gray-100 rounded-xl px-4 py-2">
+                                    <h3 className="text-xl font-semibold text-gray-800 mb-2">Thông Tin Người Chuyển</h3>
+                                    <p className="text-gray-700">
+                                        <strong>Tên:</strong> {transaction.senderName || "Chưa cập nhật"}
+                                    </p>
+                                    <p className="text-gray-700">
+                                        <strong>Email:</strong> {transaction.sender?.email || "Chưa cập nhật"}
+                                    </p>
+                                    <p className="text-gray-700">
+                                        <strong>Biến Thể:</strong> {transaction.variant}
                                     </p>
                                 </div>
                             </div>
