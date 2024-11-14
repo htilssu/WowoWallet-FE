@@ -168,7 +168,7 @@ function HistorySection() {
                   total={totalPage}
                   className={'mt-2'}
                   onChange={(page) => {
-                    setSearchParams({page: page.toString()});
+                    setSearchParams({page: (page - 1).toString()});
                   }}
                   color={'rgb(26,180,74)'}
               />
