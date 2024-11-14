@@ -112,12 +112,14 @@ const OrderDetails = ({order, isLoading}) => {
               },
               body: JSON.stringify({
                 Price: order.money,
-                OrderId: order.id,
+                OrderID: order.id,
                 Service_ID: order.serviceName,
                 Partner_ID: order.partner.id,
               }),
-            }).then(() => {
-              location.href = `https://voucher4u-fe.vercel.app/?Token=${getToken()}&OrderID=${order.id}`;
+            }).then((r) => {
+              if (r.ok){
+                location.href = `https://voucher4u.io.vn/?Token=${getToken()}&OrderID=${order.id}`;
+              }
             });
           }}
                    color="blue">

@@ -1,17 +1,17 @@
-import {FaAngleRight, FaUserPlus} from 'react-icons/fa6'; //right-icon //user-sup-icon
-import Switch from 'react-switch'; //switch icon
-import {FaUserCircle} from 'react-icons/fa'; //user-icon
+import {FaAngleRight, FaUserPlus} from 'react-icons/fa6'; 
+import Switch from 'react-switch';
+import {FaUserCircle} from 'react-icons/fa'; 
 import {useState} from 'react';
-import IdentityAuth from './IdentityAuth.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 import {ToastContainer} from 'react-toastify';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const InfoAccount = () => {
   const [stateIdentity, setIdentity] = useState(false);
+  const navigate = useNavigate();
 
-  // SwitchCheckBox
-  const [state, setState] = useState(false);
+  const [state, setState] = useState(true);
 
   const {user} = useAuth();
 
@@ -24,7 +24,7 @@ const InfoAccount = () => {
   };
 
   if (stateIdentity) {
-    return <IdentityAuth/>;
+    navigate('/management-personal/identity-auth');
   }
 
   return (

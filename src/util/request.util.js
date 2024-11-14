@@ -22,4 +22,8 @@ const wDelete = async (url) => {
   return (await request.delete(url)).data;
 };
 
-export {request, wPost, wGet, wDelete};
+const wPut = async (url, data) => {
+  return (await request.put(url, data)).data;
+};
+
+export {request, wPost, wGet, wDelete, wPut};
