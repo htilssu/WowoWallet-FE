@@ -9,6 +9,7 @@ import AuthorizedView from './system-component/AuthorizedView.jsx';
 import {callBackUrl} from '../../pages/CallBackHandler.jsx';
 import RoleLayout from '../../pages/admin/layout-admin/role-manage/RoleLayout.jsx';
 import SettingLayout from '../../pages/admin/layout-admin/setting-manage/SettingLayout.jsx';
+import CustomerLayout from "../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx";
 
 const ApiKeyPage = lazy(() => import('../../pages/partner/ApiKeyPage.jsx'));
 const PartnerLayout = lazy(() => import('../../pages/partner/PartnerLayout.jsx'));
@@ -110,7 +111,12 @@ export const router = createBrowserRouter([
             path: 'request', element: <RequestCustomer/>,
           },
         ],
-      }, {
+      }
+      , {
+        path: 'customer-manage',
+        element: <CustomerLayout/>,
+      },
+      {
         path: 'partner-manage',
         element: <PartnerLayoutAdmin/>,
       }, {
