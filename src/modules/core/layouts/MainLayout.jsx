@@ -1,7 +1,6 @@
 ﻿import Footer from "../system-component/Footer.jsx";
 import { Outlet } from "react-router-dom";
 import Navbar from "../system-component/Navbar.jsx";
-import {ToastContainer} from "react-toastify";
 
 export function MainLayout() {
   return (
@@ -12,7 +11,6 @@ export function MainLayout() {
         <div className={"w-full"}></div>
         <Outlet />
       </div>
-        <ToastContainer  hideProgressBar={true} limit={2} pauseOnHover={false}/>
       <Footer />
     </div>
   );
