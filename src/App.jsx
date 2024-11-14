@@ -11,6 +11,7 @@ import LoadingPageSkeleton from './components/LoadingPageSkeleton.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 import pusher from './services/pusher.js';
 import PusherLayout from './components/PusherLayout.jsx';
+import {ToastContainer} from 'react-toastify';
 
 function App() {
   const mode = import.meta.env.MODE;
@@ -31,6 +32,7 @@ function App() {
                 </QueryClientProvider>
               </PusherLayout>
             </AuthProvider>
+            <ToastContainer/>
           </MantineProvider>
         </Suspense>
       </>
