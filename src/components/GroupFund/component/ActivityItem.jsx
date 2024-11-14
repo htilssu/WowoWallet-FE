@@ -4,15 +4,15 @@ const ActivityItem = ({ activity }) => {
     const getTypeStyles = (type) => {
         switch (type) {
             case "TOP_UP":
-                return { textColor: "text-green-600", bgColor: "bg-green-50", symbol: "+", text: "Góp quỹ" };
+                return { textColor: "text-green-600", bgColor: "bg-green-50", text: "Góp quỹ" };
             case "WITHDRAW":
-                return { textColor: "text-red-600", bgColor: "bg-red-50", symbol: "-", text: "Rút quỹ" };
+                return { textColor: "text-red-600", bgColor: "bg-red-50", text: "Rút quỹ" };
             default:
-                return { textColor: "text-gray-600", bgColor: "bg-gray-200", symbol: "?", text: "Không xác định" };
+                return { textColor: "text-gray-600", bgColor: "bg-gray-200", text: "Không xác định" };
         }
     };
 
-    const { textColor, bgColor, symbol ,text} = getTypeStyles(activity.transactionType);
+    const { textColor, bgColor, symbol ,text} = getTypeStyles(activity.type);
 
     return (
         <li className="flex items-center px-5 py-2 transition-transform transform bg-white rounded-xl shadow-md hover:shadow-lg border border-gray-200 mb-4 space-x-4">
@@ -42,7 +42,6 @@ const ActivityItem = ({ activity }) => {
             {/* Amount and Type */}
             <div className="text-right flex flex-col items-end space-y-1">
                 <div className="flex items-center space-x-1">
-                    <span className={`text-2xl font-bold ${textColor}`}>{symbol}</span>
                     <span className={`text-lg font-medium ${textColor}`}>
                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(activity.transaction.amount)}
                     </span>
