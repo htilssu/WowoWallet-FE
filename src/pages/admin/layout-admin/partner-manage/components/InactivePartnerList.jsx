@@ -26,7 +26,7 @@ const InactivePartnerList = ({ inactivePartners }) => {
     // Send reject request
     const handleReject = async (id) => {
         try {
-            await axios.post(`/v1/partner/delete/${id}`);
+            await wPost(`/v1/partner/delete/${id}`);
             alert("Đối tác đã bị từ chối.");
             queryClient.invalidateQueries({ queryKey: ["partners"] });
         } catch (error) {
