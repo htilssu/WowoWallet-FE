@@ -332,7 +332,6 @@ const TicketPage = () => {
                     )}
                 </>
             )}
-            <ToastContainer />
             {showSuccessModal && (
                 <TicketRequestSuccess onClose={() => setShowSuccessModal(false)} />
             )}

@@ -69,16 +69,22 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
         // Kiểm tra không bỏ trống tên quỹ
         if (!name.trim()) {
             newErrors.name = "Tên quỹ không được bỏ trống.";
-        }else if (name.length > 50) {
+        } else if (name.length < 5) {
+            newErrors.name = "Tên quỹ phải có ít nhất 5 ký tự.";
+        } else if (name.length > 50) {
             newErrors.name = "Tên quỹ phải dưới 50 ký tự.";
+        } else if (/[^a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềểếìỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ\s]/.test(name)) {
+            newErrors.name = "Tên quỹ không được chứa ký tự đặc biệt.";
         }
 
-        // Kiểm tra không nhập số âm cho số tiền mục tiêu
+        // Kiểm tra số tiền mục tiêu
         if (target < 0) {
             newErrors.target = "Số tiền không hợp lệ.";
-        }else {
+        } else {
             if (target === 0) {
                 newErrors.target = "Mục tiêu không được bằng 0.";
+            } else if (target < 10000) {
+                newErrors.target = "Mục tiêu phải lớn hơn hoặc bằng 10,000.";
             }
             if (isNaN(target)) {
                 newErrors.target = "Mục tiêu không hợp lệ.";
@@ -86,8 +92,8 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
             if (target.toString().includes(',')) {
                 newErrors.target = "Mục tiêu không hợp lệ.";
             }
-            if (fundData.target < fundData.wallet.balance && target < fundData.wallet.balance) {
-                newErrors.target = "Mục tiêu không được nhỏ hơn với số dư quỹ hiện tại.";
+            if (fundData.wallet && target < fundData.wallet.balance) {
+                newErrors.target = "Mục tiêu không được nhỏ hơn số dư quỹ hiện tại.";
             }
         }
 

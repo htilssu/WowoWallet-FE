@@ -1,7 +1,7 @@
-import { useState } from "react";
-import OTPInput, { ResendOTP } from "otp-input-react";
-import { MdOutlineSendToMobile } from "react-icons/md";
-import { ToastContainer, toast } from 'react-toastify';
+import {useState} from 'react';
+import OTPInput, {ResendOTP} from 'otp-input-react';
+import {MdOutlineSendToMobile} from 'react-icons/md';
+import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const SendOTP = () => {
@@ -85,7 +85,6 @@ const SendOTP = () => {
                     </div>
                 </div>
             </div>
-            <ToastContainer />
         </div>
     );
 };
