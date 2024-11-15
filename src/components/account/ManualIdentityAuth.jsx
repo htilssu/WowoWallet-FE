@@ -197,7 +197,7 @@ const ManualIdentityAuth = () => {
 
   const createVerify = async (formData) => {
       try {
-          const response = await wPost('http://localhost:8080/v1/verifications/create', formData, {
+          const response = await wPost('/v1/verifications/create', formData, {
               headers: { 'Content-Type': 'multipart/form-data' }
           });
           if (typeof response === 'string') {

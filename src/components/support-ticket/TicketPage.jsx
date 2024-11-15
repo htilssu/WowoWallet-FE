@@ -20,7 +20,8 @@ const TicketPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [canClick, setCanClick] = useState(true);
 
     const reasons = useMemo(() => ({
         "Hỗ trợ hoàn trả giao dịch chuyển tiền": ["Giao dịch bị lỗi", "Người hưởng chưa nhận được tiền", "Sai thông tin người nhận"],
@@ -92,21 +93,36 @@ const TicketPage = () => {
         }
     }, [reasons, requestType]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const validateForm = (requestType, selectedReason, agreeTerms) => {
         if (!requestType) {
             showToast("Vui lòng chọn loại yêu cầu.");
+            return false; 
         }
         if (!selectedReason) {
             showToast("Vui lòng chọn lý do tra soát.");
+            return false; 
         }
         if (!agreeTerms) {
             showToast("Bạn cần đồng ý với các điều khoản dịch vụ.");
+            return false; 
+        }
+        return true; 
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!validateForm(requestType, selectedReason, agreeTerms)) {
+            return;
         }
 
+        if (!canClick) return;
+
+        setIsSubmitting(true);
+        setCanClick(false);
+
         try {
-            const response = await createTicket(requestType, selectedReason);
+            const response = await debouncedCreateTicket(requestType, selectedReason);
             if (response.success) {
                 handleRefetchHistory();
                 setShowSuccessModal(true);
@@ -118,6 +134,11 @@ const TicketPage = () => {
             }
         } catch (error) {
             showToast(error.message);
+        } finally {
+            setIsSubmitting(false);
+            setTimeout(() => {
+                setCanClick(true);
+            }, 2000);
         }
     };
 
@@ -126,6 +147,9 @@ const TicketPage = () => {
     };
 
     const createTicket = async (requestType, selectedReason) => {
+        if (!requestType || !selectedReason) {
+            throw new Error("Thông tin yêu cầu không hợp lệ."); 
+        }
         const userId = user?.id;
         const body = {
             customer: {
@@ -157,6 +181,27 @@ const TicketPage = () => {
             }
         }
     };
+
+    const debounce = (func, delay) => {
+        let timeoutId;
+        return (...args) => {
+            return new Promise((resolve, reject) => {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
+                timeoutId = setTimeout(async () => {
+                    try {
+                        const result = await func(...args); 
+                        resolve(result); 
+                    } catch (error) {
+                        reject(error);
+                    }
+                }, delay);
+            });
+        };
+    };
+
+    const debouncedCreateTicket = useMemo(() => debounce(createTicket, 300), []);
 
     const handlePageChange = (direction) => {
         if (direction === 'next' && currentPage < totalPages) {
@@ -268,8 +313,9 @@ const TicketPage = () => {
                             color: 'white',
                         }}
                         onClick={handleSubmit}
+                        disabled={isSubmitting || !canClick}
                     >
-                        Gửi yêu cầu
+                        {isSubmitting ? "Đang gửi..." : "Gửi yêu cầu"}
                     </Button>
                 </div>
             )}
