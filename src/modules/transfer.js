@@ -30,3 +30,11 @@ export async function checkUser(userUnique) {
   }
   return (await wGet(`/v1/transfer/check/${userUnique}`));
 }
+
+export async function payOrder(orderId) {
+  if (!orderId) {
+    return false;
+  }
+
+  return (await wPost(`/v1/pay/${orderId}`));
+}

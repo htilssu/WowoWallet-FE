@@ -6,7 +6,7 @@ import {DatePickerInput} from '@mantine/dates';
 import '@mantine/dates/styles.css';
 import TransactionTable from '../../components/history/TransactionTable.jsx';
 import {useForm} from '@mantine/form';
-import {useNavigate, useSearchParams} from 'react-router-dom';
+import {useSearchParams} from 'react-router-dom';
 import {useEffect} from 'react';
 
 const options = [
@@ -63,7 +63,6 @@ const TransactionHistory = () => {
 function HistorySection() {
   let [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get('page') || 0;
-  const navigate = useNavigate();
   const filterForm = useForm({
     initialValues: {
       'filter': 'TẤT CẢ',
@@ -160,9 +159,6 @@ function HistorySection() {
 
           <div className="mb-4 flex flex-col sm:flex-row gap-1 mt-3">
             <p>Có {data?.total} giao dịch.</p>
-            <div>
-              Tổng Tiền GD: 2,620,000 đ
-            </div>
           </div>
           <>
             <TransactionTable list={transactions}/>
@@ -172,7 +168,7 @@ function HistorySection() {
                   total={totalPage}
                   className={'mt-2'}
                   onChange={(page) => {
-                    setSearchParams({page: page.toString()});
+                    setSearchParams({page: (page - 1).toString()});
                   }}
                   color={'rgb(26,180,74)'}
               />

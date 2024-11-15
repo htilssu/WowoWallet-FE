@@ -31,16 +31,21 @@ const Sidebar = ({
       icon: <MdHome/>,
     },
     {
+      name: 'Chăm sóc Khách hàng',
+      link: '/admin1/care-cus-manage',
+      icon: <BsPersonVcardFill/>,
+    },
+    {
       name: 'Quản Lý',
       icon: <SiGoogletagmanager/>,
     },
     {
       name: 'Phân Quyền',
-      link: '/',
+      link: '/admin1/role-manage',
       icon: <MdManageAccounts/>,
     },
     {
-      name: 'Dữ Liệu',
+      name: 'Thống Kê',
       link: '/admin1/statistic-manage',
       icon: <MdAssessment/>,
     },
@@ -58,17 +63,12 @@ const Sidebar = ({
       icon: <RiExchangeFill/>,
     },
     {
-      name: 'Quản lý Kế toán',
-      link: '/admin1/statistic-manage',
+      name: 'Quản lý Khách hàng',
+      link: '/admin1/customer-manage',
       icon: <FaMoneyBillTrendUp/>,
     },
     {
-      name: 'Quản lý CSKH',
-      link: '/admin1/customer-manage',
-      icon: <BsPersonVcardFill/>,
-    },
-    {
-      name: 'Quản lý IT',
+      name: 'Quản lý Nhân viên',
       link: '/admin1/employee-manage',
       icon: <MdGroups2/>,
     },
@@ -136,9 +136,7 @@ const Sidebar = ({
               <div key={idx}>
                 <NavLink
                     to={item.link}
-                    className={`hover:ml-4 ${isSidebarOpen
-                                             ? 'pl-8'
-                                             : 'justify-end pr-5'} text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex items-center space-x-3`}
+                    className={`hover:ml-4 ${isSidebarOpen ? 'pl-8' : 'justify-end pr-5'} text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 w-full bg-[#1E293B] p-2 rounded-full transform ease-in-out duration-300 flex items-center space-x-3`}
                     onClick={() => {
                       if (item.name === 'Quản Lý') {
                         setOpenTable(!openTable);
@@ -165,9 +163,8 @@ const Sidebar = ({
                             <NavLink
                                 key={subIdx}
                                 to={subItem.link}
-                                className={`text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 p-2 rounded-lg bg-[#2E3B4E] mt-1 flex items-center 
-        ${isSidebarOpen ? 'space-x-2' : 'justify-end mr-2'}`
-                                }
+                                className={`hover:translate-x-2 text-white no-underline hover:no-underline hover:text-green-400 dark:hover:text-green-500 p-2 rounded-lg bg-[#2E3B4E] mt-1 flex items-center transition-all duration-300 ease-in-out
+    ${isSidebarOpen ? 'space-x-2' : 'justify-end mr-2'}`}
                             >
                               {subItem.icon}
                               {isSidebarOpen && (

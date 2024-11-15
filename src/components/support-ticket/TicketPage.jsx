@@ -33,7 +33,7 @@ const TicketPage = () => {
         if (!userId) throw new Error("Không tìm thấy người dùng.");
         
         try {
-            const response = await wGet(`http://localhost:8080/v1/ticket/user/${userId}`);
+            const response = await wGet(`/v1/ticket/user/${userId}`);
             if (response.length > 0) { 
                 handleRefetchHistory();
                 return response; 
@@ -136,7 +136,7 @@ const TicketPage = () => {
             status: "OPEN"
         };
         try {
-            const response = await wPost(`http://localhost:8080/v1/ticket/create`, body);           
+            const response = await wPost(`/v1/ticket/create`, body);           
             if (typeof response === 'string') {
                 return { success: true, message: response };  
             }
@@ -286,7 +286,6 @@ const TicketPage = () => {
                     )}
                 </>
             )}
-            <ToastContainer />
             {showSuccessModal && (
                 <TicketRequestSuccess onClose={() => setShowSuccessModal(false)} />
             )}

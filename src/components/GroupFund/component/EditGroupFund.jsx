@@ -63,17 +63,42 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
 
 // Hàm kiểm tra tính hợp lệ
     const validateFormData = () => {
-        const { name, target, targetDate } = formData;
+        const { name, target, targetDate , description} = formData;
         const newErrors = {};
 
         // Kiểm tra không bỏ trống tên quỹ
         if (!name.trim()) {
             newErrors.name = "Tên quỹ không được bỏ trống.";
+        } else if (name.length < 5) {
+            newErrors.name = "Tên quỹ phải có ít nhất 5 ký tự.";
+        } else if (name.length > 50) {
+            newErrors.name = "Tên quỹ phải dưới 50 ký tự.";
+        } else if (/[^a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềểếìỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ\s]/.test(name)) {
+            newErrors.name = "Tên quỹ không được chứa ký tự đặc biệt.";
         }
 
-        // Kiểm tra không nhập số âm cho số tiền mục tiêu
+        // Kiểm tra số tiền mục tiêu
         if (target < 0) {
             newErrors.target = "Số tiền không hợp lệ.";
+        } else {
+            if (target === 0) {
+                newErrors.target = "Mục tiêu không được bằng 0.";
+            } else if (target < 10000) {
+                newErrors.target = "Mục tiêu phải lớn hơn hoặc bằng 10,000.";
+            }
+            if (isNaN(target)) {
+                newErrors.target = "Mục tiêu không hợp lệ.";
+            }
+            if (target.toString().includes(',')) {
+                newErrors.target = "Mục tiêu không hợp lệ.";
+            }
+            if (fundData.wallet && target < fundData.wallet.balance) {
+                newErrors.target = "Mục tiêu không được nhỏ hơn số dư quỹ hiện tại.";
+            }
+        }
+
+        if (description.length > 200) {
+            newErrors.description = "Mô tả quỹ phải dưới 200 ký tự.";
         }
 
         // Kiểm tra ngày hạn không được là ngày quá khứ
@@ -165,6 +190,9 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
                             className="mt-2 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                             rows="2"
                         ></textarea>
+                        {errors.description && (
+                            <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+                        )}
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-gray-600">

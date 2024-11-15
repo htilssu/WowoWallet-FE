@@ -10,7 +10,7 @@ const ManagementPersonalInfo = () => {
   const navigate = useNavigate();
   // Set first child `info-account`
   const navigateToInfoAccount = () => {
-    navigate('/management-personal/info-account');
+    navigate('');
   };
 
   return (

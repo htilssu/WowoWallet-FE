@@ -62,7 +62,6 @@ const HomePage = () => {
                     Có thể bạn quan tâm
                   </div>
                   <div>
-                    <Slider/>
                   </div>
                 </div>
               </div>
@@ -70,10 +69,11 @@ const HomePage = () => {
           </div>
         </div>
         <div className={'px-20 mt-10'}>
-          <div className={'rs-text-medium text-lg md:ml-6'}>
-            Thống kê giao dịch
-          </div>
-          <Statistical/>
+          <div className={'bg-white py-4 rounded-lg'}>
+            <div className={'rs-text-medium text-lg md:ml-6'}>
+              Thống kê giao dịch
+            </div>
+            <Statistical/></div>
         </div>
         <ScrollRestoration/>
       </div>

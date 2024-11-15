@@ -158,7 +158,7 @@ const TransferMoney = () => {
                     setReceiver(res);
                   }).catch(e => {
                     setReceiver(null);
-                    toast(e.response.data.message, {type: 'error'});
+                    form.setFieldError('receiverId', e.response.data.message);
                   });
                 }}
                 className="text-gray-700"

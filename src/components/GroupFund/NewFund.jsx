@@ -19,6 +19,8 @@ const NewFund = () => {
         fundType: "",
     });
     const [errors, setErrors] = useState({});
+    const [charCount, setCharCount] = useState(0);
+    const [termsAccepted, setTermsAccepted] = useState(false);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
@@ -27,13 +29,19 @@ const NewFund = () => {
     };
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        if (name === "contributionAmount") {
+        const { name, value, type, checked } = e.target;
+        if (type === "checkbox") {
+            setTermsAccepted(checked);
+        }else if (name === "contributionAmount") {
             const value = e.target.value.replace(/\D/g, ""); // chỉ lấy số, loại bỏ ký tự khác
             const formattedValue = new Intl.NumberFormat("vi-VN").format(value);
             setFundData({ ...fundData, contributionAmount: formattedValue });
         } else {
             setFundData({...fundData, [name]: value});
+            setFundData({ ...fundData, [name]: value });
+            if (name === "purpose") {
+                setCharCount(value.length);
+            }
         }
     };
 
@@ -42,7 +50,35 @@ const NewFund = () => {
         // Kiểm tra tên quỹ (bắt buộc nhập)
         if (!fundData.fundName.trim()) {
             newErrors.fundName = "Vui lòng nhập tên quỹ.";
+        } else {
+            if (fundData.fundName.length < 5 || fundData.fundName.length > 50) {
+                newErrors.fundName = "Tên quỹ phải từ 5 đến 50 ký tự.";
+            }
+            if (/[^a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềểếìỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ\s]/.test(fundData.fundName)) {
+                newErrors.fundName = "Tên quỹ không được chứa ký tự đặc biệt.";
+            }
+            if (/^\d+$/.test(fundData.fundName)) {
+                newErrors.fundName = "Tên quỹ không hợp lệ.";
+            }
         }
+        // Kiểm tra tiền mục tiêu
+        if (!fundData.contributionAmount.trim()) {
+            newErrors.contributionAmount = "Vui lòng nhập số tiền mục tiêu.";
+        } else {
+            // Remove all non-digit characters
+            const numericValue = fundData.contributionAmount.replace(/\D/g, ""); // chỉ lấy số, loại bỏ ký tự khác
+
+            // Convert to number
+            const numericAmount = parseFloat(numericValue);
+
+            // Check if the numeric amount is valid and within the specified range
+            if (isNaN(numericAmount)) {
+                newErrors.contributionAmount = "Số tiền mục tiêu không hợp lệ.";
+            } else if (numericAmount < 10000 || numericAmount > 100000000000) {
+                newErrors.contributionAmount = "Số tiền mục tiêu phải từ 10.000 đến 100.000.000.000.";
+            }
+        }
+
         // Kiểm tra ngày đóng góp hợp lệ
         if (!fundData.contributionDeadline.trim()) {
             newErrors.contributionDeadline = "Vui lòng nhập ngày hạn quỹ.";
@@ -56,6 +92,12 @@ const NewFund = () => {
                 newErrors.contributionDeadline = "Ngày đóng góp phải sau ngày hiện tại.";
             }
         }
+        if (fundData.purpose.length > 200) {
+            newErrors.purpose = "Mô tả quỹ phải dưới 200 ký tự.";
+        }
+        if (!termsAccepted) {
+            newErrors.termsAccepted = "Bạn phải chấp nhận điều khoản và điều kiện.";
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -65,7 +107,7 @@ const NewFund = () => {
         e.preventDefault();
         if (validateForm()) {
             try {
-                const response = await wPost('http://localhost:8080/v1/group-fund', {
+                const response = await wPost('/v1/group-fund', {
                     name: fundData.fundName,
                     image: "/sanmay.png",
                     type: fundData.fundType,
@@ -146,6 +188,9 @@ const NewFund = () => {
                                 className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 required
                             />
+                            {errors.contributionAmount && (
+                                <p className="text-red-500 mt-2">{errors.contributionAmount}</p>
+                            )}
                         </div>
 
                         {/* Ngày hoàn thành mục tiêu */}
@@ -170,7 +215,7 @@ const NewFund = () => {
                         {/* Mô tả quỹ */}
                         <div className="mb-6">
                             <TextField
-                                label={"Mô tả quỹ (0/200)"}
+                                label={`Mô tả quỹ (${charCount}/200)`}
                                 name="purpose"
                                 value={fundData.purpose}
                                 onChange={handleInputChange}
@@ -178,6 +223,7 @@ const NewFund = () => {
                                 className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 required
                             />
+                            {errors.purpose && <p className="text-red-500 mt-2">{errors.purpose}</p>}
                         </div>
 
                         {/* Điều khoản */}
@@ -191,7 +237,10 @@ const NewFund = () => {
                                         </Anchor>
                                     </div>
                                 }
+                                checked={termsAccepted}
+                                onChange={handleInputChange}
                             />
+                            {errors.termsAccepted && <p className="text-red-500 mt-1 text-sm">{errors.termsAccepted}</p>}
                         </div>
 
                         {/* Nút điều khiển */}

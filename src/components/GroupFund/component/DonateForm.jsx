@@ -7,6 +7,7 @@ import {sendTransferMoneyOtp, verifyTransferMoneyOtp} from "../../../modules/otp
 import {toast} from "react-toastify";
 import {useQueryClient} from "@tanstack/react-query";
 import {SyncLoader} from "react-spinners";
+import {useWallet} from "../../../modules/hooks/useWallet.jsx";
 
 const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
     const [amount, setAmount] = useState("");
@@ -20,6 +21,8 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
     const [loading, setLoading] = useState(false);
 
     const suggestionAmounts = [20000, 50000, 100000];
+
+    const { data: wallet, isLoading, isError } = useWallet();
 
     const handleSuggestionClick = (suggestedAmount) => {
         setAmount(suggestedAmount.toLocaleString("en-US", {
@@ -44,11 +47,15 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
 
     // Hàm kiểm tra dữ liệu
     const validateAmount = (amount) => {
+        if (isLoading) return "Đang kiểm tra số dư ví...";
+
         const numericAmount = parseInt(amount.replace(/\./g, ''), 10);
         if (!amount) {
             return "Vui lòng nhập số tiền.";
         } else if (numericAmount < 10000) {
             return "Số tiền góp ít nhất 10.000 VNĐ.";
+        } else if (wallet?.balance < numericAmount) {
+            return "Số dư không đủ trong Ví.";
         }
         return null;
     };
@@ -68,24 +75,26 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
             };
 
             const response = await wPost('/v1/group-fund/top-up', transferData);
+            toast.success('Góp quỹ thành công');
 
             setTimeout(() => {
                 queryClient.invalidateQueries({queryKey: ['groupFund', fundId]});
                 queryClient.invalidateQueries({queryKey: ['groupFunds']});
                 queryClient.invalidateQueries({queryKey: ['transactions', fundId]});
+                queryClient.invalidateQueries({queryKey: ['wallet']});
 
                 setFundBalance(prevBalance => prevBalance + numericAmount);
                 setAmount("");
                 setError("");
 
                 setLoading(false);
-                toast.success('Góp quỹ thành công');
                 onClose();
             }, 3000);
 
         } catch (error) {
             console.error("Lỗi:", error);
             setError(error.response.data.message);
+            setLoading(false);
         }
     };
 

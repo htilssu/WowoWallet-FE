@@ -1,6 +1,6 @@
 import {FaDownload} from 'react-icons/fa';
 import {useState} from 'react';
-import {Button, NumberInput} from '@mantine/core';
+import {Button, LoadingOverlay, NumberInput} from '@mantine/core';
 import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {ScrollRestoration} from 'react-router-dom';
@@ -8,6 +8,8 @@ import {Collapse} from '@material-tailwind/react';
 import {getRevealFormat} from '../../util/number.util.js';
 import {topUp} from '../../modules/topup.js';
 import {getMyWallet} from '../../modules/wallet/wallet.js';
+import {revalidateCache} from '../../modules/cache.js';
+import {toast} from 'react-toastify';
 
 const suggestedAmounts = [20000, 50000, 100000, 200000, 500000, 1000000];
 const paymentMethods = [
@@ -21,7 +23,7 @@ const paymentMethods = [
     label: 'Online bằng thẻ liên kết',
     method: 'ATM_CARD',
     minAmount: 10000,
-    fee: '0,33%',
+    // fee: '0,33%',
   },
 ];
 
@@ -31,6 +33,7 @@ const TopUpForm = () => {
   const [error, setError] = useState(false);
   const [suggestAmount, setSuggestAmount] = useState(0);
   const [selectedCardNumber, setSelectedCardNumber] = useState(undefined);
+  const [loading, setLoading] = useState(false);
 
   const {data: wallet} = useQuery({
     queryKey: ['wallet'],
@@ -53,6 +56,10 @@ const TopUpForm = () => {
 
   const handleAmountChange = (e) => {
     setSuggestAmount(0);
+    if (parseInt(e) > BigInt(Number.MAX_SAFE_INTEGER)) {
+      setError('Số tiền quá lớn');
+      return;
+    }
     setAmount(e);
     setError(null);
   };
@@ -73,12 +80,26 @@ const TopUpForm = () => {
       setError('Vui lòng chọn phương thức thanh toán');
       return;
     }
-    if (methodPay === 'link-card' && !selectedCardNumber) {
+    if (methodPay === 'ATM_CARD' && !selectedCardNumber) {
       setError('Vui lòng chọn thẻ liên kết');
       return;
     }
     setError(null);
-    topUp(wallet.id, amount);
+    setLoading(true);
+    topUp(wallet.id, amount, methodPay, selectedCardNumber, methodPay).then(r => {
+      if (r.redirectTo) {
+        window.location.href = r.redirectTo;
+      }
+      else {
+        setTimeout(() => {
+          setLoading(false);
+          revalidateCache('wallet').then();
+          toast.success('Nạp tiền thành công');
+        }, 1000);
+      }
+    }).catch(() => {
+      setLoading(false);
+    });
   }
 
   function handleSelectCard(card) {
@@ -86,7 +107,8 @@ const TopUpForm = () => {
   }
 
   return (
-      <div className={'w-full'}>
+      <div className={'w-full relative'}>
+        <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{radius: 'sm', blur: 2}}/>
         <div className="bg-white shadow-md rounded-lg overflow-hidden mb-9">
           <div
               className="flex items-center p-4 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-t-lg">
@@ -101,7 +123,7 @@ const TopUpForm = () => {
               <NumberInput
                   size={'md'}
                   suffix={''}
-                  max={9999999999}
+                  max={BigInt(Number.MAX_SAFE_INTEGER)}
                   min={10000}
                   rightSection={<div className={'mr-10'}>VNĐ</div>}
                   allowNegative={false}
@@ -170,12 +192,12 @@ const TopUpForm = () => {
 
 
             <Collapse open={methodPay === 'ATM_CARD'}>
-              <div className={'p-4'}>
+              <div>
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                   CHỌN THẺ LIÊN KẾT
                 </label>
               </div>
-              <div className={'w-full grid grid-cols-2 gap-3 px-4'}>
+              <div className={'w-full grid grid-cols-2 gap-3'}>
                 {Array.isArray(cardList) && cardList?.map((card) => {
                   const bank = bankList?.find(b => b.id == card.atmId);
                   return (
@@ -184,7 +206,7 @@ const TopUpForm = () => {
                             '!bg-green-100 border-green-500'} w-full flex items-center rounded hover:border-green-500 hover:bg-gray-100 transition-colors px-2 py-3 border`}
                             onClick={() => handleSelectCard(card)}
                       >
-                        <img src={bank.logo} className={'w-1/3'} alt="bank logo"/>
+                        <img src={bank?.logo} className={'w-1/3'} alt="bank logo"/>
                         <div className={'text-center w-full'}>{getRevealFormat(card.cardNumber.toString())}</div>
                       </div>)
                   );

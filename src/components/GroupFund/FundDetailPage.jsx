@@ -12,6 +12,7 @@ import {Confirm} from "react-admin";
 import WithdrawForm from "./component/WithdrawForm.jsx";
 import EditGroupFund from "./component/EditGroupFund.jsx";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {toast} from "react-toastify";
 
 const FundDetailPage = () => {
     const {id} = useParams(); // Lấy ID của quỹ từ URL
@@ -22,11 +23,13 @@ const FundDetailPage = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditFundOpen, setIsEditFundOpen] = useState(false);
+    const [isLockModalOpen, setIsLockModalOpen] = useState(false);
+    const [isFundLocked, setIsFundLocked] = useState(false);
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
     // Fetch dữ liệu quỹ
-    const { data: fundData, isLoading: isLoadingFund, isError: isErrorFund } = useQuery({
+    const {data: fundData, isLoading: isLoadingFund, isError: isErrorFund} = useQuery({
         queryKey: ['groupFund', id],
         queryFn: () => wGet(`/v1/group-fund/${id}`),
         staleTime: 5 * 60 * 1000,
@@ -34,12 +37,18 @@ const FundDetailPage = () => {
     });
 
     // Fetch dữ liệu thành viên quỹ
-    const { data: fundMembers, isLoading: isLoadingMembers, isError: isErrorMembers } = useQuery({
+    const {data: fundMembers, isLoading: isLoadingMembers, isError: isErrorMembers} = useQuery({
         queryKey: ['groupFundMembers', id],
         queryFn: () => wGet(`/v1/group-fund/${id}/members`),
         staleTime: 5 * 60 * 1000,
         cacheTime: 30 * 60 * 1000,
     });
+
+    useEffect(() => {
+        if (fundData) {
+            setIsFundLocked(fundData.isLocked);
+        }
+    }, [fundData]);
 
     const handleDonateClick = () => {
         setIsDonateFormOpen(true); // Mở form
@@ -82,8 +91,8 @@ const FundDetailPage = () => {
         try {
             const response = await wPost(`/v1/group-fund/members/leave`, body);
             setMessage(response.message);
-            queryClient.invalidateQueries({ queryKey: ['groupFunds'] });
-            queryClient.invalidateQueries({ queryKey: ['groupFundMembers', id], });
+            queryClient.invalidateQueries({queryKey: ['groupFunds']});
+            queryClient.invalidateQueries({queryKey: ['groupFundMembers', id],});
             navigate(-1);
         } catch (error) {
             setErrorMessage("Có lỗi xảy ra khi rời quỹ.");
@@ -93,7 +102,8 @@ const FundDetailPage = () => {
 
     const confirmCancel = () => {
         setIsModalOpen(false);
-        handleLeaveGroup().then(r => {});
+        handleLeaveGroup().then(r => {
+        });
     };
 
     const closeModal = () => {
@@ -105,8 +115,40 @@ const FundDetailPage = () => {
     }
 
     if (isErrorFund || isErrorMembers) {
-        return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Không thể lấy thông tin quỹ</div>;
+        return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Không thể lấy thông tin
+            quỹ</div>;
     }
+
+    //khóa quỹ
+    const handleLockFundClick = async () => {
+        try {
+            const response = await wPost(`/v1/group-fund/${id}/lock`);
+            toast.success("Khóa quỹ thành công");
+
+            setIsFundLocked(true); // Update state to locked
+            queryClient.invalidateQueries({queryKey: ['groupFund', id]});
+            setIsLockModalOpen(false);
+
+        } catch (error) {
+            setErrorMessage("Không thể khóa quỹ này.");
+            setMessage(null);
+        }
+    };
+    //mở quỹ
+    const handleUnlockFundClick = async () => {
+        try {
+            const response = await wPost(`/v1/group-fund/${id}/unlock`);
+            toast.success("Mở khóa quỹ thành công");
+
+            setIsFundLocked(false); // Update state to unlocked
+            queryClient.invalidateQueries({queryKey: ['groupFund', id]});
+            setIsLockModalOpen(false);
+
+        } catch (error) {
+            setErrorMessage("Không thể mở quỹ này.");
+            setMessage(null);
+        }
+    };
 
     return (
         <Fragment>
@@ -122,10 +164,10 @@ const FundDetailPage = () => {
                     </div>
                     <div className="bg-white rounded-lg shadow-lg py-4 px-6 sm:px-10 mb-8">
                         {/* Fund Title */}
-                        <h2 className="text-xl sm:text-3xl font-bold sm:mb-2 mb-1">{fundData.name}</h2>
+                        <h2 className="text-xl sm:text-3xl font-bold sm:mb-2 break-words">{fundData.name}</h2>
 
                         {/* Fund Purpose */}
-                        <p className="sm:text-lg mb-4">{fundData.description}</p>
+                        <p className="sm:text-lg mb-4 break-words">{fundData.description}</p>
 
                         {/* Action Buttons */}
                         <div className="mb-2 sm:mb-6 flex justify-center sm:justify-start">
@@ -135,7 +177,7 @@ const FundDetailPage = () => {
                             >
                                 Góp Quỹ
                             </button>
-                            {isFundManager && (
+                            {isFundManager ? (
                                 <>
                                     <button
                                         className="px-2 py-2 ssm:px-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 mr-2"
@@ -149,7 +191,12 @@ const FundDetailPage = () => {
                                         Rút Quỹ
                                     </button>
                                 </>
-                            )}
+                            ) : isFundLocked && (
+                                <div className="mt-4 text-center text-red-600 font-semibold text-lg">
+                                    Quỹ đã bị khóa
+                                </div>
+                            )
+                            }
                         </div>
 
                         {/* Contribution Details */}
@@ -198,14 +245,10 @@ const FundDetailPage = () => {
                             <h3 className="text-2xl font-bold mb-2">Thành Viên</h3>
                             <div className="flex space-x-2 mb-4">
                                 <button
-                                    className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition duration-150"
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-yellow-600 transition duration-150"
                                     onClick={handleInviteClick}
                                 >
                                     Mời Bạn
-                                </button>
-                                <button
-                                    className="px-4 py-2 bg-teal-500 text-white rounded-lg shadow-md hover:bg-teal-600 transition duration-150">
-                                    Chia Sẻ Quỹ
                                 </button>
                             </div>
 
@@ -219,12 +262,18 @@ const FundDetailPage = () => {
                         </div>
 
                         {isFundManager && (
-                            <div>
+                            <div className={"flex gap-4"}>
                                 <button
-                                    className="px-4 py-2 bg-indigo-500 text-white rounded-lg shadow-md hover:bg-indigo-600"
-                                    onClick={handleEditFundClick}
+                                    className="px-4 py-2 bg-gray-400 text-white rounded-lg shadow-md hover:bg-gray-500"
+                                    onClick={() => handleEditFundClick()}
                                 >
-                                    Chỉnh Sửa Quỹ
+                                    Chỉnh sửa Quỹ
+                                </button>
+                                <button
+                                    className="px-4 py-2 bg-red-400 text-white rounded-lg shadow-md hover:bg-red-500"
+                                    onClick={() => setIsLockModalOpen(true)}
+                                >
+                                    {isFundLocked ? "Mở Khóa Quỹ" : "Khóa Quỹ"}
                                 </button>
                             </div>
                         )}
@@ -244,12 +293,22 @@ const FundDetailPage = () => {
                 </div>
                 <ScrollRestoration/>
                 {isDonateFormOpen &&
-                    <DonateForm onClose={handleCloseDonateForm} fundId={id} balance={fundData.wallet.balance} senderId={userId} userEmail={userEmail}/>}
+                    <DonateForm onClose={handleCloseDonateForm} fundId={id} balance={fundData.wallet.balance}
+                                senderId={userId} userEmail={userEmail}/>}
                 {isWithdrawFormOpen &&
-                    <WithdrawForm onClose={handleWithdrawForm} fundId={id} balance={fundData.wallet.balance} senderId={userId}/>}
+                    <WithdrawForm onClose={handleWithdrawForm} fundId={id} balance={fundData.wallet.balance}
+                                  senderId={userId}/>}
                 {isEditFundOpen && (
                     <EditGroupFund fundData={fundData} onClose={() => setIsEditFundOpen(false)} fundId={id}/>)}
             </div>
+            <Confirm
+                isOpen={isLockModalOpen}
+                title={`${isFundLocked ? "Mở Quỹ" : "Khóa Quỹ"}: ${fundData.name}`}
+                content={`Bạn có chắc chắn muốn ${isFundLocked ? "mở khóa" : "khóa"} quỹ này không?`}
+                cancel="Quay lại"
+                confirm="Xác nhận"
+                onConfirm={isFundLocked ? handleUnlockFundClick : handleLockFundClick}
+                onClose={() => setIsLockModalOpen(false)}/>
             <Confirm
                 isOpen={isModalOpen}
                 title={`Nhóm Quỹ: ${fundData.name}`}

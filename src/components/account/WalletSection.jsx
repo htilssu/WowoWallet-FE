@@ -2,7 +2,6 @@ import {FaEdit} from 'react-icons/fa';
 import {HiMiniCheckBadge} from 'react-icons/hi2';
 import {Link, useNavigate} from 'react-router-dom';
 import AvatarStatus from '../library component/AvatarStatus.jsx';
-import {ToastContainer} from 'react-toastify';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {Divider, Skeleton} from '@mantine/core';
 import {formatCurrency} from '../../util/currency.util.js';
@@ -73,7 +72,7 @@ const MyWallet = () => {
   };
 
   return (
-      <div>
+      <div className={'w-full'}>
         <div className="max-w-lg mx-auto bg-white rounded-lg overflow-hidden mb-9">
           <div>
             <div className="bg-[url('/backgroundLogin.png')] bg-cover">
@@ -133,7 +132,6 @@ const MyWallet = () => {
           <WalletSection/>
           <TopUpBtn/>
         </div>
-        <ToastContainer stacked/>
       </div>
   );
 };

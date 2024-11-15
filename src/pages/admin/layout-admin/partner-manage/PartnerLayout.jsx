@@ -1,33 +1,93 @@
-import { useState } from "react";
-import PartnerList from "./PartnerList.jsx";
-import PartnerDetails from "./PartnerDetail.jsx";
-import TransactionList from "./TransactionList.jsx";
-import ServiceManagement from "./ServiceManagement.jsx";
+import {useState} from "react";
+import PartnerList from "./components/PartnerList.jsx";
+import PartnerDetails from "./components/PartnerDetail.jsx";
+import TransactionList from "./components/TransactionList.jsx";
+import {wGet} from "../../../../util/request.util.js";
+import {useQuery} from "@tanstack/react-query";
+import InactivePartnerList from "./components/InactivePartnerList.jsx";
+
+const fetchPartners = async () => {
+    try {
+        const response = await wGet("/v1/partner/all");
+        return response;
+    } catch (error) {
+        console.error("Lỗi khi lấy danh sách Partner:", error);
+        throw error;
+    }
+};
 
 function PartnerLayout() {
     const [selectedPartner, setSelectedPartner] = useState(null);
+    const [showInactivePartners, setShowInactivePartners] = useState(false);
+
+    const {data: partners, error, isLoading} = useQuery({
+        queryKey: ["partners"],
+        queryFn: fetchPartners,
+        staleTime: 300000,
+        cacheTime: 600000,
+    });
+
+    const inactivePartners = partners?.filter(partner => partner.status === 'INACTIVE');
+    const activeOrSuspendedPartners = partners?.filter(partner =>
+        partner.status === 'ACTIVE' || partner.status === 'SUSPENDED'
+    );
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
-            <h1 className="text-4xl font-bold text-center text-primaryColor mb-8">
-                Quản Lý Đối Tác
-            </h1>
+        <div className="min-h-screen bg-gray-50 p-8 flex flex-col w-full">
+            <div className="flex items-center justify-center mb-8">
+                <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
+                    Quản Lý Đối Tác
+                </h1>
+            </div>
 
-            <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-1">
-                    <PartnerList setSelectedPartner={setSelectedPartner} />
+            <div>
+                {/* Button to toggle inactive partners list */}
+                <button
+                    onClick={() => setShowInactivePartners(prev => !prev)}
+                    className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600"
+                >
+                    {showInactivePartners ? "Ẩn Danh Sách" : "Xem Danh Sách Yêu Cầu Làm Đối Tác"}
+                </button>
+
+                {/* Conditionally render InactivePartnerList */}
+                {showInactivePartners && (
+                    <div>
+                        <InactivePartnerList inactivePartners={inactivePartners} />
+                    </div>
+                )}
+            </div>
+
+            <div className="w-full max-w-6xl grid grid-cols-12 gap-6">
+                {/* Active/Suspended Partners List Section */}
+                <div className="col-span-12 md:col-span-4">
+                    <PartnerList
+                        setSelectedPartner={setSelectedPartner}
+                        activeOrSuspendedPartners={activeOrSuspendedPartners}
+                    />
                 </div>
-                <div className="col-span-2">
+
+                {/* Details Section */}
+                <div className="col-span-12 md:col-span-8 space-y-6">
                     {selectedPartner ? (
-                        <>
-                            <PartnerDetails partner={selectedPartner} />
-                            <TransactionList partner={selectedPartner} />
-                            <ServiceManagement partner={selectedPartner} />
-                        </>
+                        <div>
+                            <div className="shadow-lg">
+                                <PartnerDetails partner={selectedPartner}/>
+                            </div>
+
+                            <div className="shadow-lg ">
+                                <TransactionList partner={selectedPartner}/>
+                            </div>
+                        </div>
                     ) : (
-                        <p className="text-center text-lg text-gray-600">
-                            Chọn đối tác để xem chi tiết.
-                        </p>
+                        <div
+                            className="col-span-12 bg-white shadow-lg rounded-lg p-5 flex justify-center items-center h-full">
+                            <p className="text-gray-600 text-lg text-center">
+                                Chọn đối tác để xem chi tiết.
+                            </p>
+                        </div>
                     )}
                 </div>
             </div>
