@@ -2,7 +2,6 @@ import {FaEdit} from 'react-icons/fa';
 import {HiMiniCheckBadge} from 'react-icons/hi2';
 import {Link, useNavigate} from 'react-router-dom';
 import AvatarStatus from '../library component/AvatarStatus.jsx';
-import {ToastContainer} from 'react-toastify';
 import {useAuth} from '../../modules/hooks/useAuth.jsx';
 import {Divider, Skeleton} from '@mantine/core';
 import {formatCurrency} from '../../util/currency.util.js';
@@ -133,7 +132,6 @@ const MyWallet = () => {
           <WalletSection/>
           <TopUpBtn/>
         </div>
-        <ToastContainer stacked/>
       </div>
   );
 };
