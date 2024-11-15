@@ -63,7 +63,7 @@ const InviteMember = ({ fundId, userId, onCancel }) => {
 
         try {
             const response = await wPost(`/v1/invitations`, body);
-            setSuccessMessage(response.message);
+            setSuccessMessage("Gửi lời mời thành công!");
             setErrorMessage(null);
         } catch {
             setErrorMessage("Có lỗi xảy ra khi gửi lời mời. Vui lòng thử lại.");
