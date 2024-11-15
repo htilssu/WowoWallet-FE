@@ -10,6 +10,8 @@ import {callBackUrl} from '../../pages/CallBackHandler.jsx';
 import RoleLayout from '../../pages/admin/layout-admin/role-manage/RoleLayout.jsx';
 import SettingLayout from '../../pages/admin/layout-admin/setting-manage/SettingLayout.jsx';
 import CustomerLayout from "../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx";
+import CustomerTransactionLayout
+  from "../../pages/admin/layout-admin/transaction-manage/manage/user-transaction/CustomerTransactionLayout.jsx";
 
 const ApiKeyPage = lazy(() => import('../../pages/partner/ApiKeyPage.jsx'));
 const PartnerLayout = lazy(() => import('../../pages/partner/PartnerLayout.jsx'));
@@ -44,7 +46,6 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     TicketRequestSuccess = lazy(() => import('../../components/support-ticket/TicketRequestSuccess.jsx')),
     TicketDetail = lazy(() => import('../../components/support-ticket/TicketDetail.jsx')),
     LayoutTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/LayoutTransaction.jsx')),
-    CurrentTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/CurrentTransaction.jsx')),
     BankLayout = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/bank/BankLayout.jsx')),
     ServiceTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/ServiceTransaction.jsx')),
     WalletLayout = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/bank/BankLayout.jsx')),
@@ -68,8 +69,14 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Dashboard/>,
-      },{
-        path: 'current-transaction', element: <CurrentTransaction />, 
+      },
+      {
+        path: 'user-transactions/:email?',
+        element: <CustomerTransactionLayout />,
+      },
+      {
+        path: 'user-transactions',
+        element: <CustomerTransactionLayout />,
       }, {
         path: 'wallet-transaction', element: <WalletLayout />, 
         children: [

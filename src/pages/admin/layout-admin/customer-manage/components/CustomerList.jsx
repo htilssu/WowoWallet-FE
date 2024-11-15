@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ViewCustomerModal from './ViewCustomerModal';
 import EditCustomerModal from './EditCustomerModal';
 import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const CustomerList = ({ customers }) => {
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const navigate = useNavigate();
 
     const openViewModal = (customer) => {
         setSelectedCustomer(customer);
@@ -24,33 +27,33 @@ const CustomerList = ({ customers }) => {
         setIsEditModalOpen(false);
     };
 
+    const handleTransaction = (email) => {
+        navigate(`/admin1/user-transactions/${email}`);
+    };
+
     return (
-        <div className="overflow-x-auto bg-white shadow-lg rounded-xl px-4 mb-4">
+        <div className="overflow-x-auto bg-white shadow-lg rounded-xl p-6 mb-6">
+            <h2 className="text-xl font-bold text-center text-gray-800 mb-4">Danh Sách Khách Hàng</h2>
             <table className="min-w-full table-auto border-collapse">
                 <thead>
                 <tr className="bg-gradient-to-r from-blue-50 to-indigo-100 text-indigo-700 font-semibold">
-                    <th className="px-6 py-4 text-left">ID</th>
-                    <th className="px-6 py-4 text-left">Email</th>
-                    <th className="px-6 py-4 text-left">Họ và Tên</th>
-                    <th className="px-6 py-4 text-left">Ngày Sinh</th>
-                    <th className="px-6 py-4 text-left">Giới Tính</th>
-                    <th className="px-6 py-4 text-left">Trạng Thái</th>
-                    <th className="px-6 py-4 text-left">Hành Động</th>
+                    {[ 'Email', 'Họ và Tên', 'Ngày Sinh', 'Giới Tính', 'Trạng Thái', 'Hành Động'].map((heading) => (
+                        <th key={heading} className="px-6 py-4 text-left">{heading}</th>
+                    ))}
                 </tr>
                 </thead>
                 <tbody>
                 {customers.map((customer) => (
                     <tr
                         key={customer.id}
-                        className="border-b hover:bg-indigo-100 transition-all duration-200"
+                        className="border-b hover:bg-indigo-50 transition-all duration-200"
                     >
-                        <td className="p-4 text-gray-700 font-semibold text-sm">{customer.id}</td>
-                        <td className="px-6 py-4 text-gray-700 font-semibold text-sm">{customer.email}</td>
-                        <td className="px-6 py-4">{customer.fullName}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 text-gray-700 font-medium">{customer.email}</td>
+                        <td className="px-6 py-4 text-gray-700">{customer.fullName}</td>
+                        <td className="px-6 py-4 text-gray-700">
                             {customer.dob ? `${customer.dob[2]}/${customer.dob[1]}/${customer.dob[0]}` : 'Chưa có'}
                         </td>
-                        <td className="px-6 py-4">{customer.gender ? 'Nam' : 'Nữ'}</td>
+                        <td className="px-6 py-4 text-gray-700">{customer.gender ? 'Nam' : 'Nữ'}</td>
                         <td className="px-6 py-4">
                                 <span
                                     className={`px-3 py-1 rounded-full text-sm font-semibold ${
@@ -60,17 +63,23 @@ const CustomerList = ({ customers }) => {
                                     {customer.isActive ? 'Hoạt động' : 'Không hoạt động'}
                                 </span>
                         </td>
-                        <td className="p-2">
+                        <td className="px-6 py-4">
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => openViewModal(customer)}
-                                    className="p-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition duration-200"
+                                    className="p-2 text-sm rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition duration-200"
                                 >
-                                    Xem
+                                    Xem chi tiết
+                                </button>
+                                <button
+                                    onClick={() => handleTransaction(customer.email)}
+                                    className="p-2 text-sm rounded-lg bg-cyan-500 text-white hover:bg-cyan-600 transition duration-200"
+                                >
+                                    Xem giao dịch
                                 </button>
                                 <button
                                     onClick={() => openEditModal(customer)}
-                                    className="px-4 py-2 text-sm rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 transition duration-200"
+                                    className="p-2 text-sm rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 transition duration-200"
                                 >
                                     Chỉnh sửa
                                 </button>

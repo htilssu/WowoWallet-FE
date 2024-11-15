@@ -2,8 +2,8 @@ import { useState } from "react";
 import { IoIosEye } from "react-icons/io";
 import { useQuery } from "@tanstack/react-query";
 import { GrNext } from "react-icons/gr";
-import TransactionDetails from "./TransactionDetails.jsx";
-import {wGet} from "../../../../../util/request.util.js";
+import { wGet } from "../../../../../../../util/request.util.js";
+import TransactionDetails from "../../../../partner-manage/components/TransactionDetails.jsx";
 
 // Hàm fetch data từ API với phân trang
 const fetchTransactionPartners = async (id, page, pageSize) => {
@@ -38,8 +38,8 @@ const TransactionList = ({ partner }) => {
     return (
         <div className="bg-white shadow-lg rounded-2xl p-6 mx-auto mb-6 max-w-4xl">
             {/* Header */}
-            <header className="text-center mb-4">
-                <h2 className="text-3xl font-bold text-gray-800">Lịch Sử Giao Dịch {partner.name}</h2>
+            <header className="text-center mb-2">
+                <h2 className="text-2xl font-bold text-gray-800">Lịch Sử Giao Dịch</h2>
             </header>
 
             <p className="text-gray-600 mb-2">Tổng số giao dịch: {transactions.total}</p>

@@ -44,7 +44,7 @@ export default function LayoutTransaction() {
     };
 
     const buttonData = [
-        { icon: MdReceiptLong, text: 'Giao dịch hiện hành', path: '/admin1/current-transaction' },
+        { icon: MdReceiptLong, text: 'Giao dịch Khách hàng', path: '/admin1/user-transactions' },
         { icon: MdAccountBalanceWallet, text: 'Giao dịch ví', path: '/admin1/wallet-transaction' },
         { icon: MdAccountBalance, text: 'Giao dịch ngân hàng', path: '/admin1/bank-transaction' },
         { icon: MdSupportAgent , text: 'Giao dịch dịch vụ', path: '/admin1/service-transaction' },  
