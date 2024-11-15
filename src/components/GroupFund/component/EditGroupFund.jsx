@@ -73,7 +73,7 @@ const EditGroupFund = ({ fundData, onClose, fundId }) => {
             newErrors.name = "Tên quỹ phải có ít nhất 5 ký tự.";
         } else if (name.length > 50) {
             newErrors.name = "Tên quỹ phải dưới 50 ký tự.";
-        } else if (/[^a-zA-Z0-9\s]/.test(name)) {  // Kiểm tra ký tự đặc biệt
+        } else if (/[^a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềểếìỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ\s]/.test(name)) {
             newErrors.name = "Tên quỹ không được chứa ký tự đặc biệt.";
         }
 
