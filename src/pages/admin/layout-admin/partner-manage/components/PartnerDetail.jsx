@@ -3,14 +3,12 @@ import { useState } from "react";
 import {IoIosEye, IoIosEyeOff } from "react-icons/io";
 import {FaRegCopy, FaToggleOff, FaToggleOn} from "react-icons/fa";
 import {Confirm} from "react-admin";
-import EditPartnerModal from "./EditPartnerModal.jsx";
 import {wPost} from "../../../../../util/request.util.js";
 
 const PartnerDetails = ({ partner }) => {
     // State to toggle visibility of the API key
     const [isApiKeyVisible, setIsApiKeyVisible] = useState(false);
     const [copySuccess, setCopySuccess] = useState("");
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
     const [isModalOpenStatus, setIsModalOpenStatus] = useState(false);
     const [isPartnerActive, setIsPartnerActive] = useState(partner.status === "ACTIVE");
@@ -29,15 +27,6 @@ const PartnerDetails = ({ partner }) => {
             setCopySuccess("Failed to copy API Key!");
             setTimeout(() => setCopySuccess(""), 2000);
         });
-    };
-
-    // Edit Modal
-    const EditModal = () => {
-        setIsEditModalOpen(!isEditModalOpen);
-    };
-    const handleSaveEdit = (updatedData) => {
-        console.log("Saved partner data:", updatedData);
-        // Gọi API để cập nhật dữ liệu
     };
 
     // Open Delete Confirmation Modal
@@ -172,13 +161,7 @@ const PartnerDetails = ({ partner }) => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="mt-6 flex space-x-4">
-                    <button
-                        onClick={EditModal}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                    >
-                        Edit
-                    </button>
+                <div className="mt-4 flex space-x-4">
                     <button
                         onClick={openDeleteModal}
                         className="px-6 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
@@ -187,13 +170,6 @@ const PartnerDetails = ({ partner }) => {
                     </button>
                 </div>
             </div>
-            {/* Modal Edit */}
-            <EditPartnerModal
-                isOpen={isEditModalOpen}
-                onClose={EditModal}
-                partner={partner}
-                onSave={handleSaveEdit}
-            />
             <Confirm
                 isOpen={isModalOpenDelete}
                 title={`Đối tác: ${partner.name}`}

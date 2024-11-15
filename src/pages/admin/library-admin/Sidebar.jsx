@@ -63,12 +63,12 @@ const Sidebar = ({
       icon: <RiExchangeFill/>,
     },
     {
-      name: 'Quản lý ...',
-      link: '/admin1/',
+      name: 'Quản lý Khách hàng',
+      link: '/admin1/customer-manage',
       icon: <FaMoneyBillTrendUp/>,
     },
     {
-      name: 'Quản lý Nhân Viên',
+      name: 'Quản lý Nhân viên',
       link: '/admin1/employee-manage',
       icon: <MdGroups2/>,
     },

@@ -59,7 +59,7 @@ const OrderDetails = ({order, isLoading}) => {
     {/* Số tiền */}
     <div className="mb-4">
       <Text c="dimmed" weight={500}>Số tiền:</Text>
-      {isLoading ? <Skeleton height={20} width="50%"/> : <Text size="md">{order.money.toLocaleString(
+      {isLoading ? <Skeleton height={20} width="50%"/> : <Text size="md">{order.discountMoney.toLocaleString(
           'vi-VN')} VND</Text>}
     </div>
 
@@ -118,7 +118,7 @@ const OrderDetails = ({order, isLoading}) => {
               }),
             }).then((r) => {
               if (r.ok){
-                location.href = `https://voucher4u-fe.vercel.app/?Token=${getToken()}&OrderID=${order.id}`;
+                location.href = `https://voucher4u.io.vn/?Token=${getToken()}&OrderID=${order.id}`;
               }
             });
           }}
