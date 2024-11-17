@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import {useEffect} from 'react';
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -20,8 +21,12 @@ ChartJS.register(
 
 const TransactionChart = ({data, isLoading}) => {
   // Xử lý dữ liệu JSON
+  useEffect(() => {
+    if (data) {
+      data.dayAnalysis.sort((a, b) => a.day - b.day);
+    }
+  }, [data]);
   const labels = data?.dayAnalysis.map(day => `Ngày ${day.day}`);
-  const totalTransactions = data?.dayAnalysis.map(day => day.totalTransactions);
   const totalInMoney = data?.dayAnalysis.map(day => day.totalInMoney);
   const totalOutMoney = data?.dayAnalysis.map(day => day.totalOutMoney);
 
