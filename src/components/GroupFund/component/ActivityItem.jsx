@@ -27,7 +27,7 @@ const ActivityItem = ({ activity }) => {
             {/* Content */}
             <div className="flex-1">
                 <div className="mb-1">
-                    <p className="text-lg font-bold text-gray-900">{`${activity.senderName}`}</p>
+                    <p className="text-lg font-bold text-gray-900">{`${activity.flowType === "TOP_UP_GROUP_FUND" ? activity.senderName : activity.receiverName}`}</p>
                     <p className="text-sm text-gray-500">
                         {format(new Date(activity.created), 'HH:mm dd/MM/yyyy')}
                     </p>
