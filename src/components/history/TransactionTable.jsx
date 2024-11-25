@@ -15,7 +15,7 @@ function TransactionTable({list}) {
       header: 'Mã giao dịch',
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('type', {
+    columnHelper.accessor('flowType', {
       header: 'Loại giao dịch',
       cell: (info) => transactionType[info.getValue()],
     }),
