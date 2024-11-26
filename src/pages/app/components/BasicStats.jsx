@@ -1,11 +1,44 @@
-import {FaWallet, FaExchangeAlt, FaChartPie, FaMoneyBillWave, FaChartLine} from "react-icons/fa"; // Import các icon từ react-icons
+import {FaWallet, FaExchangeAlt, FaChartPie, FaMoneyBillWave, FaChartLine} from "react-icons/fa";
+import {wGet} from "../../../util/request.util.js";
+import {useQuery} from "@tanstack/react-query"; // Import các icon từ react-icons
 
-const BasicStats = () => {
+const BasicStats = ({id}) => {
+
+    // Fetch dữ liệu thống kê từ API nếu có ID
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ['applicationInfo', id],
+        queryFn: () => wGet(`/v1/application/${id}`),
+        staleTime: 5 * 60 * 1000,
+        cacheTime: 30 * 60 * 1000,
+        enabled: !!id, // Chỉ gọi API khi có ID
+    });
+
+    // Xử lý khi tải dữ liệu
+    if (isLoading) {
+        return (
+            <div className="bg-gradient-to-r from-blue-50 to-white shadow-lg rounded-lg p-6 mb-6">
+                <p className="text-gray-600">Đang tải dữ liệu...</p>
+            </div>
+        );
+    }
+
+    // Xử lý khi gặp lỗi
+    if (isError) {
+        return (
+            <div className="bg-gradient-to-r from-blue-50 to-white shadow-lg rounded-lg p-6 mb-6">
+                <p className="text-red-600">Đã xảy ra lỗi khi tải dữ liệu.</p>
+            </div>
+        );
+    }
+
+    // Đảm bảo data.balance tồn tại và có giá trị hợp lệ
+    const balance = data?.balance ?? 1000000;
+
     const stats = [
-        { id: 1, label: "Tổng số ví", value: 5, icon: <FaWallet className="text-blue-500" size={28} /> },
+        { id: 1, label: "Tổng số ví", value: 2, icon: <FaWallet className="text-blue-500" size={28} /> },
         { id: 2, label: "Giao dịch hôm nay", value: 20, icon: <FaExchangeAlt className="text-cyan-500" size={28} /> },
         { id: 3, label: "Tổng số giao dịch", value: 150, icon: <FaChartPie className="text-orange-500" size={28} /> },
-        { id: 4, label: "Tổng số dư", value: "3,000,000 VNĐ", icon: <FaMoneyBillWave className="text-green-500" size={28} /> },
+        { id: 4, label: "Tổng số dư", value: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(balance), icon: <FaMoneyBillWave className="text-green-500" size={28} /> },
     ];
 
     return (

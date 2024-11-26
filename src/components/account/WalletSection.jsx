@@ -68,7 +68,7 @@ const MyWallet = () => {
   const navigate = useNavigate();
   const handleMPersonal = (e) => {
     e.preventDefault();
-    navigate('/me');
+    navigate('/management-personal');
   };
 
   return (

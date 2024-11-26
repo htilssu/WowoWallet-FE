@@ -69,7 +69,7 @@ const NavbarAvatar = ({ logout }) => {
         <ul className="py-2" aria-labelledby="user-menu-button">
           <li>
             <a
-              href="#"
+              href="/management-personal"
               className="block px-4 py-2 text-sm hover:bg-blue-200 transition-colors ease-in-out"
             >
               Dashboard

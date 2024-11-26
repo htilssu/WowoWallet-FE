@@ -10,22 +10,22 @@ import TransactionDetails from "../../admin/layout-admin/partner-manage/componen
 
 const fetchTransactionPartners = async (id, page, pageSize) => {
     try {
-        const response = await wGet(`/v1/transaction/${id}/history?offset=${pageSize}&page=${page}`);
+        const response = await wGet(`/v1/application/${id}/order?offset=${pageSize}&page=${page}`);
         return response;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách Partner:", error);
-        throw error;
+        return { data: [], total: 0 };
     }
 };
 
-const TransactionList = ({ walletId }) => {
+const TransactionList = ({ partner }) => {
     const [selectedTransaction, setSelectedTransaction] = useState(null);
     const [page, setPage] = useState(0);
     const pageSize = 10;
 
-    const { data: transactions, error, isLoading } = useQuery({
-        queryKey: ["transactions", walletId, page],
-        queryFn: () => fetchTransactionPartners(walletId, page, pageSize),
+    const { data: orders, error, isLoading } = useQuery({
+        queryKey: ["orders", partner.id, page],
+        queryFn: () => fetchTransactionPartners(partner.id, page, pageSize),
         keepPreviousData: true,
         staleTime: 300000,
         cacheTime: 600000,
@@ -40,11 +40,11 @@ const TransactionList = ({ walletId }) => {
     return (
         <div className="bg-white shadow-lg rounded-2xl p-6 mx-auto mb-6 max-w-4xl">
             {/* Header */}
-            <header className="text-center mb-2">
-                <h2 className="text-2xl font-bold text-gray-800">Lịch Sử Giao Dịch</h2>
+            <header className="text-center mb-4">
+                <h2 className="text-3xl font-bold text-gray-800">Lịch Sử Giao Dịch {partner.name}</h2>
             </header>
 
-            <p className="text-gray-600 mb-2">Tổng số giao dịch: {transactions.total}</p>
+            <p className="text-gray-600 mb-2">Tổng số giao dịch: {orders?.total || 0}</p>
 
             {/* Transaction Table */}
             <div className="overflow-hidden border border-gray-200 rounded-lg shadow">
@@ -57,42 +57,42 @@ const TransactionList = ({ walletId }) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {transactions.data.length === 0 ? (
+                    {orders.length === 0 ? (
                         <tr>
                             <td colSpan="5" className="py-4 px-6 text-center text-gray-500">Không tìm thấy giao dịch
                                 nào
                             </td>
                         </tr>
                     ) : (
-                        transactions.data.map((transaction) => (
-                            <tr key={transaction.id} className="border-b hover:bg-blue-50 transition">
-                                <td className="py-4 px-6 text-gray-700">{new Date(transaction.created).toLocaleDateString()}</td>
-                                <td className={`py-4 px-6 font-semibold ${transaction.type === 'IN' ? 'text-green-500' : 'text-red-500'}`}>
-                                    {transaction.type}
+                        orders.data?.map((order) => (
+                            <tr key={order.id} className="border-b hover:bg-blue-50 transition">
+                                <td className="py-4 px-6 text-gray-700">{new Date(order.created).toLocaleDateString()}</td>
+                                <td className={`py-4 px-6 font-semibold ${order.type === 'PENDING' ? 'text-green-500' : 'text-red-500'}`}>
+                                    {order.type}
                                 </td>
-                                <td className={`py-4 px-6 font-semibold ${transaction.type === 'IN' ? 'text-green-500' : 'text-red-500'}`}>
+                                <td className={`py-4 px-6 font-semibold ${order.type === 'PENDING' ? 'text-green-500' : 'text-red-500'}`}>
                                     {new Intl.NumberFormat('vi-VN', {
                                         style: 'currency',
                                         currency: 'VND'
-                                    }).format(transaction.amount)}
+                                    }).format(order.amount)}
                                 </td>
                                 <td className="py-4 px-6">
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                                transaction.status === "SUCCESS"
+                                                order.status === "SUCCESS"
                                                     ? "bg-green-100 text-green-600"
-                                                    : transaction.status === "PENDING"
+                                                    : order.status === "PENDING"
                                                         ? "bg-yellow-100 text-yellow-600"
                                                         : "bg-red-100 text-red-600"
                                             }`}
                                         >
-                                            {transaction.status}
+                                            {order.status}
                                         </span>
                                 </td>
                                 <td className="py-4 px-6">
                                     <button
                                         className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition"
-                                        onClick={() => handleViewDetails(transaction)}
+                                        onClick={() => handleViewDetails(order)}
                                     >
                                         <IoIosEye className="text-white"/>
                                         <span>Xem chi tiết</span>
@@ -121,9 +121,9 @@ const TransactionList = ({ walletId }) => {
 
                 <button
                     onClick={() => setPage((prev) => prev + 1)}
-                    disabled={!transactions || transactions.data.length < pageSize}
+                    disabled={!orders || orders.data?.length < pageSize}
                     className={`px-4 py-2 rounded-full transition-colors duration-300 shadow-md ${
-                        !transactions || transactions.data.length < pageSize ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                        !orders || orders.data?.length < pageSize ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
                     } flex items-center justify-center`}
                 >
                     <GrNext className="text-lg"/>

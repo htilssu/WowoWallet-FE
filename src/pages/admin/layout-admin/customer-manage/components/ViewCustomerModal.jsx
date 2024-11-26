@@ -52,8 +52,8 @@ const ViewCustomerModal = ({customer, onClose}) => {
                     {/* Customer Details Section */}
                     <div className="grid grid-cols-2 gap-4 text-gray-700 text-base font-medium">
                         <div>
-                            <span className="text-gray-500">Username:</span>
-                            <p className="font-semibold text-gray-800">{customer.username}</p>
+                            <span className="text-gray-500">Tên:</span>
+                            <p className="font-semibold text-gray-800">{customer.firstName + " " + customer.lastName}</p>
                         </div>
                         <div>
                             <span className="text-gray-500">Loại:</span>

@@ -5,6 +5,20 @@ import { GrNext } from "react-icons/gr";
 import { wGet } from "../../../../../../../util/request.util.js";
 import TransactionDetails from "../../../../partner-manage/components/TransactionDetails.jsx";
 
+// Hàm map flowType sang trạng thái
+const mapFlowType = (flowType) => {
+    const flowTypeMap = {
+        TRANSFER_MONEY: { label: "Chuyển tiền", color: "text-yellow-500" },
+        RECEIVE_MONEY: { label: "Nhận tiền", color: "text-green-500" },
+        TOP_UP: { label: "Nạp tiền", color: "text-blue-500" },
+        WITHDRAW: { label: "Rút tiền", color: "text-red-500" },
+        TOP_UP_GROUP_FUND: { label: "Góp quỹ nhóm", color: "text-purple-500" },
+        WITHDRAW_GROUP_FUND: { label: "Rút quỹ nhóm", color: "text-orange-500" },
+    };
+
+    return flowTypeMap[flowType] || { label: "Không xác định", color: "text-gray-500" };
+};
+
 // Hàm fetch data từ API với phân trang
 const fetchTransactionPartners = async (id, page, pageSize) => {
     try {
@@ -57,47 +71,50 @@ const TransactionList = ({ partner }) => {
                     <tbody>
                     {transactions.data.length === 0 ? (
                         <tr>
-                            <td colSpan="5" className="py-4 px-6 text-center text-gray-500">Không tìm thấy giao dịch
-                                nào
-                            </td>
+                            <td colSpan="5" className="py-4 px-6 text-center text-gray-500">Không tìm thấy giao dịch nào</td>
                         </tr>
                     ) : (
-                        transactions.data.map((transaction) => (
-                            <tr key={transaction.id} className="border-b hover:bg-blue-50 transition">
-                                <td className="py-4 px-6 text-gray-700">{new Date(transaction.created).toLocaleDateString()}</td>
-                                <td className={`py-4 px-6 font-semibold ${transaction.type === 'IN' ? 'text-green-500' : 'text-red-500'}`}>
-                                    {transaction.type}
-                                </td>
-                                <td className={`py-4 px-6 font-semibold ${transaction.type === 'IN' ? 'text-green-500' : 'text-red-500'}`}>
-                                    {new Intl.NumberFormat('vi-VN', {
-                                        style: 'currency',
-                                        currency: 'VND'
-                                    }).format(transaction.amount)}
-                                </td>
-                                <td className="py-4 px-6">
-                                        <span
-                                            className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                                transaction.status === "SUCCESS"
-                                                    ? "bg-green-100 text-green-600"
-                                                    : transaction.status === "PENDING"
-                                                        ? "bg-yellow-100 text-yellow-600"
-                                                        : "bg-red-100 text-red-600"
-                                            }`}
+                        transactions.data.map((transaction) => {
+                            const { label, color } = mapFlowType(transaction.flowType);
+                            return (
+                                <tr key={transaction.id} className="border-b hover:bg-blue-50 transition">
+                                    <td className="py-4 px-6 text-gray-700">
+                                        {new Date(transaction.created).toLocaleDateString()}
+                                    </td>
+                                    <td className={`py-4 px-6 font-semibold ${color}`}>
+                                        {label}
+                                    </td>
+                                    <td className={`py-4 px-6 font-semibold ${color}`}>
+                                        {new Intl.NumberFormat('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND',
+                                        }).format(transaction.amount)}
+                                    </td>
+                                    <td className="py-4 px-6">
+                                            <span
+                                                className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                    transaction.status === "SUCCESS"
+                                                        ? "bg-green-100 text-green-600"
+                                                        : transaction.status === "PENDING"
+                                                            ? "bg-yellow-100 text-yellow-600"
+                                                            : "bg-red-100 text-red-600"
+                                                }`}
+                                            >
+                                                {transaction?.status || "Thành công"}
+                                            </span>
+                                    </td>
+                                    <td className="py-4 px-6">
+                                        <button
+                                            className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition"
+                                            onClick={() => handleViewDetails(transaction)}
                                         >
-                                            {transaction.status}
-                                        </span>
-                                </td>
-                                <td className="py-4 px-6">
-                                    <button
-                                        className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition"
-                                        onClick={() => handleViewDetails(transaction)}
-                                    >
-                                        <IoIosEye className="text-white"/>
-                                        <span>Xem chi tiết</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
+                                            <IoIosEye className="text-white" />
+                                            <span>Xem chi tiết</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })
                     )}
                     </tbody>
                 </table>
@@ -109,10 +126,12 @@ const TransactionList = ({ partner }) => {
                     onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
                     disabled={page === 0}
                     className={`px-4 py-2 rounded-full transition-colors duration-300 shadow-md ${
-                        page === 0 ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                        page === 0
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-blue-500 text-white hover:bg-blue-600"
                     } flex items-center justify-center`}
                 >
-                    <GrNext className="rotate-180 text-lg"/>
+                    <GrNext className="rotate-180 text-lg" />
                 </button>
 
                 <p className="text-gray-800 font-semibold text-lg">Trang {page + 1}</p>
@@ -121,19 +140,18 @@ const TransactionList = ({ partner }) => {
                     onClick={() => setPage((prev) => prev + 1)}
                     disabled={!transactions || transactions.data.length < pageSize}
                     className={`px-4 py-2 rounded-full transition-colors duration-300 shadow-md ${
-                        !transactions || transactions.data.length < pageSize ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                        !transactions || transactions.data.length < pageSize
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-blue-500 text-white hover:bg-blue-600"
                     } flex items-center justify-center`}
                 >
-                    <GrNext className="text-lg"/>
+                    <GrNext className="text-lg" />
                 </button>
             </div>
 
             {/* Transaction Details Modal */}
             {selectedTransaction && (
-                <TransactionDetails
-                    transaction={selectedTransaction}
-                    onClose={closeDetails}
-                />
+                <TransactionDetails transaction={selectedTransaction} onClose={closeDetails} />
             )}
         </div>
     );

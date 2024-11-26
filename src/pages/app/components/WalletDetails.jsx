@@ -11,10 +11,10 @@ const WalletDetails = ({ wallet, onBack }) => {
             </button>
             <div className="flex items-center mb-6">
                 <FaWallet className="text-green-600 mr-4 animate-pulse" size={36} />
-                <h2 className="text-3xl font-bold text-gray-900">Chi Tiết Ví: {wallet.name}</h2>
+                <h2 className="text-3xl font-bold text-gray-900">Chi Tiết Ví: {wallet?.name || "Ví Điện Tử"}</h2>
             </div>
             <p className="text-lg text-gray-700 mb-6">
-                <strong>Số dư:</strong> <span className="text-green-700 text-2xl font-bold">{wallet.balance} VNĐ</span>
+                <strong>Số dư:</strong> <span className="text-green-700 text-2xl font-bold">{wallet?.balance || 0} VNĐ</span>
             </p>
             <div className="bg-white p-6 rounded-xl border-t-4 border-emerald-500 shadow-md mb-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
