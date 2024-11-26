@@ -1,9 +1,5 @@
-  {
+{
   "rewrites": [
-    {
-      "source": "/remoteEntry.js",
-      "destination": "/assets/remoteEntry.js"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
