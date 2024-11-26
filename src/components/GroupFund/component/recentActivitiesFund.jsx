@@ -18,7 +18,7 @@ const RecentActivities = ({ id }) => {
     });
 
     // Sort transactions by created date in descending order
-    const sortedTransactions = transactions.sort((a, b) => new Date(b.transaction.created) - new Date(a.transaction.created));
+    const sortedTransactions = transactions.sort((a, b) => new Date(b.created) - new Date(a.created));
     const activitiesToShow = showAll ? sortedTransactions : sortedTransactions.slice(0, 3);
 
     // Handle loading and error states
