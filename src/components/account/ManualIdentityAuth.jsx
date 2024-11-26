@@ -240,18 +240,18 @@ const ManualIdentityAuth = () => {
   return (
     <div className="transaction-account ml-2 bg-white w-auto h-auto rounded-lg p-2 pb-9">
       <div className="info-header ml-2 items-center mt-2 flex mb-1">
-        <div className="text-primaryColor">
+        <div className="text-green-600">
           <FaUserCheck size={20} />
         </div>
         <div className="font-normal text-md ml-2">CHỨNG THỰC TÀI KHOẢN - TỰ CHỨNG THỰC</div>
-        <div className="ml-auto font-normal text-md mr-5 text-primaryColor">BƯỚC 1/2</div>
+        <div className="ml-auto font-normal text-md mr-5 text-green-600">BƯỚC 1/2</div>
       </div>
 
       <div className="info-container mx-3 mt-3 h-auto">
-        <div className="h-auto w-auto bg-dimPrimaryColor rounded-lg py-3 mt-6">
+        <div className="h-auto w-auto bg-green-100 rounded-lg py-3 mt-6">
           <div className="flex items-center ml-5 mb-2">
             <p className="text-base mr-2">Họ và tên chủ TK:</p>
-            <p className="uppercase font-medium text-primaryColor">{user.lastName} {user.firstName}</p>
+            <p className="uppercase font-medium text-green-600">{user.lastName} {user.firstName}</p>
           </div>
           <div className="flex items-center ml-5">
             <p className="text-base mr-2">Mã tài khoản:</p>
@@ -261,7 +261,7 @@ const ManualIdentityAuth = () => {
               <p className="font-medium">*****************</p>
             )}
             <button
-              className="ml-2 text-primaryColor font-semibold"
+              className="ml-2 text-green-600 font-semibold"
               onClick={toggleIdVisibility}
             >
               {isIdVisible ? "Ẩn" : "Hiển thị"} ID
@@ -340,7 +340,7 @@ const ManualIdentityAuth = () => {
               </div>
               <div className="flex relative ml-20 lg:ml-0 mt-2 lg:mt-0 items-center">
                 <button
-                  className="hover:bg-primaryColor hover:text-white rounded-md border border-primaryColor py-2 px-4"
+                  className="hover:bg-green-100 hover:text-white rounded-md border border-green-600 py-2 px-4"
                   onClick={() => document.getElementById("fileInputFont").click()}
                 >
                   Chọn ảnh
@@ -369,7 +369,7 @@ const ManualIdentityAuth = () => {
               </div>
               <div className="flex relative ml-20 lg:ml-0 mt-2 lg:mt-0 items-center">
                 <button
-                  className="hover:bg-primaryColor hover:text-white rounded-md border border-primaryColor py-2 px-4"
+                  className="hover:bg-green-600 hover:text-white rounded-md border border-green-600 py-2 px-4"
                   onClick={() => document.getElementById("fileInputBack").click()}
                 >
                   Chọn ảnh
@@ -398,7 +398,7 @@ const ManualIdentityAuth = () => {
               </div>
               <div className="flex relative ml-20 lg:ml-0 mt-2 lg:mt-0 items-center">
                 <button
-                  className="hover:bg-primaryColor hover:text-white rounded-md border border-primaryColor py-2 px-4"
+                  className="hover:bg-green-600 hover:text-white rounded-md border border-green-600 py-2 px-4"
                   onClick={handleOpenCamera}
                 >
                   Chụp ảnh
@@ -440,7 +440,7 @@ const ManualIdentityAuth = () => {
           </div>
           <div className="w-full h-auto bg-gray-100 rounded-md py-1 mt-9">
             <div className="mx-5 my-3">
-              <p className="text-primaryColor font-semibold text-base">Chú ý:</p>
+              <p className="text-green-600 font-semibold text-base">Chú ý:</p>
               <p className="text-black font-normal text-base">Đối với khách hàng là công dân dưới 14 tuổi, vui lòng liên hệ đến Ngân Lượng để được hỗ trợ xác minh.</p>
               <p className="text-black font-normal text-base">Hotline: 1900 585899</p>
               <p className="text-black font-normal text-base">Email: support@ewallet.vn</p>
@@ -449,13 +449,13 @@ const ManualIdentityAuth = () => {
 
           <div className="flex items-center mt-6 justify-end">
             <button
-              className="hover:bg-primaryColor hover:text-white text-primaryColor rounded-md border mb-3 lg:mb-0 border-primaryColor py-2 px-4 font-medium"
+              className="hover:bg-green-600 hover:text-white text-green-600 rounded-md border mb-3 lg:mb-0 border-green-600 py-2 px-4 font-medium"
               onClick={handleBack}
             >
               Quay lại
             </button>
             <button
-              className="rounded-md border mb-3 lg:mb-0 bg-primaryColor text-white font-medium py-2 px-4 ml-2"
+              className="rounded-md border mb-3 lg:mb-0 bg-green-600 text-white font-medium py-2 px-4 ml-2"
               onClick={handleSubmit}
             >
               Gửi yêu cầu

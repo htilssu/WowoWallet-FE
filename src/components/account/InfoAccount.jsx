@@ -34,7 +34,7 @@ const InfoAccount = () => {
           <div className="grid grid-rows-10 gap-x-3 ml-2 bg-white w-full h-auto rounded-lg p-2 pb-9">
             {/* Header */}
             <div className="info-header row-span-1 ml-2 items-center mt-2 flex mb-1">
-              <div className="text-primaryColor"><FaUserCircle size={20}/></div>
+              <div className="text-green-600"><FaUserCircle size={20}/></div>
               <div className="font-normal text-md ml-2">Thông tin tài khoản</div>
             </div>
 
@@ -53,10 +53,10 @@ const InfoAccount = () => {
                   <div className="row-span-1">
                     <p className="text-textGray0 font-medium text-sm">Trạng thái</p>
                     <div className="status-account font-medium mt-2 flex justify-between">
-                      <p className="text-sm bg-dimPrimaryColor items-center text-center rounded-2xl py-0.7 px-2 text-primaryColor">{user.isVerified
+                      <p className="text-sm bg-green-100 items-center text-center rounded-2xl py-0.7 px-2 text-green-600">{user.isVerified
                                                                                                                                     ? 'Đã xác thực'
                                                                                                                                     : 'Chưa xác thực'}</p>
-                      <div className="flex items-center mr-5 text-primaryColor cursor-pointer"
+                      <div className="flex items-center mr-5 text-green-600 cursor-pointer"
                            onClick={handleIdentityAuthClick}>
                         <p className="text-xs font-medium mr-1">Chứng thực</p>
                         <div className="mt-0.7"><FaAngleRight size={9}/></div>
@@ -68,7 +68,7 @@ const InfoAccount = () => {
                     <p className="text-textGray0 font-medium text-sm">Email</p>
                     <div className="email-account font-medium mt-2 text-base flex justify-between">
                       <p>{user.email}</p>
-                      <div className="flex items-center mr-5 text-primaryColor">
+                      <div className="flex items-center mr-5 text-green-600">
                         <p className="text-xs font-medium mr-1">Thay đổi</p>
                         <div className="mt-0.7"><FaAngleRight size={9}/></div>
                       </div>
@@ -79,7 +79,7 @@ const InfoAccount = () => {
                     <p className="text-textGray0 font-medium text-sm">Số điện thoại</p>
                     <div className="phone-account font-medium mt-2 text-base flex justify-between">
                       <p>{user.phoneNumber}</p>
-                      <div className="flex items-center mr-5 text-primaryColor">
+                      <div className="flex items-center mr-5 text-green-600">
                         <p className="text-xs font-medium mr-1">Thay đổi</p>
                         <div className="mt-0.7"><FaAngleRight size={9}/></div>
                       </div>
@@ -98,7 +98,7 @@ const InfoAccount = () => {
                     <p className="text-textGray0 font-medium text-sm">Ngày sinh</p>
                     <div className="type-account font-medium mt-2 text-base flex justify-between">
                       <p>{user.dob}</p>
-                      <div className="flex items-center mr-5 text-primaryColor">
+                      <div className="flex items-center mr-5 text-green-600">
                         <p className="text-xs font-medium mr-1">Thay đổi</p>
                         <div className="mt-0.7"><FaAngleRight size={9}/></div>
                       </div>
@@ -109,7 +109,7 @@ const InfoAccount = () => {
                     <p className="text-textGray0 font-medium text-sm">Thông báo khi có giao dịch phát sinh</p>
                     <div className="notification-account font-medium mt-2 text-base flex justify-between">
                       <p>Nhận thông báo qua email</p>
-                      <div className="mr-5"><Switch onChange={handleChange} checked={state} onColor="#0f8be8"
+                      <div className="mr-5"><Switch onChange={handleChange} checked={state} onColor="#16A34A"
                                                     height={25} width={50} handleDiameter={16}/></div>
                     </div>
                   </div>
@@ -131,7 +131,7 @@ const InfoAccount = () => {
           <div className="info-sup-account grid grid-rows-6 gap-x-3 ml-2 bg-white w-full h-auto rounded-lg p-2 mt-5">
             {/* Header */}
             <div className="info-sup-header row-span-1 ml-2 items-center mt-2 flex mb-1">
-              <div className="text-primaryColor"><FaUserPlus size={20}/></div>
+              <div className="text-green-600"><FaUserPlus size={20}/></div>
               <div className="font-normal text-md ml-2">Thông tin bổ sung</div>
             </div>
 
