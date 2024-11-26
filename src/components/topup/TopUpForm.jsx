@@ -60,6 +60,10 @@ const TopUpForm = () => {
       setError('Số tiền quá lớn');
       return;
     }
+    if (parseInt(e) > 100000000) {
+      setError('Số tiền nạp không được lớn hơn 100.000.000 VND');
+      return;
+    }
     setAmount(e);
     setError(null);
   };

@@ -70,19 +70,6 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
 
 export const router = createBrowserRouter([
   {
-    path: 'application',
-    children: [
-      {
-        path: '',
-        element: <ApplicationManager/>,
-      },
-      {
-        path: ':id',
-        element: <AppPartnerLayout/>,
-      },
-    ],
-  },
-  {
     path: 'admin1',
     element: <AdminDashboard/>,
     children: [
@@ -179,6 +166,19 @@ export const router = createBrowserRouter([
     path: '/',
     element: <ProtectedLayout/>,
     children: [
+      {
+        path: 'application',
+        children: [
+          {
+            path: '',
+            element: <ApplicationManager/>,
+          },
+          {
+            path: ':id',
+            element: <AppPartnerLayout/>,
+          },
+        ],
+      },
       {
         element: <MainLayout/>,
         children: [

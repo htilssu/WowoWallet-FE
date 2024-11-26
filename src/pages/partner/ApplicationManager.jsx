@@ -99,7 +99,7 @@ const ApplicationManager = () => {
                       <tr onClick={() => {
                         //navigate to application detail page
                         navigate(`/application/${app.id}`);
-                      }} key={app.id} className="hover:bg-gray-50">
+                      }} key={app.id} className="hover:bg-gray-50 hover:cursor-pointer">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{app.id}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{app.name}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

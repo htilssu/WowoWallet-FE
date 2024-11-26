@@ -3,12 +3,28 @@ import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {Avatar, Button, Card, Skeleton, Tooltip} from '@mantine/core';
 import {IoIosCheckmarkCircle} from 'react-icons/io';
-import {statusStrings, transactionStatusColor} from '../../util/status.util.js';
+import {statusStrings, transactionStatusColor, transactionType} from '../../util/status.util.js';
 import {MdArrowOutward} from 'react-icons/md';
 import {useEffect, useState} from 'react';
 
+function getType(type) {
+  switch (type) {
+    case 'TRANSFER_MONEY':
+      return 'OUT';
+    case 'RECEIVE_MONEY':
+      return 'IN';
+    case 'TOP_UP':
+      return 'IN';
+    case 'WITHDRAW':
+      return 'OUT';
+    case 'TOP_UP_GROUP_FUND':
+      return 'OUT';
+    case 'WITHDRAW_GROUP_FUND':
+      return 'IN';
+  }
+}
+
 const TransactionDetailPage = () => {
-  const navigate = useNavigate();
   const {id} = useParams();
   const [other, setOther] = useState();
   const {isLoading, data: transaction} = useQuery({
@@ -18,10 +34,11 @@ const TransactionDetailPage = () => {
   });
 
   useEffect(() => {
-    if (transaction){
-      if (transaction.type === 'IN'){
+    if (transaction) {
+      if (getType(transaction.flowType) === 'IN') {
         setOther(transaction.senderName);
-      }else {
+      }
+      else {
         setOther(transaction.receiverName);
       }
     }
@@ -68,7 +85,9 @@ const TransactionDetailPage = () => {
           <div className="flex items-center justify-between">
             <div>
               {isLoading ? (<Skeleton height={'32px'} width={'32px'}/>) : (
-                  <p className="text-sm text-gray-500 mt-1">{transaction.type === 'IN' ? 'Bên gửi' : 'Bên nhận'}</p>
+                  <p className="text-sm text-gray-500 mt-1">{getType(transaction.flowType) === 'IN'
+                                                             ? 'Bên gửi'
+                                                             : 'Bên nhận'}</p>
               )}
               <div className="flex items-center space-x-2 mt-1">
                 {isLoading ? (
@@ -114,9 +133,7 @@ const TransactionDetailPage = () => {
           <div>
             <p className="text-sm text-gray-500">Loại giao dịch</p>
             <p className="font-medium">
-              {isLoading ? <Skeleton width="150px"/> : transaction.variant === 'WALLET'
-                                                       ? 'Chuyển đến ví cá nhân'
-                                                       : 'Chuyển đến quỹ nhóm'}
+              {isLoading ? <Skeleton width="150px"/> : transactionType[transaction.flowType]}
             </p>
           </div>
         </div>
