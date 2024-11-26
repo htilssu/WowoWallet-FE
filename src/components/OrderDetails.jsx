@@ -6,6 +6,7 @@ import {payOrder} from '../modules/transfer.js';
 import {useQuery} from '@tanstack/react-query';
 import {getMyWallet} from '../modules/wallet/wallet.js';
 import {revalidateCache} from '../modules/cache.js';
+import axios from 'axios';
 
 const OrderDetails = ({order, isLoading}) => {
   const {data: wallet} = useQuery({
@@ -106,14 +107,12 @@ const OrderDetails = ({order, isLoading}) => {
           </Button>}
       {isLoading ? (<Skeleton height={40} width="30%"/>) : order.status === 'PENDING' &&
           (<Button component="a" onClick={async () => {
-            const response = await fetch(`https://sso.htilssu.id.vn/v1/services/${order.serviceName}`, {
-              method: 'GET',
-            });
-            if (!response.ok) {
+            const response = await axios.get(`https://sso.htilssu.id.vn/v1/services/${order.serviceName}`);
+            if (response.data === null) {
               toast.error('Không thể tìm thấy thông tin dịch vụ');
               return;
             }
-            const service = await response.json();
+            const service = response.data;
             fetch('https://server-voucher.vercel.app/api/RequireVoucher', {
               method: 'POST', headers: {
                 'Content-Type': 'application/json',
