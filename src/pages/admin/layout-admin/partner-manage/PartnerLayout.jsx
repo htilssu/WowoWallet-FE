@@ -1,14 +1,14 @@
 import {useState} from "react";
 import PartnerList from "./components/PartnerList.jsx";
 import PartnerDetails from "./components/PartnerDetail.jsx";
-import TransactionList from "./components/TransactionList.jsx";
+import OrderList from "./components/OrderList.jsx";
 import {wGet} from "../../../../util/request.util.js";
 import {useQuery} from "@tanstack/react-query";
 import InactivePartnerList from "./components/InactivePartnerList.jsx";
 
 const fetchPartners = async () => {
     try {
-        const response = await wGet("/v1/user/application");
+        const response = await wGet("/admin/v1/application");
         return response;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách App:", error);
@@ -78,7 +78,7 @@ function PartnerLayout() {
                             </div>
 
                             <div className="shadow-lg ">
-                                <TransactionList partner={selectedPartner}/>
+                                <OrderList partner={selectedPartner}/>
                             </div>
                         </div>
                     ) : (

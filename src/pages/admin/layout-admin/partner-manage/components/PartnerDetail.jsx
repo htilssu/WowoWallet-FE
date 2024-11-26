@@ -137,7 +137,7 @@ const PartnerDetails = ({ partner }) => {
 
                     <div className="flex items-center justify-between">
                         <p className="text-sm font-medium text-gray-600">Created:</p>
-                        <p className="text-sm text-gray-700">{partner.createdAt ? partner.createdAt : "N/A"}</p>
+                        <p className="text-sm text-gray-700">{partner.createdAt ?  (new Date(partner.createdAt).toLocaleString()) : "N/A"}</p>
                     </div>
 
                     <div className="flex items-center justify-between">

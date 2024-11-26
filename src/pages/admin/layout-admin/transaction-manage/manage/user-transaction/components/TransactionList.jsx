@@ -3,7 +3,7 @@ import { IoIosEye } from "react-icons/io";
 import { useQuery } from "@tanstack/react-query";
 import { GrNext } from "react-icons/gr";
 import { wGet } from "../../../../../../../util/request.util.js";
-import TransactionDetails from "../../../../partner-manage/components/TransactionDetails.jsx";
+import TransactionDetails from "./TransactionDetails.jsx";
 
 // Hàm map flowType sang trạng thái
 const mapFlowType = (flowType) => {
