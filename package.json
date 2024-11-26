@@ -36,6 +36,7 @@
     "face-api.js": "^0.22.2",
     "jose": "^5.9.4",
     "jsonwebtoken": "^9.0.2",
+    "numeral": "^2.0.6",
     "otp-input-react": "^0.3.0",
     "prop-types": "^15.8.1",
     "pusher-js": "8.4.0-rc2",

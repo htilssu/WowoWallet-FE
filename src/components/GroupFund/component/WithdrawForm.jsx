@@ -63,7 +63,7 @@ const WithdrawForm = ({onClose, fundId, balance}) => {
                 const transferData = {
                     groupId: fundId,
                     amount: numericAmount,
-                    description: note
+                    message: note
                 };
 
                 const response = await wPost('/v1/group-fund/withdraw', transferData);
