@@ -31,19 +31,19 @@ const WalletList = ({wallets, onSelectWallet}) => {
                                 {wallet.id}
                             </span>
 
-                  {/* Số dư (màu xanh + đơn vị VNĐ) */}
-                  <span className="text-lg font-bold text-green-600">
+                            {/* Số dư (màu xanh + đơn vị VNĐ) */}
+                            <span className="text-lg font-bold text-green-600">
                                 <span className="text-lg font-semibold text-gray-700 mr-2">
                                 Số dư:
                                 </span>
-                    {wallet.balance} VNĐ
+                                {wallet.balance} VNĐ
                             </span>
-                </div>
-              </li>
-          ))}
-        </ul>
-      </div>
-  );
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default WalletList;

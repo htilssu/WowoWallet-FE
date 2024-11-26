@@ -13,7 +13,7 @@ function fetchApplication(id) {
 }
 
 const PartnerDashboard = () => {
-  const [selectedWallet, setSelectedWallet] = useState(null);
+    const [selectedWallet, setSelectedWallet] = useState(null);
   const {id} = useParams();
   //use useQuery để fetch data từ API
   const {data: wallets, isLoading, error} = useQuery({
@@ -42,24 +42,29 @@ const PartnerDashboard = () => {
           {/* App Info */}
           <AppInfo id={id}/>
 
-          {/* Main stats */}
-          <div className="">
-            <BasicStats/>
-            {/* Có thể thêm các widget khác nếu cần */}
-          </div>
+                {/* Main stats */}
+                <div className="">
+                    <BasicStats/>
+                    {/* Có thể thêm các widget khác nếu cần */}
+                </div>
 
           {/* Wallets Section */}
           <section className="bg-white shadow-md rounded-lg p-6">
-            <WalletList wallets={wallets} onSelectWallet={setSelectedWallet}/>
+            {!selectedWallet ? (
+                        <WalletList onSelectWallet={setSelectedWallet}/>
+                    ) : (
+                        <WalletDetails wallet={selectedWallet} onBack={() => setSelectedWallet(null)}/>
+                    )}
+                <WalletList wallets={wallets} onSelectWallet={setSelectedWallet}/>
           </section>
 
+            </div>
+            {/* Footer */}
+            <footer className="text-center text-gray-500 mt-12">
+                <Footer/>
+            </footer>
         </div>
-        {/* Footer */}
-        <footer className="text-center text-gray-500 mt-12">
-          <Footer/>
-        </footer>
-      </div>
-  );
+    );
 };
 
 export default PartnerDashboard;

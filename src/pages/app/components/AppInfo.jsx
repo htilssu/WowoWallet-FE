@@ -18,8 +18,12 @@ const AppInfo = ({id}) => {
     enabled: !!id, // Chỉ gọi API khi có ID
   });
 
-  // Xử lý khi tải dữ liệu
-  if (isLoading) {
+    // Dữ liệu ứng dụng (API hoặc mock data)
+    const appData = id ? data : mockData;
+
+    // Xử lý khi tải dữ liệu
+    if (isLoading && id) {
+      if (isLoading) {
     return (
         <div className="bg-gradient-to-r from-blue-50 to-white shadow-lg rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
@@ -44,10 +48,10 @@ const AppInfo = ({id}) => {
     );
   }
 
-  // Hàm hiển thị/ẩn API Key
-  const toggleApiKeyVisibility = () => {
-    setIsApiKeyVisible((prev) => !prev);
-  };
+    // Hàm hiển thị/ẩn API Key
+    const toggleApiKeyVisibility = () => {
+        setIsApiKeyVisible((prev) => !prev);
+    };
 
   return (
       <div className="bg-gradient-to-r from-blue-50 to-white shadow-lg rounded-lg p-6 mb-6">
