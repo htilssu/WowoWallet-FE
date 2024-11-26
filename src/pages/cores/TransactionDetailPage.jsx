@@ -3,7 +3,7 @@ import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {Avatar, Button, Card, Skeleton, Tooltip} from '@mantine/core';
 import {IoIosCheckmarkCircle} from 'react-icons/io';
-import {statusStrings, transactionStatusColor} from '../../util/status.util.js';
+import {statusStrings, transactionStatusColor, transactionType} from '../../util/status.util.js';
 import {MdArrowOutward} from 'react-icons/md';
 import {useEffect, useState} from 'react';
 
@@ -18,10 +18,11 @@ const TransactionDetailPage = () => {
   });
 
   useEffect(() => {
-    if (transaction){
-      if (transaction.type === 'IN'){
+    if (transaction) {
+      if (transaction.type === 'IN') {
         setOther(transaction.senderName);
-      }else {
+      }
+      else {
         setOther(transaction.receiverName);
       }
     }
@@ -114,9 +115,7 @@ const TransactionDetailPage = () => {
           <div>
             <p className="text-sm text-gray-500">Loại giao dịch</p>
             <p className="font-medium">
-              {isLoading ? <Skeleton width="150px"/> : transaction.variant === 'WALLET'
-                                                       ? 'Chuyển đến ví cá nhân'
-                                                       : 'Chuyển đến quỹ nhóm'}
+              {isLoading ? <Skeleton width="150px"/> : transactionType[transaction.flowType]}
             </p>
           </div>
         </div>
