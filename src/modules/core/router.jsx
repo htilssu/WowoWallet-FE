@@ -14,7 +14,6 @@ import CustomerTransactionLayout
   from '../../pages/admin/layout-admin/transaction-manage/manage/user-transaction/CustomerTransactionLayout.jsx';
 import ApplicationManager from '../../pages/partner/ApplicationManager.jsx';
 import AppPartnerLayout from '../../pages/app/AppPartnerLayout.jsx';
-import AppPartnerLayout from "../../pages/app/AppPartnerLayout.jsx";
 
 const ApiKeyPage = lazy(() => import('../../pages/partner/ApiKeyPage.jsx'));
 const PartnerLayout = lazy(() => import('../../pages/partner/PartnerLayout.jsx'));
