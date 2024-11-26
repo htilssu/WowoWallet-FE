@@ -4,6 +4,7 @@ import { FcApproval } from "react-icons/fc";
 import { IoSettingsOutline } from "react-icons/io5";
 import { HiOutlineLogout } from "react-icons/hi";
 import { AiOutlineDashboard } from "react-icons/ai";
+import {useAuth} from "../../../modules/hooks/useAuth.jsx";
 
 const UserMenuItem = ({ link, text, icon }) => {
     return (
@@ -21,6 +22,8 @@ const UserMenuItem = ({ link, text, icon }) => {
 
 const Navbar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const userName = useAuth().user?.fullName;
 
     return (
         <div className="fixed w-full z-30 flex bg-[#1E293B] p-4 items-center justify-between h-16 shadow-lg">
@@ -40,10 +43,10 @@ const Navbar = () => {
                             className="p-0.5 rounded-full border-emerald-400 cursor-pointer transition-transform transform hover:scale-110"
                         />
                     </div>
-                    <div className={"flex flex-col justify-center items-center"}>
+                    <div className={"flex flex-col justify-center items-start ml-2"}>
                         <div
-                            className="hidden md:block text-sm md:text-md text-white font-semibold ml-2 hover:underline cursor-pointer">
-                            Tuan Anh
+                            className="hidden md:block text-sm md:text-md text-white font-semibold hover:underline cursor-pointer">
+                            {userName || "Tuan Anh"}
                         </div>
                         <div className={"font-extralight text-sm text-gray-300"}>
                             #Admin

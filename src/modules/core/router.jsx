@@ -12,6 +12,7 @@ import SettingLayout from '../../pages/admin/layout-admin/setting-manage/Setting
 import CustomerLayout from "../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx";
 import CustomerTransactionLayout
   from "../../pages/admin/layout-admin/transaction-manage/manage/user-transaction/CustomerTransactionLayout.jsx";
+import AppPartnerLayout from "../../pages/app/AppPartnerLayout.jsx";
 
 const ApiKeyPage = lazy(() => import('../../pages/partner/ApiKeyPage.jsx'));
 const PartnerLayout = lazy(() => import('../../pages/partner/PartnerLayout.jsx'));
@@ -62,6 +63,10 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     ManualIdentityAuth = lazy(() => import('../../components/account/ManualIdentityAuth.jsx'));
 
 export const router = createBrowserRouter([
+  {
+    path: 'partner-app',
+    element: <AppPartnerLayout />,
+  },
   {
     path: 'admin1',
     element: <AdminDashboard/>,
