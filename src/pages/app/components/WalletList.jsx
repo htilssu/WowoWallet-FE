@@ -2,9 +2,6 @@ import {FaWallet} from 'react-icons/fa';
 import {CiCircleList} from 'react-icons/ci';
 
 const WalletList = ({wallets, onSelectWallet}) => {
-  if (!wallets) {
-    return <div>Loading...</div>;
-  }
 
   return (
       <div className="p-6 bg-white rounded-lg transition-transform transform">
@@ -12,8 +9,13 @@ const WalletList = ({wallets, onSelectWallet}) => {
           <CiCircleList className="text-blue-600 mr-3" size={32}/>
           Danh Sách Ví Con Của Bạn
         </h2>
+          <div>
+              {wallets?.length === 0 && (
+                    <div className="text-center text-gray-500">Không có ví nào</div>
+              )}
+          </div>
         <ul className="space-y-4">
-          {wallets.map((wallet) => (
+          {wallets?.length > 0 && wallets.map((wallet) => (
               <li
                   key={wallet.id}
                   className="p-4 bg-gray-100 rounded-lg shadow hover:shadow-md hover:bg-gray-200 transition duration-300 flex items-center gap-4"

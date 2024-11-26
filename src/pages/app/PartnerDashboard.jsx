@@ -7,7 +7,8 @@ import Footer from '../../modules/core/system-component/Footer.jsx';
 import {FaSignOutAlt} from 'react-icons/fa';
 import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
-import WalletDetails from "./components/WalletDetails.jsx"; // Import icon cho nút đăng xuất
+import WalletDetails from "./components/WalletDetails.jsx";
+import OrderList from "./components/OrderList.jsx"; // Import icon cho nút đăng xuất
 
 function fetchApplication(id) {
     return wGet(`/v1/application/${id}/wallet`);
@@ -52,11 +53,12 @@ const PartnerDashboard = () => {
                 {/* Wallets Section */}
                 <section className="bg-white shadow-md rounded-lg p-6">
                     {!selectedWallet ? (
-                        <WalletList onSelectWallet={setSelectedWallet}/>
+                        <WalletList wallets={wallets} onSelectWallet={setSelectedWallet}/>
                     ) : (
                         <WalletDetails wallet={selectedWallet} onBack={() => setSelectedWallet(null)}/>
                     )}
-                    <WalletList wallets={wallets} onSelectWallet={setSelectedWallet}/>
+
+                    <OrderList partnerId={id}/>
                 </section>
 
             </div>

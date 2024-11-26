@@ -1,24 +1,22 @@
-
+import { useState } from "react";
+import { IoIosEye } from "react-icons/io";
+import { useQuery } from "@tanstack/react-query";
+import { GrNext } from "react-icons/gr";
+import {wGet} from "../../../../../util/request.util.js";
+import OrderDetail from "./OrderDetail.jsx";
 
 // Hàm fetch data từ API với phân trang
-import {wGet} from "../../../util/request.util.js";
-import {useState} from "react";
-import {useQuery} from "@tanstack/react-query";
-import {IoIosEye} from "react-icons/io";
-import {GrNext} from "react-icons/gr";
-import TransactionDetails from "../../admin/layout-admin/partner-manage/components/TransactionDetails.jsx";
-
 const fetchTransactionPartners = async (id, page, pageSize) => {
     try {
         const response = await wGet(`/v1/application/${id}/order?offset=${pageSize}&page=${page}`);
         return response;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách Partner:", error);
-        return { data: [], total: 0 };
+        return { data: [] };
     }
 };
 
-const TransactionList = ({ partner }) => {
+const OrderList = ({ partner }) => {
     const [selectedTransaction, setSelectedTransaction] = useState(null);
     const [page, setPage] = useState(0);
     const pageSize = 10;
@@ -41,40 +39,40 @@ const TransactionList = ({ partner }) => {
         <div className="bg-white shadow-lg rounded-2xl p-6 mx-auto mb-6 max-w-4xl">
             {/* Header */}
             <header className="text-center mb-4">
-                <h2 className="text-3xl font-bold text-gray-800">Lịch Sử Giao Dịch {partner.name}</h2>
+                <h2 className="text-3xl font-bold text-gray-800">Lịch Sử Order {partner?.name || "Vi Dien Tu"}</h2>
             </header>
 
-            <p className="text-gray-600 mb-2">Tổng số giao dịch: {orders?.total || 0}</p>
+            <p className="text-gray-600 mb-2">Tổng số Order: {orders?.total || 0}</p>
 
             {/* Transaction Table */}
             <div className="overflow-hidden border border-gray-200 rounded-lg shadow">
                 <table className="w-full text-left table-auto bg-white">
                     <thead className="bg-blue-100 text-gray-700 uppercase text-sm font-semibold">
                     <tr>
-                        {["Ngày", "Loại", "Số tiền", "Trạng thái", "Thao tác"].map((header) => (
+                        {["Ngày", "Tên DV", "Số tiền", "Trạng thái", "Thao tác"].map((header) => (
                             <th key={header} className="py-4 px-6">{header}</th>
                         ))}
                     </tr>
                     </thead>
                     <tbody>
-                    {orders.length === 0 ? (
+                    {orders.orders.length === 0 ? (
                         <tr>
-                            <td colSpan="5" className="py-4 px-6 text-center text-gray-500">Không tìm thấy giao dịch
+                            <td colSpan="5" className="py-4 px-6 text-center text-gray-500">Không tìm thấy Order
                                 nào
                             </td>
                         </tr>
                     ) : (
-                        orders.data?.map((order) => (
+                        orders.orders?.map((order) => (
                             <tr key={order.id} className="border-b hover:bg-blue-50 transition">
                                 <td className="py-4 px-6 text-gray-700">{new Date(order.created).toLocaleDateString()}</td>
-                                <td className={`py-4 px-6 font-semibold ${order.type === 'PENDING' ? 'text-green-500' : 'text-red-500'}`}>
-                                    {order.type}
+                                <td className={`py-4 px-6 font-semibold`}>
+                                    {order.serviceName}
                                 </td>
-                                <td className={`py-4 px-6 font-semibold ${order.type === 'PENDING' ? 'text-green-500' : 'text-red-500'}`}>
+                                <td className={`py-4 px-6 font-semibold ${order.status === 'SUCCESS' ? 'text-green-500' : 'text-red-500'}`}>
                                     {new Intl.NumberFormat('vi-VN', {
                                         style: 'currency',
                                         currency: 'VND'
-                                    }).format(order.amount)}
+                                    }).format(order.discountMoney)}
                                 </td>
                                 <td className="py-4 px-6">
                                         <span
@@ -121,9 +119,9 @@ const TransactionList = ({ partner }) => {
 
                 <button
                     onClick={() => setPage((prev) => prev + 1)}
-                    disabled={!orders || orders.data?.length < pageSize}
+                    disabled={!orders || orders.orders?.length < pageSize}
                     className={`px-4 py-2 rounded-full transition-colors duration-300 shadow-md ${
-                        !orders || orders.data?.length < pageSize ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                        !orders || orders.orders?.length < pageSize ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
                     } flex items-center justify-center`}
                 >
                     <GrNext className="text-lg"/>
@@ -132,7 +130,7 @@ const TransactionList = ({ partner }) => {
 
             {/* Transaction Details Modal */}
             {selectedTransaction && (
-                <TransactionDetails
+                <OrderDetail
                     transaction={selectedTransaction}
                     onClose={closeDetails}
                 />
@@ -141,4 +139,4 @@ const TransactionList = ({ partner }) => {
     );
 };
 
-export default TransactionList;
+export default OrderList;

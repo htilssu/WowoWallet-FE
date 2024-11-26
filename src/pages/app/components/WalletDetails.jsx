@@ -1,5 +1,5 @@
 
-import TransactionList from "./TransactionList.jsx";
+import OrderList from "./OrderList.jsx";
 import { FaArrowLeft, FaWallet, FaMoneyBillWave, FaClipboardList } from "react-icons/fa"; // Import các icon từ react-icons
 
 const WalletDetails = ({ wallet, onBack }) => {
@@ -30,7 +30,7 @@ const WalletDetails = ({ wallet, onBack }) => {
                     <FaClipboardList className="text-blue-600 mr-3" />
                     Danh Sách Giao Dịch
                 </h3>
-                <TransactionList walletId={wallet.id} />
+                <OrderList walletId={wallet.id} />
             </div>
         </div>
     );
