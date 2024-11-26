@@ -105,7 +105,15 @@ const OrderDetails = ({order, isLoading}) => {
             Thanh toán
           </Button>}
       {isLoading ? (<Skeleton height={40} width="30%"/>) : order.status === 'PENDING' &&
-          (<Button component="a" onClick={() => {
+          (<Button component="a" onClick={async () => {
+            const response = await fetch(`https://sso.htilssu.id.vn/v1/services/${order.serviceName}`, {
+              method: 'GET',
+            });
+            if (!response.ok) {
+              toast.error('Không thể tìm thấy thông tin dịch vụ');
+              return;
+            }
+            const service = await response.json();
             fetch('https://server-voucher.vercel.app/api/RequireVoucher', {
               method: 'POST', headers: {
                 'Content-Type': 'application/json',
@@ -114,10 +122,10 @@ const OrderDetails = ({order, isLoading}) => {
                 Price: order.money,
                 OrderID: order.id,
                 Service_ID: order.serviceName,
-                Partner_ID: order.partner.id,
+                Partner_ID: service.partnerId,
               }),
             }).then((r) => {
-              if (r.ok){
+              if (r.ok) {
                 location.href = `https://voucher4u.io.vn/?Token=${getToken()}&OrderID=${order.id}`;
               }
             });
