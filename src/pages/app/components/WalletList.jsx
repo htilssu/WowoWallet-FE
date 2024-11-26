@@ -10,7 +10,7 @@ const WalletList = ({wallets, onSelectWallet}) => {
       <div className="p-6 bg-white rounded-lg transition-transform transform">
         <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
           <CiCircleList className="text-blue-600 mr-3" size={32}/>
-          Danh Sách Ví Của Bạn
+          Danh Sách Ví Con Của Bạn
         </h2>
         <ul className="space-y-4">
           {wallets.map((wallet) => (

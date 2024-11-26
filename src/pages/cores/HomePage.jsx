@@ -3,8 +3,8 @@ import {Link, ScrollRestoration} from 'react-router-dom';
 import MyWallet from '../../components/account/WalletSection.jsx';
 import {FeatureItem} from '../../components/home/FeatureItem.jsx';
 import ScrollableCardList from '../../components/home/ScrollableCardList.jsx';
-import {Slider} from 'rsuite';
 import Statistical from '../../components/home/Statistical.jsx';
+import InterestedComponent from "../../components/InterestedComponent.jsx";
 
 const Card = ({icon, title, onClick}) => {
   return (
@@ -29,7 +29,7 @@ const HomePage = () => {
             <div className={'order-first xg:order-last md:ml-9'}>
               <MyWallet/>
             </div>
-            <div className="min-h-screen flex bg-white rounded-lg overflow-hidden flex-col max-w-3xl">
+            <div className=" flex bg-white rounded-lg overflow-hidden flex-col max-w-3xl">
               <div className="flex items-center justify-between p-4 w-full bg-white">
                 <div className="flex items-center">
                   <BsFillMenuButtonWideFill size={25} className="text-gray-800"/>
@@ -56,15 +56,7 @@ const HomePage = () => {
                   <ScrollableCardList/>
                 </div>
               </div>
-              <div className={'w-full flex flex-col p-4 mb-10 sm:mt-2'}>
-                <div className={'flex flex-col justify-center gap-4'}>
-                  <div className={'rs-text-medium text-lg'}>
-                    Có thể bạn quan tâm
-                  </div>
-                  <div>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
@@ -74,6 +66,13 @@ const HomePage = () => {
               Thống kê giao dịch
             </div>
             <Statistical/></div>
+          <div className={'w-full flex flex-col p-4 mb-10 sm:mt-2'}>
+            <div className={'flex flex-col justify-center gap-4'}>
+              <div>
+                <InterestedComponent/>
+              </div>
+            </div>
+          </div>
         </div>
         <ScrollRestoration/>
       </div>

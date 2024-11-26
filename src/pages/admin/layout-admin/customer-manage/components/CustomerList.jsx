@@ -49,7 +49,7 @@ const CustomerList = ({ customers }) => {
                         className="border-b hover:bg-indigo-50 transition-all duration-200"
                     >
                         <td className="px-6 py-4 text-gray-700 font-medium">{customer.email}</td>
-                        <td className="px-6 py-4 text-gray-700">{customer.fullName}</td>
+                        <td className="px-6 py-4 text-gray-700">{customer.firstName +" "+ customer.lastName}</td>
                         <td className="px-6 py-4 text-gray-700">
                             {customer.dob ? `${customer.dob[2]}/${customer.dob[1]}/${customer.dob[0]}` : 'Chưa có'}
                         </td>

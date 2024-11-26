@@ -87,7 +87,7 @@ const PartnerDetails = ({ partner }) => {
                 <div className="mt-6 space-y-4">
                     <div className="flex items-center justify-between">
                         <p className="text-sm font-medium text-gray-600">Email:</p>
-                        <p className="text-sm text-gray-700">{partner.email}</p>
+                        <p className="text-sm text-gray-700">{partner?.email || "TuanAnhJunior@gmail.com"}</p>
                     </div>
 
                     {/* API Key Section with Toggle Visibility and Copy Button */}
@@ -102,7 +102,7 @@ const PartnerDetails = ({ partner }) => {
                                 <FaRegCopy/>
                             </button>
                             <p className="text-sm text-gray-700">
-                                {isApiKeyVisible ? partner.apiKey : "***************"}
+                                {isApiKeyVisible ? partner.secret : "***********************************"}
                             </p>
                             <button
                                 onClick={toggleApiKeyVisibility}
@@ -137,24 +137,24 @@ const PartnerDetails = ({ partner }) => {
 
                     <div className="flex items-center justify-between">
                         <p className="text-sm font-medium text-gray-600">Created:</p>
-                        <p className="text-sm text-gray-700">{partner.created ? partner.created : "N/A"}</p>
+                        <p className="text-sm text-gray-700">{partner.createdAt ? partner.createdAt : "N/A"}</p>
                     </div>
 
                     <div className="flex items-center justify-between">
                         <p className="text-sm font-medium text-gray-600">Status:</p>
                         <button
                             className={`flex items-center px-3 py-1 rounded-md transition-colors duration-200 ${
-                                isPartnerActive ? "bg-green-500" : "bg-gray-300"
+                                !isPartnerActive ? "bg-green-500" : "bg-gray-300"
                             }`}
                             onClick={toggleStatusModal}
                         >
-                            {isPartnerActive ? (
+                            {!isPartnerActive ? (
                                 <FaToggleOn className="text-white h-5 w-5 mr-1"/>
                             ) : (
                                 <FaToggleOff className="text-gray-500 h-5 w-5 mr-1"/>
                             )}
-                            <span className={`text-sm ${isPartnerActive ? "text-white" : "text-gray-600"}`}>
-                                {isPartnerActive ? "ACTIVE" : "SUSPENDED"}
+                            <span className={`text-sm ${!isPartnerActive ? "text-white" : "text-gray-600"}`}>
+                                {!isPartnerActive ? "ACTIVE" : "SUSPENDED"}
                             </span>
                         </button>
                     </div>

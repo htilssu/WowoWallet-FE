@@ -6,57 +6,58 @@ import {Link, useParams} from 'react-router-dom';
 import Footer from '../../modules/core/system-component/Footer.jsx';
 import {FaSignOutAlt} from 'react-icons/fa';
 import {wGet} from '../../util/request.util.js';
-import {useQuery} from '@tanstack/react-query'; // Import icon cho nút đăng xuất
+import {useQuery} from '@tanstack/react-query';
+import WalletDetails from "./components/WalletDetails.jsx"; // Import icon cho nút đăng xuất
 
 function fetchApplication(id) {
-  return wGet(`/v1/application/${id}/wallet`);
+    return wGet(`/v1/application/${id}/wallet`);
 }
 
 const PartnerDashboard = () => {
     const [selectedWallet, setSelectedWallet] = useState(null);
-  const {id} = useParams();
-  //use useQuery để fetch data từ API
-  const {data: wallets, isLoading, error} = useQuery({
-    queryKey: [`application-${id}`],
-    queryFn: () => fetchApplication(id),
-  });
+    const {id} = useParams();
+    //use useQuery để fetch data từ API
+    const {data: wallets, isLoading, error} = useQuery({
+        queryKey: [`application-${id}`],
+        queryFn: () => fetchApplication(id),
+    });
 
-  return (
-      <div>
-        <div className="p-4 bg-gradient-to-br from-blue-100 to-gray-100 min-h-screen">
-          {/* Header */}
-          <header className="flex items-center justify-between bg-white shadow-lg rounded-lg p-8 mb-6">
-            <div className="flex items-center gap-4">
-              <img src={'/logoTCB.png'} alt="Logo" className="w-32 h-auto"/>
-              <h1 className="text-3xl font-bold text-gray-800">Quản Lý Ví Của Ứng Dụng</h1>
-            </div>
-            <Link to={'/sign-in'}>
-              <button
-                  className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300">
-                <FaSignOutAlt className="mr-2"/>
-                Đăng xuất
-              </button>
-            </Link>
-          </header>
+    return (
+        <div>
+            <div className="p-4 bg-gradient-to-br from-blue-100 to-gray-100 min-h-screen">
+                {/* Header */}
+                <header className="flex items-center justify-between bg-white shadow-lg rounded-lg p-8 mb-6">
+                    <div className="flex items-center gap-4">
+                        <img src={'/logoTCB.png'} alt="Logo" className="w-32 h-auto"/>
+                        <h1 className="text-3xl font-bold text-gray-800">Quản Lý Ví Của Ứng Dụng</h1>
+                    </div>
+                    <Link to={'/sign-in'}>
+                        <button
+                            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300">
+                            <FaSignOutAlt className="mr-2"/>
+                            Đăng xuất
+                        </button>
+                    </Link>
+                </header>
 
-          {/* App Info */}
-          <AppInfo id={id}/>
+                {/* App Info */}
+                <AppInfo id={id}/>
 
                 {/* Main stats */}
                 <div className="">
-                    <BasicStats/>
+                    <BasicStats id={id}/>
                     {/* Có thể thêm các widget khác nếu cần */}
                 </div>
 
-          {/* Wallets Section */}
-          <section className="bg-white shadow-md rounded-lg p-6">
-            {!selectedWallet ? (
+                {/* Wallets Section */}
+                <section className="bg-white shadow-md rounded-lg p-6">
+                    {!selectedWallet ? (
                         <WalletList onSelectWallet={setSelectedWallet}/>
                     ) : (
                         <WalletDetails wallet={selectedWallet} onBack={() => setSelectedWallet(null)}/>
                     )}
-                <WalletList wallets={wallets} onSelectWallet={setSelectedWallet}/>
-          </section>
+                    <WalletList wallets={wallets} onSelectWallet={setSelectedWallet}/>
+                </section>
 
             </div>
             {/* Footer */}

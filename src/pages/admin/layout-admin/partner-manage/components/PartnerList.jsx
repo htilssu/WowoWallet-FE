@@ -39,10 +39,10 @@ const PartnerList = ({ setSelectedPartner, activeOrSuspendedPartners }) => {
                 />
             </div>
 
-            <ul className="space-y-4">
+            <ul className="space-y-4 max-h-96 overflow-y-auto">
                 {filteredPartners?.length > 0 ? (
                     filteredPartners.map((partner) => {
-                        const partnerStatus = partner.status || "Default";
+                        const partnerStatus = partner.status || "ACTIVE";
                         const isSelected = partner.id === selectedPartnerId; // Check if this partner is selected
 
                         return (

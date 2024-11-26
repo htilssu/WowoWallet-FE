@@ -98,7 +98,7 @@ const AppInfo = ({id}) => {
                 )}
               </CopyButton>
               <p className="text-sm text-gray-700">
-                {isApiKeyVisible ? data.secret : '*********************'}
+                {isApiKeyVisible ? data.secret : '*************************'}
               </p>
               <button
                   onClick={toggleApiKeyVisibility}
