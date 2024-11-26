@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import numeral from 'numeral';
-import {TextInput} from '@mantine/core';
-import {wGet} from '../../util/request.util.js';
+import {Button, TextInput} from '@mantine/core';
+import {wGet, wPost} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import {useNavigate} from 'react-router-dom';
+import {revalidateCache} from '../../modules/cache.js';
 
 function fetchApplications() {
   return wGet('/v1/user/application');
@@ -14,8 +15,9 @@ const ApplicationManager = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [newApplication, setNewApplication] = useState('');
   const {data: applications, isLoading, error} = useQuery({
-    queryKey: 'applications',
+    queryKey: ['applications'],
     queryFn: fetchApplications,
+    staleTime: 5 * 60 * 1000,
   });
   const toggleForm = () => {
     setIsFormVisible(!isFormVisible);
@@ -32,6 +34,13 @@ const ApplicationManager = () => {
 
   if (isLoading) return <div>Loading...</div>;
 
+  function handleCreateApplication() {
+    wPost("v1/application", {
+      name: newApplication,
+    }).then(() => {
+        revalidateCache('applications').then();
+    });
+  }
 
   return (
       <div className="flex">
@@ -57,12 +66,17 @@ const ApplicationManager = () => {
                 placeholder="Tên ứng dụng"
                 className="w-full mt-2 rounded-lg"
             />
-            <button
-                onClick={cancelForm}
-                className="mt-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-200"
-            >
-              Hủy
-            </button>
+            <div className={'flex items-center mt-2 justify-start gap-2'}>
+              <Button
+                  onClick={cancelForm}
+                  className="bg-red-500 hover:bg-red-600 text-white transition duration-200"
+              >
+                Hủy
+              </Button>
+              <Button onClick={handleCreateApplication}>
+                Tạo
+              </Button>
+            </div>
           </div>
 
           {/* Applications List */}
