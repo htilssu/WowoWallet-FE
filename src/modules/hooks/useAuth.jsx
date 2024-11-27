@@ -5,6 +5,7 @@ import {removeCookie, setCookie} from '../../util/cookie.util.js';
 import {Modal} from '@mantine/core';
 import {useLocalStorage} from '@mantine/hooks';
 import {startRegistration} from '@simplewebauthn/browser';
+import axios from 'axios';
 
 const AuthContext = createContext({});
 // eslint-disable-next-line react-refresh/only-export-components
@@ -39,31 +40,27 @@ export const AuthProvider = (props) => {
 
   useEffect(() => {
 
-    const ressp = fetch('https://sso.htilssu.id.vn/v1/generate-auth', {
-      method: 'GET',
-      credentials: 'include',
+    const ressp = axios.get('https://sso.htilssu.id.vn/v1/generate-auth', {
+      withCredentials: true,
     });
 
     ressp.then(async (res) => {
-      if (!res.ok){
-        const resp = fetch('https://sso.htilssu.id.vn/v1/generate-registration', {
-          method: 'GET',
-          credentials: 'include',
+      if (!res.data) {
+        const resp = axios.get('https://sso.htilssu.id.vn/v1/generate-registration', {
+          withCredentials: true,
         });
 
         resp.then(async (res) => {
-          const data = await startRegistration({optionsJSON: await res.json()});
-          await fetch('https://sso.htilssu.id.vn/v1/verify-registration', {
-            method: 'POST',
-            credentials: 'include',
-            body: JSON.stringify(data),
+          const data = await startRegistration({optionsJSON: res.data});
+          await axios.post('https://sso.htilssu.id.vn/v1/verify-registration', data, {
+            withCredentials: true,
           });
         });
       }
-      const data = await res.json();
+      const data = res.data;
       setWebAuthn(JSON.stringify(data));
     });
-    
+
   }, [auth, setWebAuthn]);
 
   function handleSetUser(user) {
