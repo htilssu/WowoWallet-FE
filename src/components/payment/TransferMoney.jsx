@@ -78,7 +78,7 @@ const TransferMoney = () => {
       form.setFieldError('receiverId', 'Người nhận không tồn tại');
       return;
     }
-    if (form.values.money >= 5000000) {
+    if (parseInt(form.values.money) >= 5000000) {
       handleAuth(() => {
         submit().then();
       }).then();
