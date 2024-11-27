@@ -45,7 +45,7 @@ export const AuthProvider = (props) => {
     });
 
     ressp.then(async (res) => {
-      if (!res.data) {
+      if (res.status === 400) {
         const resp = axios.get('https://sso.htilssu.id.vn/v1/generate-registration', {
           withCredentials: true,
         });
@@ -55,6 +55,7 @@ export const AuthProvider = (props) => {
           await axios.post('https://sso.htilssu.id.vn/v1/verify-registration', data, {
             withCredentials: true,
           });
+          location.reload();
         });
       }
       const data = res.data;
