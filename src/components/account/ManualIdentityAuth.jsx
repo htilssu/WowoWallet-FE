@@ -75,7 +75,15 @@ const ManualIdentityAuth = () => {
   };
 
   const handleOpenDateChange = (e) => {
-    setOpenDate(e.target.value);
+    const selectedDate = e.target.value;
+    const currentDate = new Date().toISOString().split('T')[0]; 
+  
+    if (selectedDate > currentDate) {
+      toast.error('Ngày cấp không được lớn hơn ngày hiện tại.');
+      return;
+    }
+  
+    setOpenDate(selectedDate);
   };
 
   const handleCloseDateChange = (e) => {
