@@ -27,7 +27,7 @@ export const AuthProvider = (props) => {
     removeCookie('userId');
     if (getToken() !== null) {
       getUser().then((user) => {
-        setCookie('userId', user.id, 9999999);
+        setCookie('userId', user.id, 9999999, 'htilssu.id.vn');
         setAuth({
           user: user,
         });

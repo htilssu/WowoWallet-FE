@@ -5,9 +5,9 @@ function getCookie(name) {
   return cookies[name];
 }
 
-function setCookie(key, value, age) {
+function setCookie(key, value, age, domain) {
   const secure = location.protocol === 'https:' ? 'Secure' : '';
-  document.cookie = `${key}=${value};Path=/; Max-Age=${age}; Domain=${location.hostname};${secure}`;
+  document.cookie = `${key}=${value};Path=/;Domain=${domain?? location.hostname}; Max-Age=${age};${secure}`;
 }
 
 function removeCookie(key) {
