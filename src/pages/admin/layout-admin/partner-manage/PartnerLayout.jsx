@@ -1,17 +1,17 @@
 import {useState} from "react";
 import PartnerList from "./components/PartnerList.jsx";
 import PartnerDetails from "./components/PartnerDetail.jsx";
-import TransactionList from "./components/TransactionList.jsx";
+import OrderList from "./components/OrderList.jsx";
 import {wGet} from "../../../../util/request.util.js";
 import {useQuery} from "@tanstack/react-query";
 import InactivePartnerList from "./components/InactivePartnerList.jsx";
 
 const fetchPartners = async () => {
     try {
-        const response = await wGet("/v1/partner/all");
+        const response = await wGet("/admin/v1/application");
         return response;
     } catch (error) {
-        console.error("Lỗi khi lấy danh sách Partner:", error);
+        console.error("Lỗi khi lấy danh sách App:", error);
         throw error;
     }
 };
@@ -20,15 +20,15 @@ function PartnerLayout() {
     const [selectedPartner, setSelectedPartner] = useState(null);
     const [showInactivePartners, setShowInactivePartners] = useState(false);
 
-    const {data: partners, error, isLoading} = useQuery({
-        queryKey: ["partners"],
+    const {data: apps, error, isLoading} = useQuery({
+        queryKey: ["apps"],
         queryFn: fetchPartners,
         staleTime: 300000,
         cacheTime: 600000,
     });
 
-    const inactivePartners = partners?.filter(partner => partner.status === 'INACTIVE');
-    const activeOrSuspendedPartners = partners?.filter(partner =>
+    const inactivePartners = apps?.filter(partner => partner.status === 'INACTIVE');
+    const activeOrSuspendedPartners = apps?.filter(partner =>
         partner.status === 'ACTIVE' || partner.status === 'SUSPENDED'
     );
 
@@ -60,12 +60,12 @@ function PartnerLayout() {
                 )}
             </div>
 
-            <div className="w-full max-w-6xl grid grid-cols-12 gap-6">
+            <div className="w-full max-w-8xl grid grid-cols-12 gap-6">
                 {/* Active/Suspended Partners List Section */}
                 <div className="col-span-12 md:col-span-4">
                     <PartnerList
                         setSelectedPartner={setSelectedPartner}
-                        activeOrSuspendedPartners={activeOrSuspendedPartners}
+                        activeOrSuspendedPartners={apps}
                     />
                 </div>
 
@@ -78,7 +78,7 @@ function PartnerLayout() {
                             </div>
 
                             <div className="shadow-lg ">
-                                <TransactionList partner={selectedPartner}/>
+                                <OrderList partner={selectedPartner}/>
                             </div>
                         </div>
                     ) : (

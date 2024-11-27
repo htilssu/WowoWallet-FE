@@ -8,19 +8,19 @@ const fetchTransactionStats = async () => {
 };
 
 // Hàm ánh xạ trạng thái giao dịch
-const mapStatus = (status) => {
-    switch (status) {
-        case 1:
-            return { label: "Đang chờ", color: "bg-yellow-200", textColor: "text-yellow-800" };
-        case 2:
-            return { label: "Thành công", color: "bg-green-200", textColor: "text-green-800" };
-        case 3:
-            return { label: "Đã hủy", color: "bg-red-200", textColor: "text-red-800" };
-        case 4:
-            return { label: "Hoàn tiền", color: "bg-blue-200", textColor: "text-blue-800" };
-        default:
-            return { label: "Không xác định", color: "bg-gray-200", textColor: "text-gray-800" };
-    }
+const mapStatus = (flowType) => {
+    // Định nghĩa các trạng thái
+    const statusMap = {
+        TRANSFER_MONEY: { label: "Chuyển tiền", color: "bg-yellow-200", textColor: "text-yellow-800" },
+        RECEIVE_MONEY: { label: "Nhận tiền", color: "bg-green-200", textColor: "text-green-800" },
+        TOP_UP: { label: "Nạp tiền", color: "bg-blue-200", textColor: "text-blue-800" },
+        WITHDRAW: { label: "Rút tiền", color: "bg-red-200", textColor: "text-red-800" },
+        TOP_UP_GROUP_FUND: { label: "Nạp vào quỹ nhóm", color: "bg-purple-200", textColor: "text-purple-800" },
+        WITHDRAW_GROUP_FUND: { label: "Rút từ quỹ nhóm", color: "bg-orange-200", textColor: "text-orange-800" },
+    };
+
+    // Trả về trạng thái tương ứng hoặc trạng thái mặc định nếu không tìm thấy
+    return statusMap[flowType] || { label: "Không xác định", color: "bg-gray-200", textColor: "text-gray-800" };
 };
 
 const TransactionStatistics = () => {
@@ -63,7 +63,7 @@ const TransactionStatistics = () => {
                 {/* Tổng số tiền */}
                 <div
                     className="bg-cyan-100 stat-item transition-transform transform hover:scale-105 rounded-lg p-6 text-center shadow-md">
-                    <p className="text-lg text-gray-500 mb-2">Tổng số tiền</p>
+                    <p className="text-lg text-gray-500 mb-2">Tổng số tiền Giao Dịch</p>
                     <p className="text-2xl font-extrabold text-green-600">{totalStats.totalAmount.toLocaleString()} VND</p>
                 </div>
             </div>
@@ -71,13 +71,13 @@ const TransactionStatistics = () => {
             <h3 className="text-xl font-semibold text-gray-700 mt-8 mb-4">Chi Tiết Giao Dịch Theo Trạng Thái</h3>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {data.map((transaction, index) => {
-                    const status = mapStatus(transaction.status);
+                    const flowType = mapStatus(transaction.flowType);
                     return (
                         <div
                             key={index}
                             className={`transition-transform transform hover:scale-105 rounded-lg p-4 shadow-md ${status.color}`}>
-                            <h4 className={`text-lg font-bold ${status.textColor} mb-2`}>
-                                {status.label}
+                            <h4 className={`text-lg font-bold ${flowType.textColor} mb-2`}>
+                                {flowType.label}
                             </h4>
                             <ul className="space-y-2">
                                 <li className="flex justify-between">

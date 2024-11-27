@@ -4,8 +4,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import {FaCreditCard, FaMobileAlt, FaCode, FaLink, FaChartLine} from 'react-icons/fa';
-import { MdOutlineLtePlusMobiledata, MdTravelExplore } from "react-icons/md";
+import {FaCreditCard, FaMobileAlt, FaCode, FaLink, FaChartLine, FaAppStoreIos} from 'react-icons/fa';
+import { MdTravelExplore } from "react-icons/md";
 import { TbCreditCardPay } from "react-icons/tb";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import { BiSupport } from "react-icons/bi";
@@ -17,7 +17,7 @@ const items = [
     { link: "/bank", icon: <FaLink size={30} className="text-indigo-500" />, title: "Liên kết thẻ" },
     { link: "/bdsd", icon: <FaChartLine size={30} className="text-yellow-400" />, title: "Biến động số dư" },
     { link: "/group-fund", icon: <FaGroupArrowsRotate size={30} className="text-red-500" />, title: "Quỹ nhóm" },
-    { link: "/profile", icon: <MdOutlineLtePlusMobiledata size={45} className="text-blue-500" />, title: "Data 4G/5G" },
+    { link: "/application", icon: <FaAppStoreIos  size={45} className="text-blue-500" />, title: "App Partner" },
     { link: "/", icon: <FaCreditCard size={30} className="text-red-500" />, title: "Thẻ tín dụng" },
     { link: "/", icon: <MdTravelExplore size={30} className="text-teal-500" />, title: "Du lịch-Đi lại" },
     { link: "/", icon: <FaMobileAlt size={30} className="text-yellow-500" />, title: "Nạp tiền Điện thoại" },

@@ -2,27 +2,27 @@ import { useState } from "react";
 import { IoIosEye } from "react-icons/io";
 import { useQuery } from "@tanstack/react-query";
 import { GrNext } from "react-icons/gr";
-import TransactionDetails from "./TransactionDetails.jsx";
 import {wGet} from "../../../../../util/request.util.js";
+import OrderDetail from "./OrderDetail.jsx";
 
 // Hàm fetch data từ API với phân trang
 const fetchTransactionPartners = async (id, page, pageSize) => {
     try {
-        const response = await wGet(`/v1/transaction/${id}/history?offset=${pageSize}&page=${page}`);
+        const response = await wGet(`/v1/application/${id}/order?offset=${pageSize}&page=${page}`);
         return response;
     } catch (error) {
         console.error("Lỗi khi lấy danh sách Partner:", error);
-        throw error;
+        return { data: [] };
     }
 };
 
-const TransactionList = ({ partner }) => {
+const OrderList = ({ partner }) => {
     const [selectedTransaction, setSelectedTransaction] = useState(null);
     const [page, setPage] = useState(0);
     const pageSize = 10;
 
-    const { data: transactions, error, isLoading } = useQuery({
-        queryKey: ["transactions", partner.id, page],
+    const { data: orders, error, isLoading } = useQuery({
+        queryKey: ["orders", partner.id, page],
         queryFn: () => fetchTransactionPartners(partner.id, page, pageSize),
         keepPreviousData: true,
         staleTime: 300000,
@@ -39,58 +39,58 @@ const TransactionList = ({ partner }) => {
         <div className="bg-white shadow-lg rounded-2xl p-6 mx-auto mb-6 max-w-4xl">
             {/* Header */}
             <header className="text-center mb-4">
-                <h2 className="text-3xl font-bold text-gray-800">Lịch Sử Giao Dịch {partner.name}</h2>
+                <h2 className="text-3xl font-bold text-gray-800">Lịch Sử Order {partner?.name || "Vi Dien Tu"}</h2>
             </header>
 
-            <p className="text-gray-600 mb-2">Tổng số giao dịch: {transactions.total}</p>
+            <p className="text-gray-600 mb-2">Tổng số Order: {orders?.total || 0}</p>
 
             {/* Transaction Table */}
             <div className="overflow-hidden border border-gray-200 rounded-lg shadow">
                 <table className="w-full text-left table-auto bg-white">
                     <thead className="bg-blue-100 text-gray-700 uppercase text-sm font-semibold">
                     <tr>
-                        {["Ngày", "Loại", "Số tiền", "Trạng thái", "Thao tác"].map((header) => (
+                        {["Ngày", "Tên DV", "Số tiền", "Trạng thái", "Thao tác"].map((header) => (
                             <th key={header} className="py-4 px-6">{header}</th>
                         ))}
                     </tr>
                     </thead>
                     <tbody>
-                    {transactions.data.length === 0 ? (
+                    {orders.orders.length === 0 ? (
                         <tr>
-                            <td colSpan="5" className="py-4 px-6 text-center text-gray-500">Không tìm thấy giao dịch
+                            <td colSpan="5" className="py-4 px-6 text-center text-gray-500">Không tìm thấy Order
                                 nào
                             </td>
                         </tr>
                     ) : (
-                        transactions.data.map((transaction) => (
-                            <tr key={transaction.id} className="border-b hover:bg-blue-50 transition">
-                                <td className="py-4 px-6 text-gray-700">{new Date(transaction.created).toLocaleDateString()}</td>
-                                <td className={`py-4 px-6 font-semibold ${transaction.type === 'IN' ? 'text-green-500' : 'text-red-500'}`}>
-                                    {transaction.type}
+                        orders.orders?.map((order) => (
+                            <tr key={order.id} className="border-b hover:bg-blue-50 transition">
+                                <td className="py-4 px-6 text-gray-700">{new Date(order.created).toLocaleDateString()}</td>
+                                <td className={`py-4 px-6 font-semibold`}>
+                                    {order.serviceName}
                                 </td>
-                                <td className={`py-4 px-6 font-semibold ${transaction.type === 'IN' ? 'text-green-500' : 'text-red-500'}`}>
+                                <td className={`py-4 px-6 font-semibold ${order.status === 'SUCCESS' ? 'text-green-500' : 'text-red-500'}`}>
                                     {new Intl.NumberFormat('vi-VN', {
                                         style: 'currency',
                                         currency: 'VND'
-                                    }).format(transaction.amount)}
+                                    }).format(order.discountMoney)}
                                 </td>
                                 <td className="py-4 px-6">
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                                transaction.status === "SUCCESS"
+                                                order.status === "SUCCESS"
                                                     ? "bg-green-100 text-green-600"
-                                                    : transaction.status === "PENDING"
+                                                    : order.status === "PENDING"
                                                         ? "bg-yellow-100 text-yellow-600"
                                                         : "bg-red-100 text-red-600"
                                             }`}
                                         >
-                                            {transaction.status}
+                                            {order.status}
                                         </span>
                                 </td>
                                 <td className="py-4 px-6">
                                     <button
                                         className="flex items-center justify-center space-x-1 bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 transition"
-                                        onClick={() => handleViewDetails(transaction)}
+                                        onClick={() => handleViewDetails(order)}
                                     >
                                         <IoIosEye className="text-white"/>
                                         <span>Xem chi tiết</span>
@@ -119,9 +119,9 @@ const TransactionList = ({ partner }) => {
 
                 <button
                     onClick={() => setPage((prev) => prev + 1)}
-                    disabled={!transactions || transactions.data.length < pageSize}
+                    disabled={!orders || orders.orders?.length < pageSize}
                     className={`px-4 py-2 rounded-full transition-colors duration-300 shadow-md ${
-                        !transactions || transactions.data.length < pageSize ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                        !orders || orders.orders?.length < pageSize ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
                     } flex items-center justify-center`}
                 >
                     <GrNext className="text-lg"/>
@@ -130,7 +130,7 @@ const TransactionList = ({ partner }) => {
 
             {/* Transaction Details Modal */}
             {selectedTransaction && (
-                <TransactionDetails
+                <OrderDetail
                     transaction={selectedTransaction}
                     onClose={closeDetails}
                 />
@@ -139,4 +139,4 @@ const TransactionList = ({ partner }) => {
     );
 };
 
-export default TransactionList;
+export default OrderList;
