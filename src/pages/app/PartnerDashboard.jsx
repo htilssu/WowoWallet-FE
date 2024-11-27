@@ -1,5 +1,4 @@
 import AppInfo from './components/AppInfo.jsx';
-import BasicStats from './components/BasicStats.jsx';
 import WalletList from './components/WalletList.jsx';
 import {useState} from 'react';
 import {Link, useParams} from 'react-router-dom';
@@ -8,7 +7,8 @@ import {FaSignOutAlt} from 'react-icons/fa';
 import {wGet} from '../../util/request.util.js';
 import {useQuery} from '@tanstack/react-query';
 import WalletDetails from "./components/WalletDetails.jsx";
-import OrderList from "./components/OrderList.jsx"; // Import icon cho nút đăng xuất
+import OrderList from "./components/OrderList.jsx";
+import OrderAppStatistics from "./components/OrderAppStatistics.jsx"; // Import icon cho nút đăng xuất
 
 function fetchApplication(id) {
     return wGet(`/v1/application/${id}/wallet`);
@@ -44,14 +44,11 @@ const PartnerDashboard = () => {
                 {/* App Info */}
                 <AppInfo id={id}/>
 
-                {/* Main stats */}
-                <div className="">
-                    <BasicStats id={id}/>
-                    {/* Có thể thêm các widget khác nếu cần */}
-                </div>
 
                 {/* Wallets Section */}
                 <section className="bg-white shadow-md rounded-lg p-6">
+                    <OrderAppStatistics id={id}/>
+
                     {!selectedWallet ? (
                         <WalletList wallets={wallets} onSelectWallet={setSelectedWallet}/>
                     ) : (
