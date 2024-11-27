@@ -3,14 +3,14 @@ const statusStrings = {
   SUCCESS: 'Thành công',
   CANCELLED: 'Đã hủy',
   REFUNDED: 'Đã hoàn tiền',
-  undefined: 'Thành công'
+  undefined: 'Thành công',
 };
 const transactionStatusColor = {
   'PENDING': 'text-yellow-500',
   'SUCCESS': 'text-green-500',
   'FAILED': 'text-red-500',
   'CANCEL': 'text-gray-500',
-  undefined: 'text-green-500'
+  undefined: 'text-green-500',
 };
 
 export const transactionType = {
@@ -20,6 +20,7 @@ export const transactionType = {
   'WITHDRAW': 'Rút tiền',
   'TOP_UP_GROUP_FUND': 'Góp quỹ',
   'WITHDRAW_GROUP_FUND': 'Rút quỹ',
+  'WITHDRAW_APPLICATION': 'Rút tiền dịch vụ',
 };
 
 const statusColors = {
@@ -27,6 +28,6 @@ const statusColors = {
   SUCCESS: 'green',
   CANCELLED: 'red',
   REFUNDED: 'gray',
-  undefined: 'green-500'
+  undefined: 'green-500',
 };
 export {statusStrings, transactionStatusColor, statusColors};
