@@ -20,7 +20,7 @@ export const transactionType = {
   'WITHDRAW': 'Rút tiền',
   'TOP_UP_GROUP_FUND': 'Góp quỹ',
   'WITHDRAW_GROUP_FUND': 'Rút quỹ',
-  'WITHDRAW_APPLICATION': 'Rút tiền dịch vụ',
+  'WITHDRAW_APPLICATION': 'Rút tiền từ app',
 };
 
 const statusColors = {
