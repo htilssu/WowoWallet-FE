@@ -40,23 +40,17 @@ export const AuthProvider = (props) => {
 
   useEffect(() => {
 
-    const ressp = axios.get('https://sso.htilssu.id.vn/v1/generate-auth', {
-      withCredentials: true,
-    });
+    const ressp = axios.get('https://sso.htilssu.id.vn/v1/generate-auth');
 
     ressp.then(async (res) => {
       const data = res.data;
       setWebAuthn(JSON.stringify(data));
     }).catch((e) => {
-      const resp = axios.get('https://sso.htilssu.id.vn/v1/generate-registration', {
-        withCredentials: true,
-      });
+      const resp = axios.get('https://sso.htilssu.id.vn/v1/generate-registration');
 
       resp.then(async (res) => {
         const data = await startRegistration({optionsJSON: res.data});
-        await axios.post('https://sso.htilssu.id.vn/v1/verify-registration', data, {
-          withCredentials: true,
-        });
+        await axios.post('https://sso.htilssu.id.vn/v1/verify-registration', data);
         location.reload();
       });
     });
