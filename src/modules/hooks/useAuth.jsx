@@ -45,21 +45,20 @@ export const AuthProvider = (props) => {
     });
 
     ressp.then(async (res) => {
-      if (res.status === 400) {
-        const resp = axios.get('https://sso.htilssu.id.vn/v1/generate-registration', {
-          withCredentials: true,
-        });
-
-        resp.then(async (res) => {
-          const data = await startRegistration({optionsJSON: res.data});
-          await axios.post('https://sso.htilssu.id.vn/v1/verify-registration', data, {
-            withCredentials: true,
-          });
-          location.reload();
-        });
-      }
       const data = res.data;
       setWebAuthn(JSON.stringify(data));
+    }).catch((e) => {
+      const resp = axios.get('https://sso.htilssu.id.vn/v1/generate-registration', {
+        withCredentials: true,
+      });
+
+      resp.then(async (res) => {
+        const data = await startRegistration({optionsJSON: res.data});
+        await axios.post('https://sso.htilssu.id.vn/v1/verify-registration', data, {
+          withCredentials: true,
+        });
+        location.reload();
+      });
     });
 
   }, [auth, setWebAuthn]);
