@@ -68,7 +68,7 @@ const DonateForm = ({onClose, fundId, balance, senderId, userEmail}) => {
         try {
             const transferData = {
                 senderId: senderId,
-                sourceId: null,
+                sourceId: wallet.id,
                 receiverId: fundId,
                 money: numericAmount,
                 message: note,

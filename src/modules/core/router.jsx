@@ -9,9 +9,11 @@ import AuthorizedView from './system-component/AuthorizedView.jsx';
 import {callBackUrl} from '../../pages/CallBackHandler.jsx';
 import RoleLayout from '../../pages/admin/layout-admin/role-manage/RoleLayout.jsx';
 import SettingLayout from '../../pages/admin/layout-admin/setting-manage/SettingLayout.jsx';
-import CustomerLayout from "../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx";
+import CustomerLayout from '../../pages/admin/layout-admin/customer-manage/CustomerLayout.jsx';
 import CustomerTransactionLayout
-  from "../../pages/admin/layout-admin/transaction-manage/manage/user-transaction/CustomerTransactionLayout.jsx";
+  from '../../pages/admin/layout-admin/transaction-manage/manage/user-transaction/CustomerTransactionLayout.jsx';
+import ApplicationManager from '../../pages/partner/ApplicationManager.jsx';
+import AppPartnerLayout from '../../pages/app/AppPartnerLayout.jsx';
 
 const ApiKeyPage = lazy(() => import('../../pages/partner/ApiKeyPage.jsx'));
 const PartnerLayout = lazy(() => import('../../pages/partner/PartnerLayout.jsx'));
@@ -47,12 +49,17 @@ const TopUp = lazy(() => import('../../components/topup/TopUp.jsx')),
     TicketDetail = lazy(() => import('../../components/support-ticket/TicketDetail.jsx')),
     LayoutTransaction = lazy(() => import('../../pages/admin/layout-admin/transaction-manage/LayoutTransaction.jsx')),
     BankLayout = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/bank/BankLayout.jsx')),
-    ServiceTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/ServiceTransaction.jsx')),
+    ServiceTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/ServiceTransaction.jsx')),
     WalletLayout = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/bank/BankLayout.jsx')),
-    AllWalletTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/wallet/AllWalletTransaction.jsx')),
-    TransferWallet = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/wallet/TransferWallet.jsx')),
-    AllBankTransaction = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/bank/AllBankTransaction.jsx')),
-    TransferBank = lazy(() => import('./../../pages/admin/layout-admin/transaction-manage/manage/bank/TransferBank.jsx')),
+    AllWalletTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/wallet/AllWalletTransaction.jsx')),
+    TransferWallet = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/wallet/TransferWallet.jsx')),
+    AllBankTransaction = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/bank/AllBankTransaction.jsx')),
+    TransferBank = lazy(
+        () => import('./../../pages/admin/layout-admin/transaction-manage/manage/bank/TransferBank.jsx')),
     InfoAccount = lazy(() => import('../../components/account/InfoAccount.jsx')),
     CareCustomerLayout = lazy(() => import('../../pages/admin/layout-admin/care-cus-manage/CareCustomerLayout.jsx')),
     OverviewCare = lazy(() => import('./../../pages/admin/layout-admin/care-cus-manage/OverviewCare.jsx')),
@@ -72,49 +79,49 @@ export const router = createBrowserRouter([
       },
       {
         path: 'user-transactions/:email?',
-        element: <CustomerTransactionLayout />,
+        element: <CustomerTransactionLayout/>,
       },
       {
         path: 'user-transactions',
-        element: <CustomerTransactionLayout />,
+        element: <CustomerTransactionLayout/>,
       }, {
-        path: 'wallet-transaction', element: <WalletLayout />, 
+        path: 'wallet-transaction', element: <WalletLayout/>,
         children: [
           {
             index: true, element: <AllWalletTransaction/>,
-          },{
+          }, {
             path: 'all', element: <AllWalletTransaction/>,
-          },{
+          }, {
             path: 'transfer', element: <TransferWallet/>,
-          }
+          },
         ],
       }, {
-        path: 'service-transaction', element: <ServiceTransaction />,
-      },{
-        path: 'bank-transaction', element: <BankLayout />,
+        path: 'service-transaction', element: <ServiceTransaction/>,
+      }, {
+        path: 'bank-transaction', element: <BankLayout/>,
         children: [
           {
             index: true, element: <AllBankTransaction/>,
-          },{
+          }, {
             path: 'all', element: <AllBankTransaction/>,
-          },{
+          }, {
             path: 'transfer', element: <TransferBank/>,
-          }
+          },
         ],
       }, {
         path: 'transaction-manage',
         element: <LayoutTransaction/>,
-      },{
+      }, {
         path: 'care-cus-manage',
         element: <CareCustomerLayout/>,
         children: [
           {
             index: true, element: <OverviewCare/>,
-          },{
+          }, {
             path: 'overview', element: <OverviewCare/>,
-          },{
+          }, {
             path: 'chat', element: <OverviewCare/>,
-          },{
+          }, {
             path: 'request', element: <RequestCustomer/>,
           },
         ],
@@ -159,6 +166,19 @@ export const router = createBrowserRouter([
     path: '/',
     element: <ProtectedLayout/>,
     children: [
+      {
+        path: 'application',
+        children: [
+          {
+            path: '',
+            element: <ApplicationManager/>,
+          },
+          {
+            path: ':id',
+            element: <AppPartnerLayout/>,
+          },
+        ],
+      },
       {
         element: <MainLayout/>,
         children: [
@@ -227,10 +247,10 @@ export const router = createBrowserRouter([
               }, {
                 path: 'identity-auth', element: <IdentityAuth/>,
               }, {
-                path: 'manual-auth', element: <ManualIdentityAuth/>
-              }
+                path: 'manual-auth', element: <ManualIdentityAuth/>,
+              },
             ],
-          }
+          },
         ],
       },
     ],

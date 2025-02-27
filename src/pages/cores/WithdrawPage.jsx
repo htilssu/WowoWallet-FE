@@ -9,6 +9,7 @@ import {wGet} from '../../util/request.util.js';
 import {withdraw} from '../../modules/withdraw.js';
 import {revalidateCache} from '../../modules/cache.js';
 import {toast} from 'react-toastify';
+import {useWallet} from '../../modules/hooks/useWallet.jsx';
 
 const WithdrawPage = () => {
   const [amount, setAmount] = useState('');
@@ -17,9 +18,7 @@ const WithdrawPage = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {data: wallet} = useQuery({
-    queryKey: ['wallet'], queryFn: async () => getMyWallet(),
-  });
+  const {data: wallet} = useWallet();
   const {data: bankList} = useQuery({
     queryKey: ['bank-list'], queryFn: async () => await wGet('/v1/banks'), staleTime: 1000 * 60 * 60,
   });
@@ -73,7 +72,7 @@ const WithdrawPage = () => {
       return;
     }
     setIsLoading(true);
-    withdraw(selectedCard, amount).then(() => {
+    withdraw(wallet.id, amount).then(() => {
       revalidateCache('wallet').then();
       showSuccessMessage();
       setIsLoading(false);

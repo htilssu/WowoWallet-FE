@@ -10,6 +10,7 @@ import {isNotEmpty, useForm} from '@mantine/form';
 import {checkUser, transfer_v2} from '../../modules/transfer.js';
 import {getMyWallet} from '../../modules/wallet/wallet.js';
 import {useQuery} from '@tanstack/react-query';
+import {handleAuth} from '../../util/auth.util.js';
 
 const TransferMoney = () => {
   //lấy thông tin Ví
@@ -77,8 +78,15 @@ const TransferMoney = () => {
       form.setFieldError('receiverId', 'Người nhận không tồn tại');
       return;
     }
-    sendOtp().then();
-    setIsShowOtpForm(true);
+    if (parseInt(form.values.money) >= 5000000) {
+      handleAuth(() => {
+        submit().then();
+      }).then();
+    }
+    else {
+      sendOtp().then();
+      setIsShowOtpForm(true);
+    }
   }
 
   return (<div className="max-w-2xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mb-9">

@@ -52,24 +52,24 @@ const TransactionDetails = ({ transaction, onClose }) => {
                                     ? "bg-green-100 text-green-600"
                                     : transaction.status === "PENDING"
                                         ? "bg-yellow-100 text-yellow-600"
-                                        : "bg-red-100 text-red-600"
+                                        : "bg-green-100 text-green-600"
                             }`}
                         >
-                            {transaction.status}
+                            {transaction?.status || "Thành công"}
                         </span>
                     </p>
                     <p className="text-gray-700">
-                        <strong>Loại:</strong> {transaction.type}
+                        <strong>Loại:</strong> {transaction.flowType}
                     </p>
                     <p className="text-gray-700">
-                        <strong>Mô Tả:</strong> {transaction.message}
+                        <strong>Mô Tả:</strong> {transaction?.message || "Không có mô tả"}
                     </p>
                     <p className="text-gray-700">
                         <strong>Ngày Tạo:</strong> {new Date(transaction.created).toLocaleString()}
                     </p>
 
                     {/* Receiver Information */}
-                    {transaction.receiverName && transaction.type === "OUT" && (
+                    {transaction.receiverName && (
                         <div>
                             <div className="mt-4 border-t border-gray-200">
                                 <div className={"bg-gray-100 rounded-xl px-4 py-2"}>
@@ -80,15 +80,12 @@ const TransactionDetails = ({ transaction, onClose }) => {
                                     <p className="text-gray-700">
                                         <strong>Email:</strong> {transaction.receiver?.email || "Chưa cập nhật"}
                                     </p>
-                                    <p className="text-gray-700">
-                                        <strong>Biến Thể:</strong> {transaction.variant}
-                                    </p>
                                 </div>
                             </div>
                         </div>
                     )}
                     {/* Sender Information for IN transactions */}
-                    {transaction.senderName && transaction.type === "IN" && (
+                    {transaction.senderName && (
                         <div>
                             <div className="mt-4 border-t border-gray-200">
                                 <div className="bg-gray-100 rounded-xl px-4 py-2">
@@ -98,9 +95,6 @@ const TransactionDetails = ({ transaction, onClose }) => {
                                     </p>
                                     <p className="text-gray-700">
                                         <strong>Email:</strong> {transaction.sender?.email || "Chưa cập nhật"}
-                                    </p>
-                                    <p className="text-gray-700">
-                                        <strong>Biến Thể:</strong> {transaction.variant}
                                     </p>
                                 </div>
                             </div>
