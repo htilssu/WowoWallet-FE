@@ -17,7 +17,7 @@ const ManagementPersonalInfo = () => {
     <div className="management-account w-full lg:w-auto mr-4 ml-2 lg:mx-20 lg:px-14">
       {/* TitleManagementAccount */}
       <div className="flex items-center w-auto mb-5">
-        <div><FaClipboardUser size={21} color="#0f8be8" /></div>
+        <div><FaClipboardUser size={21} color="#16A34A" /></div>
         <div className="font-medium text-xl ml-2">Quản trị tài khoản</div>
       </div>
 
@@ -30,7 +30,7 @@ const ManagementPersonalInfo = () => {
             to="info-account"
             className={({ isActive }) =>
               isActive
-                ? "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 rounded-md bg-dimPrimaryColor pl-3 flex cursor-pointer group text-primaryColor"
+                ? "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 rounded-md bg-green-100 pl-3 flex cursor-pointer group text-green-600"
                 : "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 hover:rounded-md bg pl-3 flex hover:bg-dimPrimaryColor cursor-pointer group text-textGray"
             }
             onClick={navigateToInfoAccount}
@@ -44,8 +44,8 @@ const ManagementPersonalInfo = () => {
             to="transaction-account"
             className={({ isActive }) =>
               isActive
-                ? "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 rounded-md bg-dimPrimaryColor pl-3 flex cursor-pointer group text-primaryColor"
-                : "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 hover:rounded-md bg pl-3 flex hover:bg-dimPrimaryColor cursor-pointer group text-textGray"
+                ? "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 rounded-md bg-green-100 pl-3 flex cursor-pointer group text-green-600"
+                : "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 hover:rounded-md bg pl-3 flex hover:bg-green-100 cursor-pointer group text-textGray"
             }
             style={{ textDecoration: 'none' }}
           >
@@ -83,7 +83,7 @@ const ManagementPersonalInfo = () => {
             to="setting-level-user"
             className={({ isActive }) =>
               isActive
-                ? "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 rounded-md bg-dimPrimaryColor pl-3 flex cursor-pointer group text-primaryColor"
+                ? "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 rounded-md bg-dimPrimaryColor pl-3 flex cursor-pointer group text-green-600"
                 : "pr-3 lg:pr-0 row-span-1 w-auto h-full items-center py-4 hover:rounded-md bg pl-3 flex hover:bg-dimPrimaryColor cursor-pointer group text-textGray"
             }
             style={{ textDecoration: 'none' }}
