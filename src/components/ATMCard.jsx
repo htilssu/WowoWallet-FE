@@ -95,7 +95,7 @@ function ATMCard({
             {showConfirm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                     <div className="bg-white p-5 rounded-lg shadow-lg z-60">
-                        <p className="text-lg mb-4">Bạn có chắc chắn muốn xóa thẻ này không?</p>
+                        <p className="text-lg mb-4 z-10 text-black">Bạn có chắc chắn muốn xóa thẻ này không?</p>
                         <div className="flex justify-end space-x-4">
                             <button
                                 className="px-4 py-2 bg-red-500 text-white rounded"
