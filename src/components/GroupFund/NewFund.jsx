@@ -78,14 +78,10 @@ const NewFund = () => {
                 newErrors.contributionAmount = "Số tiền mục tiêu phải từ 10.000 đến 100.000.000.000.";
             }
         }
-
-        // Kiểm tra ngày đóng góp hợp lệ
-        if (!fundData.contributionDeadline.trim()) {
-            newErrors.contributionDeadline = "Vui lòng nhập ngày hạn quỹ.";
-        } else {
+        // Các trường khác vẫn tùy chọn
+        if (fundData.contributionDeadline.trim()) {
             const deadline = new Date(fundData.contributionDeadline);
             const today = new Date();
-
             if (isNaN(deadline.getTime())) {
                 newErrors.contributionDeadline = "Ngày đóng góp không hợp lệ.";
             } else if (deadline <= today) {

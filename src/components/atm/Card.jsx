@@ -51,13 +51,12 @@ const Card = ({ cardNumber, cardHolder, expiryDate, bankName, onDelete }) => {
             </div>
             {hover && (
                 <div
-                    className="absolute top-5 right-6 cursor-pointer text-white text-xl "
+                    className="absolute z-10 top-5 right-6 cursor-pointer text-white text-xl "
                     onClick={handleDelete}
                 >
                     <FaTrash className={"text-red-400"} />
                 </div>
             )}
-
             {showConfirm && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                     <div className="bg-white p-5 rounded-lg shadow-lg z-60">
