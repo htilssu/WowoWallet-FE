@@ -29,7 +29,7 @@ export const AuthProvider = (props) => {
       getUser().then((user) => {
         setCookie('userId', user.id, 9999999, 'htilssu.id.vn');
         setAuth({
-          user: user,
+          user: user.user,
         });
         setLoading(false);
       }).catch(() => {
