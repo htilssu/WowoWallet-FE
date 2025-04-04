@@ -3,11 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import SearchBar from "./components/SearchBar.jsx";
 import CustomerList from "./components/CustomerList.jsx";
 import Pagination from "./components/Pagination.jsx";
-import {wGet} from "../../../../util/request.util.js";
+import { wGet } from "../../../../util/request.util.js";
 
-const fetchCustomers = async (page, pageSize) => {
+const fetchCustomers = async (page, pageSize, searchQuery, searchType) => {
     try {
-        const response = await wGet(`/v1/user/all?page=${page}&pageSize=${pageSize}`);
+        if (!searchQuery) {
+            const response = await wGet(`/v1/user/all?page=${page}&pageSize=${pageSize}`);
+            return response;
+        }
+        const response = await wGet(`/v1/user/search/${searchQuery}?type=${searchType}&page=${page}&pageSize=${pageSize}`);
         return response;
     } catch (error) {
         throw new Error('Error fetching customers: ' + error.message);
@@ -16,13 +20,14 @@ const fetchCustomers = async (page, pageSize) => {
 
 const CustomerLayout = () => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchType, setSearchType] = useState('username'); // Mặc định tìm kiếm theo username
     const [currentPage, setCurrentPage] = useState(1);
     const customersPerPage = 10;
 
     const { data, error, isLoading } = useQuery(
         {
-            queryKey: ['customers-admin', currentPage],
-            queryFn: () => fetchCustomers(currentPage - 1, customersPerPage),
+            queryKey: ['customers-admin', currentPage, searchQuery, searchType],
+            queryFn: () => fetchCustomers(currentPage - 1, customersPerPage, searchQuery, searchType),
             staleTime: 5 * 60 * 1000,
             cacheTime: 30 * 60 * 1000,
             keepPreviousData: true,
@@ -31,11 +36,6 @@ const CustomerLayout = () => {
 
     const customers = data?.content;
     const totalCustomers = data?.totalElements;
-
-    // Filter customers based on search query
-    const filteredCustomers = customers?.filter(customer =>
-        customer.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     // UI for loading state
     if (isLoading) return (
@@ -59,12 +59,16 @@ const CustomerLayout = () => {
 
             <main className="p-6 w-full">
                 <div className="bg-cyan-100 rounded-lg shadow-md p-6">
-                    <SearchBar setSearchQuery={setSearchQuery} />
+                    <SearchBar
+                        setSearchQuery={setSearchQuery}
+                        setSearchType={setSearchType}
+                        setCurrentPage={setCurrentPage} // Reset về trang 1 khi tìm kiếm
+                    />
                 </div>
 
                 <div className="bg-white rounded-lg shadow-md p-6">
-                    {filteredCustomers?.length > 0 ? (
-                        <CustomerList customers={filteredCustomers} />
+                    {customers?.length > 0 ? (
+                        <CustomerList customers={customers} />
                     ) : (
                         <div className="text-center text-gray-500 py-10">
                             <p className="text-lg">No customers found</p>
